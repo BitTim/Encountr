@@ -1,0 +1,15 @@
+[package]
+name = "encountr"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+tokio = { version = "1.46.1", features = ["full"] }
+axum = "0.8.4"
+
+serde_json = "1.0.140"
+tower-http = "0.6.6"
+tower-cookies = "0.11.0"
+uuid = { version = "1.17.0", features = ["serde", "v4"] }
+sqlx = { version = "0.8.6", features = ["postgres", "runtime-tokio", "uuid"] }
+serde = { version = "1.0.219", features = ["derive"] }
