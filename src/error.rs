@@ -7,7 +7,7 @@
  * File:       error.rs
  * Module:     Encountr
  * Author:     Tim Anhalt (BitTim)
- * Modified:   18.07.25, 20:24
+ * Modified:   22.07.25, 23:48
  */
 
 use axum::http::StatusCode;
@@ -22,6 +22,7 @@ pub enum Error {
     InvalidPostgresURL,
     MigrationsFailed,
     UserNotFound { email: String },
+    UserExists,
 }
 
 impl IntoResponse for Error {

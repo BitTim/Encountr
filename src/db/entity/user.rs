@@ -7,7 +7,7 @@
  * File:       user.rs
  * Module:     Encountr
  * Author:     Tim Anhalt (BitTim)
- * Modified:   18.07.25, 20:24
+ * Modified:   22.07.25, 23:59
  */
 
 use crate::{Error, Result};
@@ -31,7 +31,7 @@ pub struct UserForCreate {
     pub refresh_token: Option<String>,
 }
 
-async fn create(user_fc: &UserForCreate, pool: &PgPool) -> Result<()> {
+pub(crate) async fn create(user_fc: &UserForCreate, pool: &PgPool) -> Result<()> {
     let query = "INSERT INTO \"user\" (email, name) VALUES ($1, $2)";
     sqlx::query(query)
         .bind(&user_fc.email)
@@ -43,7 +43,7 @@ async fn create(user_fc: &UserForCreate, pool: &PgPool) -> Result<()> {
     Ok(())
 }
 
-async fn read(id: &Uuid, pool: &PgPool) -> Result<UserFull> {
+pub(crate) async fn read(id: &Uuid, pool: &PgPool) -> Result<UserFull> {
     let query = "SELECT id, email, name, pwd, salt, refresh_token FROM \"user\" WHERE id = $1";
     let user: UserFull = sqlx::query_as(query)
         .bind(&id)
@@ -65,15 +65,11 @@ pub(crate) async fn read_by_email(email: &str, pool: &PgPool) -> Result<UserFull
     Ok(user)
 }
 
-pub(crate) async fn update(id: &Uuid, user_fc: &UserForCreate, pool: &PgPool) -> Result<()> {
-    let query =
-        "UPDATE \"user\" SET email = $2, name = $3, pwd = $4, refresh_token = $5 WHERE id = $1";
+pub(crate) async fn update_pwd(id: &Uuid, pwd: &str, pool: &PgPool) -> Result<()> {
+    let query = "UPDATE \"user\" SET pwd = $2 WHERE id = $1";
     sqlx::query(query)
         .bind(&id)
-        .bind(&user_fc.email)
-        .bind(&user_fc.name)
-        .bind(&user_fc.pwd)
-        .bind(&user_fc.refresh_token)
+        .bind(&pwd)
         .execute(pool)
         .await
         .map_err(|e| Error::Generic { msg: e.to_string() })?;

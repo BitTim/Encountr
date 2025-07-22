@@ -7,7 +7,7 @@
  * File:       mod.rs
  * Module:     Encountr
  * Author:     Tim Anhalt (BitTim)
- * Modified:   18.07.25, 20:26
+ * Modified:   23.07.25, 00:08
  */
 
 use axum::Router;
@@ -20,5 +20,6 @@ pub mod register;
 pub(crate) fn auth_routes(pool: PgPool) -> Router {
     Router::new()
         .route("/login", post(login::login_handler))
+        .route("/register", post(register::register_handler))
         .with_state(pool)
 }
