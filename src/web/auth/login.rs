@@ -31,7 +31,7 @@ pub(crate) async fn login_handler(
         .map_err(|e| Error::Generic {
             msg: format!("{} ({:?})", e.to_string(), &params),
         })?;
-    let pwd = crypt::salt_and_hash(&user.salt.to_string(), params.pwd_clear);
+    let pwd = crypt::salt_and_hash(&user.pwd_salt.to_string(), params.pwd_clear);
 
     if user.pwd.is_none_or(|value| value != pwd) {
         return Err(Error::UserNotFound {

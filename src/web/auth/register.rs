@@ -27,9 +27,8 @@ pub(crate) async fn register_handler(
     State(pool): State<PgPool>,
     Json(params): Json<RegisterParams>,
 ) -> Result<()> {
-    let user = db::entity::user::read_by_email(&params.email, &pool).await;
-
-    if user.is_ok() {
+    let exists = db::entity::user::exists_email(&params.email, &pool).await?;
+    if exists {
         return Err(Error::UserExists);
     }
 
@@ -39,17 +38,13 @@ pub(crate) async fn register_handler(
         });
     }
 
-    let user_fc = db::entity::user::UserForCreate {
+    let user_fi = db::entity::user::UserForInsert {
         email: params.email.clone(),
         name: params.name.clone(),
-        pwd: None,
-        refresh_token: None,
     };
 
-    db::entity::user::create(&user_fc, &pool).await?;
-    let new_user = db::entity::user::read_by_email(&params.email, &pool).await?;
-
-    let pwd = crypt::salt_and_hash(&new_user.salt.to_string(), params.pwd_clear);
+    let new_user = db::entity::user::create(&user_fi, &pool).await?;
+    let pwd = crypt::salt_and_hash(&new_user.pwd_salt.to_string(), params.pwd_clear);
     db::entity::user::update_pwd(&new_user.id, &pwd, &pool).await?;
 
     // TODO: Generate and return JWT

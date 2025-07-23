@@ -20,8 +20,14 @@ pub struct UserFull {
     pub email: String,
     pub name: String,
     pub pwd: Option<String>,
-    pub salt: Uuid,
+    pub pwd_salt: Uuid,
+    pub token_salt: Uuid,
     pub refresh_token: Option<String>,
+}
+
+pub struct UserForInsert {
+    pub email: String,
+    pub name: String,
 }
 
 pub struct UserForCreate {
@@ -31,16 +37,27 @@ pub struct UserForCreate {
     pub refresh_token: Option<String>,
 }
 
-pub(crate) async fn create(user_fc: &UserForCreate, pool: &PgPool) -> Result<()> {
-    let query = "INSERT INTO \"user\" (email, name) VALUES ($1, $2)";
-    sqlx::query(query)
-        .bind(&user_fc.email)
-        .bind(&user_fc.name)
-        .execute(pool)
+pub(crate) async fn exists_email(email: &str, pool: &PgPool) -> Result<bool> {
+    let query = "SELECT EXISTS (SELECT 1 FROM \"user\" WHERE id = $1 AND email = $2)";
+    let exists = sqlx::query_scalar(query)
+        .bind(&email)
+        .fetch_one(pool)
         .await
         .map_err(|e| Error::Generic { msg: e.to_string() })?;
 
-    Ok(())
+    Ok(exists)
+}
+
+pub(crate) async fn create(user_fi: &UserForInsert, pool: &PgPool) -> Result<UserFull> {
+    let query = "INSERT INTO \"user\" (email, name) VALUES ($1, $2) RETURNING id, email, name, pwd, pqd_salt, token_salt, refresh_token";
+    let user: UserFull = sqlx::query_as(query)
+        .bind(&user_fi.email)
+        .bind(&user_fi.name)
+        .fetch_one(pool)
+        .await
+        .map_err(|e| Error::Generic { msg: e.to_string() })?;
+
+    Ok(user)
 }
 
 pub(crate) async fn read(id: &Uuid, pool: &PgPool) -> Result<UserFull> {

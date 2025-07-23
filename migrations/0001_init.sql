@@ -16,7 +16,8 @@ CREATE TABLE "user"
     email         TEXT NOT NULL UNIQUE,
     name          TEXT NOT NULL,
     pwd           TEXT,
-    salt          UUID NOT NULL             DEFAULT gen_random_uuid(),
+    pwd_salt      UUID NOT NULL             DEFAULT gen_random_uuid(),
+    token_salt    UUID NOT NULL             DEFAULT gen_random_uuid(),
     refresh_token TEXT
 );
 
