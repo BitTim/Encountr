@@ -7,15 +7,16 @@
  * File:       main.rs
  * Module:     Encountr
  * Author:     Tim Anhalt (BitTim)
- * Modified:   18.07.25, 20:26
+ * Modified:   29.07.25, 01:10
  */
 
 pub use self::error::{Error, Result};
 
 mod crypt;
-pub mod db;
+mod db;
+mod env;
 mod error;
-pub mod web;
+mod web;
 
 use crate::web::auth::auth_routes;
 use axum::Router;

@@ -7,7 +7,7 @@
  * File:       user.rs
  * Module:     Encountr
  * Author:     Tim Anhalt (BitTim)
- * Modified:   22.07.25, 23:59
+ * Modified:   28.07.25, 21:49
  */
 
 use crate::{Error, Result};
@@ -19,6 +19,7 @@ pub struct UserFull {
     pub id: Uuid,
     pub email: String,
     pub name: String,
+    pub role: String,
     pub pwd: Option<String>,
     pub pwd_salt: Uuid,
     pub token_salt: Uuid,
@@ -49,7 +50,7 @@ pub(crate) async fn exists_email(email: &str, pool: &PgPool) -> Result<bool> {
 }
 
 pub(crate) async fn create(user_fi: &UserForInsert, pool: &PgPool) -> Result<UserFull> {
-    let query = "INSERT INTO \"user\" (email, name) VALUES ($1, $2) RETURNING id, email, name, pwd, pqd_salt, token_salt, refresh_token";
+    let query = "";
     let user: UserFull = sqlx::query_as(query)
         .bind(&user_fi.email)
         .bind(&user_fi.name)

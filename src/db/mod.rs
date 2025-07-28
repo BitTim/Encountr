@@ -7,10 +7,11 @@
  * File:       mod.rs
  * Module:     Encountr
  * Author:     Tim Anhalt (BitTim)
- * Modified:   18.07.25, 20:24
+ * Modified:   28.07.25, 15:29
  */
 
 pub mod entity;
+mod repo;
 
 use crate::{Error, Result};
 use sqlx::PgPool;
