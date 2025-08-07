@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2025 Tim Anhalt (BitTim)
+ *
+ * Project:    Encountr
+ * License:    GPLv3
+ *
+ * File:       MainActivity.kt
+ * Module:     Encountr.app.main
+ * Author:     Tim Anhalt (BitTim)
+ * Modified:   07.08.25, 02:32
+ */
+
 package dev.bittim.encountr
 
 import android.os.Bundle
@@ -5,12 +17,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import dev.bittim.encountr.core.ui.RootNavGraph
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,29 +28,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             EncountrTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                RootNavGraph(
+                    modifier = Modifier.fillMaxSize(),
+                    navController = rememberNavController()
+                )
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    EncountrTheme {
-        Greeting("Android")
     }
 }

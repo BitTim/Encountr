@@ -1,3 +1,17 @@
+<!--
+  ~ Copyright (c) 2025 Tim Anhalt (BitTim)
+  ~
+  ~ Project:    Encountr
+  ~ License:    GPLv3
+  ~
+  ~ File:       strings.xml
+  ~ Module:     Encountr.app.main
+  ~ Author:     Tim Anhalt (BitTim)
+  ~ Modified:   07.08.25, 02:32
+  -->
+
 <resources>
     <string name="app_name">Encountr</string>
+    <string name="onboarding_description">Welcome to Encountr! To start tracking your Pokémon, you need to create a save below by giving it a name and selecting a game.</string>
+    <string name="onboarding_note">Note: You can edit and add more saves later as well.</string>
 </resources>

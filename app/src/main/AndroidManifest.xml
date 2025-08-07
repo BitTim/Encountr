@@ -1,7 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Tim Anhalt (BitTim)
+  ~
+  ~ Project:    Encountr
+  ~ License:    GPLv3
+  ~
+  ~ File:       AndroidManifest.xml
+  ~ Module:     Encountr.app.main
+  ~ Author:     Tim Anhalt (BitTim)
+  ~ Modified:   07.08.25, 02:32
+  -->
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
+            android:name=".Encountr"
             android:allowBackup="true"
             android:dataExtractionRules="@xml/data_extraction_rules"
             android:fullBackupContent="@xml/backup_rules"
