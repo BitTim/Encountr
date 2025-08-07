@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="89.775558mm"
+   height="89.775566mm"
+   viewBox="0 0 89.775558 89.775566"
+   version="1.1"
+   id="svg1"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <linearGradient
+       id="linearGradient4">
+      <stop
+         style="stop-color:#7dce82;stop-opacity:1;"
+         offset="0"
+         id="stop5" />
+      <stop
+         style="stop-color:#2e5339;stop-opacity:1;"
+         offset="1"
+         id="stop6" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#linearGradient4"
+       id="linearGradient6"
+       x1="13.259545"
+       y1="13.259528"
+       x2="76.740494"
+       y2="76.740479"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <g
+     id="layer1"
+     transform="translate(-0.11222076,-0.11221696)">
+    <circle
+       style="fill:url(#linearGradient6);fill-opacity:1;stroke:none;stroke-width:0.224439;stroke-linecap:round;stroke-linejoin:round"
+       id="path1"
+       cx="45"
+       cy="44.999996"
+       r="44.887779" />
+    <path
+       d="M 45.000236,15 A 5,5 0 0 0 44.34653,15.042892 30,30 0 0 0 15,45.000236 a 30,30 0 0 0 5.547982,17.380852 30,30 0 0 0 7.070886,7.070886 h 5.17e-4 a 30,30 0 0 0 17.380851,5.547982 30,30 0 0 0 29.956828,-29.346529 5,5 0 0 0 0.04289,-0.653191 5,5 0 0 0 -4.999695,-5.000211 5,5 0 0 0 -5.000212,5.000211 20,20 0 0 1 -19.999813,19.999813 20,20 0 0 1 -10.157519,-2.771407 l 5.59139,-5.591907 a 12.5,12.5 0 0 1 5.17e-4,0 12.5,12.5 0 0 0 4.565612,0.863514 12.5,12.5 0 0 0 12.500015,-12.500013 12.5,12.5 0 0 0 -0.863514,-4.565612 12.5,12.5 0 0 0 -7.071403,-7.070887 12.5,12.5 0 0 0 -4.565096,-0.863513 12.5,12.5 0 0 0 -12.500012,12.500012 12.5,12.5 0 0 0 0.863513,4.565096 l -5.592423,5.592424 a 20,20 0 0 1 -2.771407,-10.15752 20,20 0 0 1 19.999813,-20.000329 5,5 0 0 0 5.16e-4,0 5,5 0 0 0 4.999695,-4.999695 A 5,5 0 0 0 45.000236,15 Z m 0,25.000025 a 5,5 0 0 1 4.999695,5.000211 5,5 0 0 1 -1.460376,3.531051 5,5 0 0 1 -0.0083,0.0083 5,5 0 0 1 -3.531051,1.460376 5,5 0 0 1 -5.000211,-4.999695 5,5 0 0 1 1.46451,-3.535701 5,5 0 0 1 3.535701,-1.46451 z"
+       style="fill:#f7f7ff;fill-opacity:1;stroke-width:0.264583"
+       id="path20" />
+  </g>
+</svg>

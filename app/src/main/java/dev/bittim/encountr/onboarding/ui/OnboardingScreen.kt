@@ -7,7 +7,7 @@
  * File:       OnboardingScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.08.25, 02:32
+ * Modified:   07.08.25, 16:51
  */
 
 package dev.bittim.encountr.onboarding.ui
@@ -59,7 +59,7 @@ fun OnboardingScreen() {
                 modifier = Modifier
                     .width(56.dp)
                     .aspectRatio(1f),
-                model = R.drawable.logo,
+                model = R.drawable.ic_logo,
                 contentDescription = UiText.StringResource(R.string.app_name).asString(),
                 contentScale = ContentScale.Fit
             )
