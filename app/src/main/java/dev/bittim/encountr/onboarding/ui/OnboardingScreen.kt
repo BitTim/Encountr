@@ -7,11 +7,12 @@
  * File:       OnboardingScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.08.25, 16:51
+ * Modified:   08.08.25, 16:50
  */
 
 package dev.bittim.encountr.onboarding.ui
 
+import android.content.Intent
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -49,7 +50,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import coil3.compose.AsyncImage
 import dev.bittim.encountr.R
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
@@ -59,14 +62,18 @@ import dev.bittim.encountr.core.ui.util.annotations.ScreenPreview
 
 @Composable
 fun OnboardingScreen() {
-    var definitionsUrl by rememberSaveable { mutableStateOf("https://gist.githubusercontent.com/BitTim/f943e03758088dbd5089861b892737ff/raw/edb848373b4e5548b8d33d7cb9383a9fb81b3798/encountr-definitions.json") }
+    val context = LocalContext.current
+
+    var definitionsUrl by rememberSaveable { mutableStateOf("https://bittim.github.io/Encountr/definitions.json") }
     var isEditing by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         contentWindowInsets = WindowInsets.safeContent
     ) { paddingValues ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(paddingValues),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
             verticalArrangement = Arrangement.spacedBy(Spacing.xl)
         ) {
             // region:      -- Header
@@ -200,7 +207,13 @@ fun OnboardingScreen() {
 
                     TextButton(
                         modifier = Modifier.weight(1f),
-                        onClick = { }
+                        onClick = {
+                            val intent = Intent(
+                                Intent.ACTION_VIEW,
+                                context.resources.getString(R.string.url_github).toUri()
+                            )
+                            context.startActivity(intent)
+                        }
                     ) {
                         Icon(
                             Icons.Default.Code,

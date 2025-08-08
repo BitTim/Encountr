@@ -7,7 +7,7 @@
   ~ File:       strings.xml
   ~ Module:     Encountr.app.main
   ~ Author:     Tim Anhalt (BitTim)
-  ~ Modified:   07.08.25, 02:32
+  ~ Modified:   08.08.25, 16:56
   -->
 
 <resources>
@@ -24,4 +24,5 @@
     <string name="text_field_definitions_url">Definitions URL</string>
     <string name="content_desc_confirm">Confirm</string>
     <string name="content_desc_reset">Reset</string>
+    <string name="url_github">https://github.com/BitTim/Encountr</string>
 </resources>
