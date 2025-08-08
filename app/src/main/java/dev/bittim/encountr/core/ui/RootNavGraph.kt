@@ -16,7 +16,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import dev.bittim.encountr.content.pokemon.ui.screen.list.PokemonListNav
+import dev.bittim.encountr.onboarding.ui.OnboardingNav
+import dev.bittim.encountr.onboarding.ui.onboarding
 
 @Composable
 fun RootNavGraph(
@@ -26,8 +27,8 @@ fun RootNavGraph(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = PokemonListNav,
+        startDestination = OnboardingNav,
     ) {
-
+        onboarding()
     }
 }

@@ -12,6 +12,16 @@
 
 <resources>
     <string name="app_name">Encountr</string>
-    <string name="onboarding_description">Welcome to Encountr! To start tracking your Pokémon, you need to create a save below by giving it a name and selecting a game.</string>
-    <string name="onboarding_note">Note: You can edit and add more saves later as well.</string>
+    <string name="onboarding_title">Welcome to Encountr!</string>
+    <string name="onboarding_description">This free and open-source app helps you track and organize your Pokémon adventures. With Encountr, you can manage Pokémon by game, create teams, and access detailed information about Pokémon, their types, and various locations.</string>
+    <string name="onboarding_definitions_note">Note: Definitions will be periodically fetched from the specified URL. Most users should keep the default. Visit the GitHub repository for more information.</string>
+    <string name="content_desc_edit">Edit</string>
+    <string name="button_continue">Continue</string>
+    <string name="content_desc_privacy_policy">Privacy Policy</string>
+    <string name="button_privacy_policy">Privacy Policy</string>
+    <string name="content_desc_github">GitHub Repository</string>
+    <string name="button_github">GitHub Repository</string>
+    <string name="text_field_definitions_url">Definitions URL</string>
+    <string name="content_desc_confirm">Confirm</string>
+    <string name="content_desc_reset">Reset</string>
 </resources>

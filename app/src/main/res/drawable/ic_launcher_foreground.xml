@@ -1,30 +1,17 @@
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:aapt="http://schemas.android.com/aapt"
-        android:width="108dp"
-        android:height="108dp"
-        android:viewportWidth="108"
-        android:viewportHeight="108">
-    <path android:pathData="M31,63.928c0,0 6.4,-11 12.1,-13.1c7.2,-2.6 26,-1.4 26,-1.4l38.1,38.1L107,108.928l-32,-1L31,63.928z">
-        <aapt:attr name="android:fillColor">
-            <gradient
-                    android:startY="49.59793"
-                    android:startX="42.9492"
-                    android:endY="92.4963"
-                    android:endX="85.84757"
-                    android:type="linear">
-                <item
-                        android:color="#44000000"
-                        android:offset="0.0" />
-                <item
-                        android:color="#00000000"
-                        android:offset="1.0" />
-            </gradient>
-        </aapt:attr>
-    </path>
-    <path
-            android:pathData="M65.3,45.828l3.8,-6.6c0.2,-0.4 0.1,-0.9 -0.3,-1.1c-0.4,-0.2 -0.9,-0.1 -1.1,0.3l-3.9,6.7c-6.3,-2.8 -13.4,-2.8 -19.7,0l-3.9,-6.7c-0.2,-0.4 -0.7,-0.5 -1.1,-0.3C38.8,38.328 38.7,38.828 38.9,39.228l3.8,6.6C36.2,49.428 31.7,56.028 31,63.928h46C76.3,56.028 71.8,49.428 65.3,45.828zM43.4,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2c-0.3,-0.7 -0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C45.3,56.528 44.5,57.328 43.4,57.328L43.4,57.328zM64.6,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2s-0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C66.5,56.528 65.6,57.328 64.6,57.328L64.6,57.328z"
-            android:fillColor="#FFFFFF"
-            android:fillType="nonZero"
-            android:strokeWidth="1"
-            android:strokeColor="#00000000" />
+<!--
+  ~ Copyright (c) 2025 Tim Anhalt (BitTim)
+  ~
+  ~ Project:    Encountr
+  ~ License:    GPLv3
+  ~
+  ~ File:       ic_launcher_foreground.xml
+  ~ Module:     Encountr.app.main
+  ~ Author:     Tim Anhalt (BitTim)
+  ~ Modified:   08.08.25, 03:36
+  -->
+
+<vector xmlns:aapt="http://schemas.android.com/aapt" xmlns:android="http://schemas.android.com/apk/res/android" android:height="200dp" android:viewportHeight="108" android:viewportWidth="108" android:width="200dp">
+      
+    <path android:fillColor="#f7f7ff" android:pathData="m54,31.95a3.68,3.68 0,0 0,-0.48 0.03,22.06 22.05,45 0,0 -21.57,22.02 22.06,22.06 0,0 0,4.08 12.78,22.05 22.06,135 0,0 5.2,5.2l0,0a22.06,22.06 0,0 0,12.78 4.08,22.06 22.05,45 0,0 22.02,-21.57 3.68,3.68 0,0 0,0.03 -0.48,3.68 3.68,0 0,0 -3.68,-3.68 3.68,3.68 0,0 0,-3.68 3.68A14.7,14.7 0,0 1,54 68.7,14.7 14.7,45 0,1 46.53,66.67l4.11,-4.11a9.19,9.19 0,0 1,0 0,9.19 9.19,0 0,0 3.36,0.63 9.19,9.19 0,0 0,9.19 -9.19,9.19 9.19,0 0,0 -0.63,-3.36 9.19,9.19 0,0 0,-5.2 -5.2,9.19 9.19,0 0,0 -3.36,-0.63 9.19,9.19 0,0 0,-9.19 9.19,9.19 9.19,0 0,0 0.63,3.36l-4.11,4.11a14.7,14.7 0,0 1,-2.04 -7.47,14.7 14.7,135 0,1 14.7,-14.7 3.68,3.68 0,0 0,0 0,3.68 3.68,0 0,0 3.68,-3.68 3.68,3.68 0,0 0,-3.68 -3.68zM54,50.32a3.68,3.68 0,0 1,3.68 3.68,3.68 3.68,0 0,1 -1.07,2.6 3.68,3.68 0,0 1,-0.01 0.01,3.68 3.68,0 0,1 -2.6,1.07 3.68,3.68 0,0 1,-3.68 -3.68,3.68 3.68,0 0,1 1.08,-2.6 3.68,3.68 0,0 1,2.6 -1.08z" android:strokeWidth="0.19"/>
+    
 </vector>

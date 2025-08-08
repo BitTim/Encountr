@@ -12,3 +12,28 @@
 
 package dev.bittim.encountr.onboarding.ui
 
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
+import kotlinx.serialization.Serializable
+
+@Serializable
+data object OnboardingNav
+
+fun NavGraphBuilder.onboarding() {
+    composable<OnboardingNav> {
+        OnboardingScreen()
+    }
+}
+
+fun NavController.navToOnboarding() {
+    navigate(OnboardingNav) {
+        popUpTo(graph.findStartDestination().id) {
+            inclusive = true
+            saveState = true
+        }
+        launchSingleTop = true
+        restoreState = true
+    }
+}
