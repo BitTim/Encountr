@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Tim Anhalt (BitTim)
+  ~
+  ~ Project:    Encountr
+  ~ License:    GPLv3
+  ~
+  ~ File:       strings.xml
+  ~ Module:     Encountr.app.main
+  ~ Author:     Tim Anhalt (BitTim)
+  ~ Modified:   10.08.25, 02:01
+  -->
+
+<resources>
+    <string name="app_name">Encountr</string>
+    <string name="onboarding_title">Willkommen bei Encountr!</string>
+    <string name="onboarding_description">Diese open-source App hilft dir, deine Pokémon-Abenteuer zu verfolgen und zu organisieren. Mit Encountr kannst du Pokémon nach Spiel verwalten, Teams erstellen und auf detaillierte Informationen über Pokémon, ihre Typen und verschiedene Orte zugreifen.</string>
+    <string name="onboarding_definitions_note">Hinweis: Definitionen werden regelmäßig von der angegebenen URL abgerufen. Die meisten Benutzer sollten die Standardeinstellung beibehalten. Besuche das GitHub-Repository für weitere Informationen.</string>
+    <string name="content_desc_edit">Bearbeiten</string>
+    <string name="button_continue">Weiter</string>
+    <string name="content_desc_privacy_policy">Datenschutzvereinbarung</string>
+    <string name="button_privacy_policy">Datenschutzvereinbarung</string>
+    <string name="content_desc_github">GitHub Repository</string>
+    <string name="button_github">GitHub Repository</string>
+    <string name="text_field_definitions_url">Definitionen URL</string>
+    <string name="content_desc_confirm">Bestätigen</string>
+    <string name="content_desc_reset">Zurücksetzen</string>
+</resources>

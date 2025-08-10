@@ -7,13 +7,13 @@
   ~ File:       strings.xml
   ~ Module:     Encountr.app.main
   ~ Author:     Tim Anhalt (BitTim)
-  ~ Modified:   08.08.25, 16:56
+  ~ Modified:   10.08.25, 02:01
   -->
 
 <resources>
     <string name="app_name">Encountr</string>
     <string name="onboarding_title">Welcome to Encountr!</string>
-    <string name="onboarding_description">This free and open-source app helps you track and organize your Pokémon adventures. With Encountr, you can manage Pokémon by game, create teams, and access detailed information about Pokémon, their types, and various locations.</string>
+    <string name="onboarding_description">This open-source app helps you track and organize your Pokémon adventures. With Encountr, you can manage Pokémon by game, create teams, and access detailed information about Pokémon, their types, and various locations.</string>
     <string name="onboarding_definitions_note">Note: Definitions will be periodically fetched from the specified URL. Most users should keep the default. Visit the GitHub repository for more information.</string>
     <string name="content_desc_edit">Edit</string>
     <string name="button_continue">Continue</string>
@@ -24,5 +24,5 @@
     <string name="text_field_definitions_url">Definitions URL</string>
     <string name="content_desc_confirm">Confirm</string>
     <string name="content_desc_reset">Reset</string>
-    <string name="url_github">https://github.com/BitTim/Encountr</string>
+    <string name="url_github" translatable="false">https://github.com/BitTim/Encountr</string>
 </resources>
