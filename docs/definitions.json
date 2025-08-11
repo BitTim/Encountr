@@ -1,173 +1,215 @@
 {
-	"version": 1,
-	"games": {
-		"unknown": {
-			"pokemon": "unown",
-			"form": "unown-question"
-		},
-		"red-japan": {
-			"pokemon": "charizard",
-			"form": null
-		},
-		"green-japan": {
-			"pokemon": "venusaur",
-			"form": null
-		},
-		"blue-japan": {
-			"pokemon": "squirtle",
-			"form": null
-		},
-		"red": {
-			"pokemon": "charizard",
-			"form": null
-		},
-		"blue": {
-			"pokemon": "squirtle",
-			"form": null
-		},
-		"yellow": {
-			"pokemon": "pikachu",
-			"form": null
-		},
-		"gold": {
-			"pokemon": "ho-oh",
-			"form": null
-		},
-		"silver": {
-			"pokemon": "lugia",
-			"form": null
-		},
-		"crystal": {
-			"pokemon": "suicune",
-			"form": null
-		},
-		"ruby": {
-			"pokemon": "groudon",
-			"form": null
-		},
-		"sapphire": {
-			"pokemon": "kyogre",
-			"form": null
-		},
-		"emerald": {
-			"pokemon": "rayquaza",
-			"form": null
-		},
-		"firered": {
-			"pokemon": "charizard",
-			"form": null
-		},
-		"leafgreen": {
-			"pokemon": "venusaur",
-			"form": null
-		},
-		"diamond": {
-			"pokemon": "dialga",
-			"form": null
-		},
-		"pearl": {
-			"pokemon": "palkia",
-			"form": null
-		},
-		"platinum": {
-			"pokemon": "giratina-altered",
-			"form": null
-		},
-		"heartgold": {
-			"pokemon": "ho-oh",
-			"form": null
-		},
-		"soudlsilver": {
-			"pokemon": "lugia",
-			"form": null
-		},
-		"black": {
-			"pokemon": "zekrom",
-			"form": null
-		},
-		"white": {
-			"pokemon": "reshiram",
-			"form": null
-		},
-		"black-2": {
-			"pokemon": "kyurem-black",
-			"form": null
-		},
-		"white-2": {
-			"pokemon": "kyurem-white",
-			"form": null
-		},
-		"x": {
-			"pokemon": "xerneas",
-			"form": null
-		},
-		"y": {
-			"pokemon": "yveltal",
-			"form": null
-		},
-		"omega-ruby": {
-			"pokemon": "groudon-primal",
-			"form": null
-		},
-		"alpha-sapphire": {
-			"pokemon": "kyogre-primal",
-			"form": null
-		},
-		"sun": {
-			"pokemon": "solgaleo",
-			"form": null
-		},
-		"moon": {
-			"pokemon": "lunala",
-			"form": null
-		},
-		"ultra-sun": {
-			"pokemon": "necrozma-dusk",
-			"form": null
-		},
-		"ultra-moon": {
-			"pokemon": "necrozma-dawn",
-			"form": null
-		},
-		"lets-go-pikachu": {
-			"pokemon": "pikachu",
-			"form": null
-		},
-		"lets-go-eevee": {
-			"pokemon": "eevee",
-			"form": null
-		},
-		"sword": {
-			"pokemon": "zacian-crowned",
-			"form": null
-		},
-		"shield": {
-			"pokemon": "zamazenta-crowned",
-			"form": null
-		},
-		"brilliant-diamond": {
-			"pokemon": "dialga",
-			"form": null
-		},
-		"shining-pearl": {
-			"pokemon": "palkia",
-			"form": null
-		},
-		"legends-arceus": {
-			"pokemon": "arceus",
-			"form": null
-		},
-		"scarlet": {
-			"pokemon": "koraidon",
-			"form": null
-		},
-		"violet": {
-			"pokemon": "miraidon",
-			"form": null
-		},
-		"legends-za": {
-			"pokemon": "lucario-mega",
-			"form": null
-		}
-	}
+  "version": 1,
+  "definitions": [
+    {
+      "game": "unknown",
+      "pokemon": "unown",
+      "form": "unown-question"
+    },
+    {
+      "game": "red-japan",
+      "pokemon": "charizard",
+      "form": null
+    },
+    {
+      "game": "green-japan",
+      "pokemon": "venusaur",
+      "form": null
+    },
+    {
+      "game": "blue-japan",
+      "pokemon": "squirtle",
+      "form": null
+    },
+    {
+      "game": "red",
+      "pokemon": "charizard",
+      "form": null
+    },
+    {
+      "game": "blue",
+      "pokemon": "squirtle",
+      "form": null
+    },
+    {
+      "game": "yellow",
+      "pokemon": "pikachu",
+      "form": null
+    },
+    {
+      "game": "gold",
+      "pokemon": "ho-oh",
+      "form": null
+    },
+    {
+      "game": "silver",
+      "pokemon": "lugia",
+      "form": null
+    },
+    {
+      "game": "crystal",
+      "pokemon": "suicune",
+      "form": null
+    },
+    {
+      "game": "ruby",
+      "pokemon": "groudon",
+      "form": null
+    },
+    {
+      "game": "sapphire",
+      "pokemon": "kyogre",
+      "form": null
+    },
+    {
+      "game": "emerald",
+      "pokemon": "rayquaza",
+      "form": null
+    },
+    {
+      "game": "firered",
+      "pokemon": "charizard",
+      "form": null
+    },
+    {
+      "game": "leafgreen",
+      "pokemon": "venusaur",
+      "form": null
+    },
+    {
+      "game": "diamond",
+      "pokemon": "dialga",
+      "form": null
+    },
+    {
+      "game": "pearl",
+      "pokemon": "palkia",
+      "form": null
+    },
+    {
+      "game": "platinum",
+      "pokemon": "giratina-altered",
+      "form": null
+    },
+    {
+      "game": "heartgold",
+      "pokemon": "ho-oh",
+      "form": null
+    },
+    {
+      "game": "soudlsilver",
+      "pokemon": "lugia",
+      "form": null
+    },
+    {
+      "game": "black",
+      "pokemon": "zekrom",
+      "form": null
+    },
+    {
+      "game": "white",
+      "pokemon": "reshiram",
+      "form": null
+    },
+    {
+      "game": "black-2",
+      "pokemon": "kyurem-black",
+      "form": null
+    },
+    {
+      "game": "white-2",
+      "pokemon": "kyurem-white",
+      "form": null
+    },
+    {
+      "game": "x",
+      "pokemon": "xerneas",
+      "form": null
+    },
+    {
+      "game": "y",
+      "pokemon": "yveltal",
+      "form": null
+    },
+    {
+      "game": "omega-ruby",
+      "pokemon": "groudon-primal",
+      "form": null
+    },
+    {
+      "game": "alpha-sapphire",
+      "pokemon": "kyogre-primal",
+      "form": null
+    },
+    {
+      "game": "sun",
+      "pokemon": "solgaleo",
+      "form": null
+    },
+    {
+      "game": "moon",
+      "pokemon": "lunala",
+      "form": null
+    },
+    {
+      "game": "ultra-sun",
+      "pokemon": "necrozma-dusk",
+      "form": null
+    },
+    {
+      "game": "ultra-moon",
+      "pokemon": "necrozma-dawn",
+      "form": null
+    },
+    {
+      "game": "lets-go-pikachu",
+      "pokemon": "pikachu",
+      "form": null
+    },
+    {
+      "game": "lets-go-eevee",
+      "pokemon": "eevee",
+      "form": null
+    },
+    {
+      "game": "sword",
+      "pokemon": "zacian-crowned",
+      "form": null
+    },
+    {
+      "game": "shield",
+      "pokemon": "zamazenta-crowned",
+      "form": null
+    },
+    {
+      "game": "brilliant-diamond",
+      "pokemon": "dialga",
+      "form": null
+    },
+    {
+      "game": "shining-pearl",
+      "pokemon": "palkia",
+      "form": null
+    },
+    {
+      "game": "legends-arceus",
+      "pokemon": "arceus",
+      "form": null
+    },
+    {
+      "game": "scarlet",
+      "pokemon": "koraidon",
+      "form": null
+    },
+    {
+      "game": "violet",
+      "pokemon": "miraidon",
+      "form": null
+    },
+    {
+      "game": "legends-za",
+      "pokemon": "lucario-mega",
+      "form": null
+    }
+  ]
 }
