@@ -7,7 +7,7 @@
  * File:       build.gradle.kts
  * Module:     Encountr.app
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.08.25, 02:01
+ * Modified:   11.08.25, 17:37
  */
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -76,42 +76,51 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation(libs.material.icons.extended)
-    implementation(libs.androidx.palette.ktx)
-
+    // Lifecycle
     ksp(libs.androidx.lifecycle.compiler)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.savedstate)
+    implementation(libs.androidx.lifecycle.runtime.compose)
 
-    implementation(libs.androidx.navigation.compose)
-
+    // Serialization
     implementation(libs.kotlinx.serialization.core)
     implementation(libs.kotlinx.serialization.json)
 
-    implementation(libs.androidx.lifecycle.runtime.compose)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-
-    implementation(libs.androidx.compose.material3.windowsizeclass)
-    implementation(libs.androidx.material3.adaptive)
-
+    // Koin
     implementation(libs.koin.core)
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
 
-    implementation(libs.moshi)
-    implementation(libs.moshi.kotlin)
-    implementation(libs.retrofit)
-    implementation(libs.converter.moshi)
+    // Ktor
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
 
-    implementation(libs.pokekotlin)
-
-    implementation(libs.coil.compose)
-
+    // Room
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.paging)
+
+    // Coil
+    implementation(libs.coil.compose)
+
+    // Responsive Material 3
+    implementation(libs.androidx.compose.material3.windowsizeclass)
+    implementation(libs.androidx.material3.adaptive)
+
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
+
+    // Palette (Color extraction)
+    implementation(libs.androidx.palette.ktx)
+
+    // Material Icons
+    implementation(libs.material.icons.extended)
+
+    // PokeApi
+    implementation(libs.pokekotlin)
 }

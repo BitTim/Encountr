@@ -7,7 +7,7 @@
  * File:       OnboardingScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   08.08.25, 16:50
+ * Modified:   11.08.25, 17:35
  */
 
 package dev.bittim.encountr.onboarding.ui
@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil3.compose.AsyncImage
 import dev.bittim.encountr.R
+import dev.bittim.encountr.core.di.Constants
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.UiText
@@ -64,7 +65,7 @@ import dev.bittim.encountr.core.ui.util.annotations.ScreenPreview
 fun OnboardingScreen() {
     val context = LocalContext.current
 
-    var definitionsUrl by rememberSaveable { mutableStateOf("https://bittim.github.io/Encountr/definitions.json") }
+    var definitionsUrl by rememberSaveable { mutableStateOf(Constants.DEFAULT_DEFS_URL) }
     var isEditing by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
@@ -125,7 +126,7 @@ fun OnboardingScreen() {
                     OutlinedTextField(
                         modifier = Modifier.weight(1f),
                         value = definitionsUrl,
-                        readOnly = !isEditing,
+                        enabled = isEditing,
                         singleLine = true,
                         onValueChange = {
                             definitionsUrl = it
@@ -144,7 +145,7 @@ fun OnboardingScreen() {
                         if (it) {
                             Row {
                                 IconButton(
-                                    onClick = { }
+                                    onClick = { definitionsUrl = Constants.DEFAULT_DEFS_URL }
                                 ) {
                                     Icon(
                                         Icons.Default.RestartAlt,
@@ -154,10 +155,7 @@ fun OnboardingScreen() {
                                 }
 
                                 FilledTonalIconButton(
-                                    onClick = {
-                                        // TODO: Validation
-                                        isEditing = false
-                                    }
+                                    onClick = { isEditing = false }
                                 ) {
                                     Icon(
                                         Icons.Default.Check,

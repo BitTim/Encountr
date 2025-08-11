@@ -7,18 +7,13 @@
  * File:       Definition.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.08.25, 02:01
+ * Modified:   11.08.25, 17:37
  */
 
-package dev.bittim.encountr.core.data.defs.entity
+package dev.bittim.encountr.core.domain.model.defs
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity(tableName = "definition")
 data class Definition(
-    @PrimaryKey(autoGenerate = true) val id: Int,
     val game: String,
     val pokemon: String,
-    val from: String?
+    val form: String?
 )

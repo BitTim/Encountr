@@ -4,14 +4,12 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       OnboardingViewModel.kt
+ * File:       Error.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
  * Modified:   11.08.25, 17:37
  */
 
-package dev.bittim.encountr.onboarding.ui
+package dev.bittim.encountr.core.domain.error
 
-import androidx.lifecycle.ViewModel
-
-class OnboardingViewModel : ViewModel()
+interface Error
