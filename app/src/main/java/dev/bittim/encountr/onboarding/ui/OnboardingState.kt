@@ -7,11 +7,14 @@
  * File:       OnboardingState.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.08.25, 02:32
+ * Modified:   11.08.25, 18:04
  */
 
 package dev.bittim.encountr.onboarding.ui
 
+import dev.bittim.encountr.core.ui.util.UiText
+
 data class OnboardingState(
-    val a: Boolean? = null
+    val fetching: Boolean = false,
+    val urlError: UiText? = null
 )

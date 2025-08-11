@@ -7,12 +7,14 @@
  * File:       Constants.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.08.25, 17:37
+ * Modified:   11.08.25, 18:07
  */
 
 package dev.bittim.encountr.core.di
 
 object Constants {
-    const val SHARED_PREF_NAME = "EncountrPreferences"
+    const val GITHUB_URL = "https://github.com/Encountr/BitTim"
     const val DEFAULT_DEFS_URL = "https://bittim.github.io/Encountr/definitions.json"
+    const val SPNAME = "EncountrPreferences"
+    const val SPKEY_DEFS_URL = "DEFINITIONS_URL"
 }

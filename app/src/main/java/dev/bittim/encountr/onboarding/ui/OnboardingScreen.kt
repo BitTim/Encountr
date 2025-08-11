@@ -7,13 +7,14 @@
  * File:       OnboardingScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.08.25, 17:35
+ * Modified:   11.08.25, 20:02
  */
 
 package dev.bittim.encountr.onboarding.ui
 
 import android.content.Intent
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,8 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.filled.RestartAlt
 import androidx.compose.material3.Button
+import androidx.compose.material3.ContainedLoadingIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -61,8 +64,17 @@ import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.UiText
 import dev.bittim.encountr.core.ui.util.annotations.ScreenPreview
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun OnboardingScreen() {
+fun OnboardingScreen(
+    state: OnboardingState,
+    resetError: () -> Unit,
+    onContinue: (
+        urlString: String,
+        navNext: () -> Unit
+    ) -> Unit,
+    navNext: () -> Unit
+) {
     val context = LocalContext.current
 
     var definitionsUrl by rememberSaveable { mutableStateOf(Constants.DEFAULT_DEFS_URL) }
@@ -116,7 +128,9 @@ fun OnboardingScreen() {
             // endregion:   -- Description
             // region:      -- Form
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .animateContentSize(),
                 verticalArrangement = Arrangement.spacedBy(Spacing.s)
             ) {
                 Row(
@@ -124,11 +138,20 @@ fun OnboardingScreen() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     OutlinedTextField(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .weight(1f)
+                            .animateContentSize(),
                         value = definitionsUrl,
-                        enabled = isEditing,
+                        readOnly = !isEditing,
                         singleLine = true,
+                        isError = state.urlError != null,
+                        supportingText = {
+                            state.urlError?.let {
+                                Text(text = it.asString())
+                            }
+                        },
                         onValueChange = {
+                            if (state.urlError != null) resetError()
                             definitionsUrl = it
                         },
                         label = {
@@ -145,7 +168,10 @@ fun OnboardingScreen() {
                         if (it) {
                             Row {
                                 IconButton(
-                                    onClick = { definitionsUrl = Constants.DEFAULT_DEFS_URL }
+                                    onClick = {
+                                        definitionsUrl = Constants.DEFAULT_DEFS_URL
+                                        isEditing = false
+                                    }
                                 ) {
                                     Icon(
                                         Icons.Default.RestartAlt,
@@ -206,10 +232,7 @@ fun OnboardingScreen() {
                     TextButton(
                         modifier = Modifier.weight(1f),
                         onClick = {
-                            val intent = Intent(
-                                Intent.ACTION_VIEW,
-                                context.resources.getString(R.string.url_github).toUri()
-                            )
+                            val intent = Intent(Intent.ACTION_VIEW, Constants.GITHUB_URL.toUri())
                             context.startActivity(intent)
                         }
                     ) {
@@ -222,11 +245,19 @@ fun OnboardingScreen() {
                     }
                 }
 
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = { }
-                ) {
-                    Text(text = UiText.StringResource(R.string.button_continue).asString())
+                AnimatedContent(state.fetching) {
+                    if (it) {
+                        ContainedLoadingIndicator(
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    } else {
+                        Button(
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = { onContinue(definitionsUrl, navNext) }
+                        ) {
+                            Text(text = UiText.StringResource(R.string.button_continue).asString())
+                        }
+                    }
                 }
             }
             // endregion:   -- Actions
@@ -244,7 +275,12 @@ fun OnboardingScreenPreview() {
                     .fillMaxSize()
                     .padding(Spacing.m),
             ) {
-                OnboardingScreen()
+                OnboardingScreen(
+                    state = OnboardingState(),
+                    resetError = {},
+                    onContinue = { _, _ -> },
+                    navNext = {}
+                )
             }
         }
     }

@@ -7,23 +7,36 @@
  * File:       OnboardingNav.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.08.25, 02:32
+ * Modified:   11.08.25, 18:09
  */
 
 package dev.bittim.encountr.onboarding.ui
 
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
+import org.koin.androidx.compose.koinViewModel
 
 @Serializable
 data object OnboardingNav
 
-fun NavGraphBuilder.onboarding() {
+fun NavGraphBuilder.onboarding(
+    navNext: () -> Unit
+) {
     composable<OnboardingNav> {
-        OnboardingScreen()
+        val viewModel = koinViewModel<OnboardingViewModel>()
+        val state by viewModel.state.collectAsStateWithLifecycle()
+
+        OnboardingScreen(
+            state = state,
+            resetError = viewModel::resetError,
+            onContinue = viewModel::onContinue,
+            navNext = navNext
+        )
     }
 }
 

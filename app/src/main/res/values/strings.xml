@@ -7,7 +7,7 @@
   ~ File:       strings.xml
   ~ Module:     Encountr.app.main
   ~ Author:     Tim Anhalt (BitTim)
-  ~ Modified:   10.08.25, 02:01
+  ~ Modified:   11.08.25, 18:03
   -->
 
 <resources>
@@ -24,5 +24,10 @@
     <string name="text_field_definitions_url">Definitions URL</string>
     <string name="content_desc_confirm">Confirm</string>
     <string name="content_desc_reset">Reset</string>
-    <string name="url_github" translatable="false">https://github.com/BitTim/Encountr</string>
+
+    <string name="error_unknown">Something went wrong</string>
+    <string name="error_invalid_url">Invalid URL</string>
+    <string name="error_invalid_response">Invalid response from URL</string>
+    <string name="error_invalid_content">Invalid format of response</string>
+    <string name="error_cache">Error during cache creation</string>
 </resources>

@@ -7,7 +7,7 @@
   ~ File:       strings.xml
   ~ Module:     Encountr.app.main
   ~ Author:     Tim Anhalt (BitTim)
-  ~ Modified:   10.08.25, 02:01
+  ~ Modified:   11.08.25, 18:03
   -->
 
 <resources>
@@ -24,4 +24,9 @@
     <string name="text_field_definitions_url">Definitionen URL</string>
     <string name="content_desc_confirm">Bestätigen</string>
     <string name="content_desc_reset">Zurücksetzen</string>
+    <string name="error_unknown">Etwas ist schief gelaufen</string>
+    <string name="error_invalid_url">Ungültige URL</string>
+    <string name="error_invalid_response">Ungültige Antowrt von der URL</string>
+    <string name="error_invalid_content">Ungültiges Fromat der Antwort</string>
+    <string name="error_cache">Fehler beim Erstellen des Caches</string>
 </resources>

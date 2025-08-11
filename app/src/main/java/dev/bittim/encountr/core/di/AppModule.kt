@@ -7,7 +7,7 @@
  * File:       AppModule.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.08.25, 17:37
+ * Modified:   11.08.25, 18:44
  */
 
 package dev.bittim.encountr.core.di
@@ -16,6 +16,7 @@ import android.content.Context
 import androidx.room.Room
 import dev.bittim.encountr.core.data.defs.local.DefinitionsDatabase
 import dev.bittim.encountr.core.data.defs.remote.DefinitionKtorService
+import dev.bittim.encountr.core.data.defs.remote.DefinitionService
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepositoryImpl
 import dev.bittim.encountr.onboarding.ui.OnboardingViewModel
@@ -28,6 +29,17 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val appModule = module {
+    // region:      -- Other
+
+    // SharedPreferences
+    single {
+        androidApplication().getSharedPreferences(
+            Constants.SPNAME,
+            Context.MODE_PRIVATE
+        )
+    }
+
+    // endregion:   -- Other
     // region:      -- Networking
 
     single {
@@ -41,7 +53,7 @@ val appModule = module {
     // endregion:   -- Networking
     // region:      -- Services
 
-    single { DefinitionKtorService(get()) }
+    single<DefinitionService> { DefinitionKtorService(get()) }
 
     // endregion:   -- Services
     // region:      -- Databases
@@ -65,15 +77,4 @@ val appModule = module {
     viewModelOf(::OnboardingViewModel)
 
     // endregion:   -- ViewModels
-    // region:      -- Other
-
-    // SharedPreferences
-    single {
-        androidApplication().getSharedPreferences(
-            Constants.SHARED_PREF_NAME,
-            Context.MODE_PRIVATE
-        )
-    }
-
-    // endregion:   -- Other
 }
