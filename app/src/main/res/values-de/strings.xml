@@ -7,7 +7,7 @@
   ~ File:       strings.xml
   ~ Module:     Encountr.app.main
   ~ Author:     Tim Anhalt (BitTim)
-  ~ Modified:   11.08.25, 18:03
+  ~ Modified:   12.08.25, 01:12
   -->
 
 <resources>
@@ -17,8 +17,8 @@
     <string name="onboarding_definitions_note">Hinweis: Definitionen werden regelmäßig von der angegebenen URL abgerufen. Die meisten Benutzer sollten die Standardeinstellung beibehalten. Besuche das GitHub-Repository für weitere Informationen.</string>
     <string name="content_desc_edit">Bearbeiten</string>
     <string name="button_continue">Weiter</string>
-    <string name="content_desc_privacy_policy">Datenschutzvereinbarung</string>
-    <string name="button_privacy_policy">Datenschutzvereinbarung</string>
+    <string name="content_desc_privacy_policy">Datenschutzrichtlinie</string>
+    <string name="button_privacy_policy">Datenschutzrichtlinie</string>
     <string name="content_desc_github">GitHub Repository</string>
     <string name="button_github">GitHub Repository</string>
     <string name="text_field_definitions_url">Definitionen URL</string>

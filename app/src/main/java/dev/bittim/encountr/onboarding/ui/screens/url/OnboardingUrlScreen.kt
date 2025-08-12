@@ -4,17 +4,16 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       OnboardingScreen.kt
+ * File:       OnboardingUrlScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.08.25, 20:02
+ * Modified:   12.08.25, 01:20
  */
 
-package dev.bittim.encountr.onboarding.ui
+package dev.bittim.encountr.onboarding.ui.screens.url
 
 import android.content.Intent
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,15 +27,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Code
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.filled.RestartAlt
 import androidx.compose.material3.Button
 import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -66,8 +62,8 @@ import dev.bittim.encountr.core.ui.util.annotations.ScreenPreview
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun OnboardingScreen(
-    state: OnboardingState,
+fun OnboardingUrlScreen(
+    state: OnboardingUrlState,
     resetError: () -> Unit,
     onContinue: (
         urlString: String,
@@ -76,9 +72,7 @@ fun OnboardingScreen(
     navNext: () -> Unit
 ) {
     val context = LocalContext.current
-
     var definitionsUrl by rememberSaveable { mutableStateOf(Constants.DEFAULT_DEFS_URL) }
-    var isEditing by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         contentWindowInsets = WindowInsets.safeContent
@@ -128,50 +122,39 @@ fun OnboardingScreen(
             // endregion:   -- Description
             // region:      -- Form
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .animateContentSize(),
+                modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(Spacing.s)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .weight(1f)
-                            .animateContentSize(),
-                        value = definitionsUrl,
-                        readOnly = !isEditing,
-                        singleLine = true,
-                        isError = state.urlError != null,
-                        supportingText = {
-                            state.urlError?.let {
-                                Text(text = it.asString())
-                            }
-                        },
-                        onValueChange = {
-                            if (state.urlError != null) resetError()
-                            definitionsUrl = it
-                        },
-                        label = {
-                            Text(
-                                text = UiText.StringResource(R.string.text_field_definitions_url)
-                                    .asString()
-                            )
-                        }
-                    )
-
                     AnimatedContent(
-                        targetState = isEditing,
-                    ) {
-                        if (it) {
-                            Row {
+                        modifier = Modifier.fillMaxWidth(),
+                        targetState = state.urlError
+                    ) { error ->
+                        OutlinedTextField(
+                            value = definitionsUrl,
+                            singleLine = true,
+                            isError = error != null,
+                            supportingText = {
+                                error?.let {
+                                    Text(text = it.asString())
+                                }
+                            },
+                            onValueChange = {
+                                if (error != null) resetError()
+                                definitionsUrl = it
+                            },
+                            label = {
+                                Text(
+                                    text = UiText.StringResource(R.string.text_field_definitions_url)
+                                        .asString()
+                                )
+                            },
+                            trailingIcon = {
                                 IconButton(
-                                    onClick = {
-                                        definitionsUrl = Constants.DEFAULT_DEFS_URL
-                                        isEditing = false
-                                    }
+                                    onClick = { definitionsUrl = Constants.DEFAULT_DEFS_URL }
                                 ) {
                                     Icon(
                                         Icons.Default.RestartAlt,
@@ -179,27 +162,8 @@ fun OnboardingScreen(
                                             .asString()
                                     )
                                 }
-
-                                FilledTonalIconButton(
-                                    onClick = { isEditing = false }
-                                ) {
-                                    Icon(
-                                        Icons.Default.Check,
-                                        UiText.StringResource(R.string.content_desc_confirm)
-                                            .asString()
-                                    )
-                                }
                             }
-                        } else {
-                            IconButton(
-                                onClick = { isEditing = true }
-                            ) {
-                                Icon(
-                                    Icons.Default.Edit,
-                                    UiText.StringResource(R.string.content_desc_edit).asString()
-                                )
-                            }
-                        }
+                        )
                     }
                 }
 
@@ -267,7 +231,7 @@ fun OnboardingScreen(
 
 @ScreenPreview
 @Composable
-fun OnboardingScreenPreview() {
+fun OnboardingUrlScreenPreview() {
     EncountrTheme {
         Surface {
             Box(
@@ -275,8 +239,8 @@ fun OnboardingScreenPreview() {
                     .fillMaxSize()
                     .padding(Spacing.m),
             ) {
-                OnboardingScreen(
-                    state = OnboardingState(),
+                OnboardingUrlScreen(
+                    state = OnboardingUrlState(),
                     resetError = {},
                     onContinue = { _, _ -> },
                     navNext = {}

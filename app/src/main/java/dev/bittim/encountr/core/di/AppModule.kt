@@ -7,7 +7,7 @@
  * File:       AppModule.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.08.25, 18:44
+ * Modified:   12.08.25, 01:11
  */
 
 package dev.bittim.encountr.core.di
@@ -19,7 +19,7 @@ import dev.bittim.encountr.core.data.defs.remote.DefinitionKtorService
 import dev.bittim.encountr.core.data.defs.remote.DefinitionService
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepositoryImpl
-import dev.bittim.encountr.onboarding.ui.OnboardingViewModel
+import dev.bittim.encountr.onboarding.ui.screens.url.OnboardingUrlViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -74,7 +74,7 @@ val appModule = module {
     // endregion:   -- Repositories
     // region:      -- ViewModels
 
-    viewModelOf(::OnboardingViewModel)
+    viewModelOf(::OnboardingUrlViewModel)
 
     // endregion:   -- ViewModels
 }

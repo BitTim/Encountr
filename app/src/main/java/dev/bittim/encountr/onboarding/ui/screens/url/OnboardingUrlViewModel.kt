@@ -4,13 +4,13 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       OnboardingViewModel.kt
+ * File:       OnboardingUrlViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.08.25, 19:21
+ * Modified:   12.08.25, 01:11
  */
 
-package dev.bittim.encountr.onboarding.ui
+package dev.bittim.encountr.onboarding.ui.screens.url
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,10 +26,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class OnboardingViewModel(
+class OnboardingUrlViewModel(
     private val definitionRepository: DefinitionRepository
 ) : ViewModel() {
-    private val _state = MutableStateFlow(OnboardingState())
+    private val _state = MutableStateFlow(OnboardingUrlState())
     val state = _state.asStateFlow()
 
     fun resetError() {
