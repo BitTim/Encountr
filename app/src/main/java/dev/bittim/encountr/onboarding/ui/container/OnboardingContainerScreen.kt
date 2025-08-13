@@ -7,7 +7,7 @@
  * File:       OnboardingContainerScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   13.08.25, 04:24
+ * Modified:   14.08.25, 01:36
  */
 
 package dev.bittim.encountr.onboarding.ui.container
@@ -33,7 +33,7 @@ import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.UiText
 import dev.bittim.encountr.core.ui.util.annotations.ScreenPreview
-import dev.bittim.encountr.onboarding.ui.container.components.OnboardingHeader
+import dev.bittim.encountr.onboarding.ui.components.OnboardingHeader
 import dev.bittim.encountr.onboarding.ui.screens.landing.LandingNav
 import dev.bittim.encountr.onboarding.ui.screens.landing.landingScreen
 

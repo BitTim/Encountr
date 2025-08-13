@@ -7,10 +7,10 @@
  * File:       OnboardingHeader.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   13.08.25, 04:24
+ * Modified:   14.08.25, 01:36
  */
 
-package dev.bittim.encountr.onboarding.ui.container.components
+package dev.bittim.encountr.onboarding.ui.components
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateFloatAsState

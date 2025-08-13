@@ -7,7 +7,7 @@
   ~ File:       AndroidManifest.xml
   ~ Module:     Encountr.app.main
   ~ Author:     Tim Anhalt (BitTim)
-  ~ Modified:   11.08.25, 19:21
+  ~ Modified:   14.08.25, 00:48
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
@@ -28,6 +28,7 @@
         <activity
                 android:name=".MainActivity"
                 android:exported="true"
+            android:windowSoftInputMode="adjustResize"
                 android:theme="@style/Theme.Encountr">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

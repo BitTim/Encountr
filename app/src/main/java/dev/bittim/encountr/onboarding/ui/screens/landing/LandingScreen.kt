@@ -7,7 +7,7 @@
  * File:       LandingScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   13.08.25, 04:28
+ * Modified:   14.08.25, 01:39
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.landing
@@ -39,6 +39,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -57,6 +58,7 @@ import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.UiText
 import dev.bittim.encountr.core.ui.util.annotations.ScreenPreview
+import dev.bittim.encountr.onboarding.ui.components.OnboardingLayout
 import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -75,174 +77,149 @@ fun LandingScreen(
 
     var definitionsUrl by rememberSaveable { mutableStateOf(Constants.DEFAULT_DEFS_URL) }
     var enableResetButton by remember { mutableStateOf(false) }
+    val index by remember { mutableIntStateOf(Random.nextInt(1, 1026)) } // TODO: Temporary
 
-    Column(
+    OnboardingLayout(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(Spacing.xl)
-    ) {
-        // region:      -- Header
-//            Row(
-//                modifier = Modifier.fillMaxWidth(),
-//                horizontalArrangement = Arrangement.spacedBy(12.dp),
-//                verticalAlignment = Alignment.CenterVertically
-//            ) {
-//                AsyncImage(
-//                    modifier = Modifier
-//                        .width(56.dp)
-//                        .aspectRatio(1f),
-//                    model = R.drawable.ic_launcher,
-//                    contentDescription = UiText.StringResource(R.string.app_name).asString(),
-//                    contentScale = ContentScale.Fit
-//                )
-//
-//                Text(
-//                    text = UiText.StringResource(R.string.app_name).asString(),
-//                    style = MaterialTheme.typography.displayMedium
-//                )
-//            }
-        // endregion:   -- Header
-        // region:      -- Description
-//            Column(
-//                modifier = Modifier.fillMaxWidth(),
-//                verticalArrangement = Arrangement.spacedBy(Spacing.s)
-//            ) {
-//                Text(
-//                    text = UiText.StringResource(R.string.onboarding_landing_title).asString(),
-//                    style = MaterialTheme.typography.titleLarge
-//                )
-//
-//                Text(
-//                    text = UiText.StringResource(R.string.onboarding_landing_description).asString(),
-//                    style = MaterialTheme.typography.bodyMedium
-//                )
-//            }
-        // endregion:   -- Description
-
-        // TODO: Temporary
-        val index = Random.nextInt(1, 1026)
-        AsyncImage(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-            model = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$index.png",
-            contentScale = ContentScale.Fit,
-            contentDescription = null
-        )
-
-        // region:      -- Form
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+        upper = {
+            // TODO: Temporary
+            AsyncImage(
+                modifier = it,
+                model = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$index.png",
+                contentScale = ContentScale.Fit,
+                contentDescription = null
+            )
+        },
+        lower = {
+            Column(
+                modifier = it,
+                verticalArrangement = Arrangement.spacedBy(Spacing.xl)
             ) {
-                AnimatedContent(
+                // region:      -- Form
+                Column(
                     modifier = Modifier.fillMaxWidth(),
-                    targetState = state.urlError
-                ) { error ->
-                    OutlinedTextField(
-                        modifier = Modifier.onFocusChanged {
-                            if (it.isFocused) enableResetButton = true
-                        },
-                        value = definitionsUrl,
-                        singleLine = true,
-                        isError = error != null,
-                        supportingText = {
-                            error?.let {
-                                Text(text = it.asString())
-                            }
-                        },
-                        onValueChange = {
-                            if (error != null) resetError()
-                            definitionsUrl = it
-                        },
-                        label = {
-                            Text(
-                                text = UiText.StringResource(R.string.text_field_definitions_url)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        AnimatedContent(
+                            modifier = Modifier.fillMaxWidth(),
+                            targetState = state.urlError
+                        ) { error ->
+                            OutlinedTextField(
+                                modifier = Modifier.onFocusChanged {
+                                    if (it.isFocused) enableResetButton = true
+                                },
+                                value = definitionsUrl,
+                                singleLine = true,
+                                isError = error != null,
+                                enabled = !state.fetching,
+                                supportingText = {
+                                    error?.let {
+                                        Text(text = it.asString())
+                                    }
+                                },
+                                onValueChange = {
+                                    if (error != null) resetError()
+                                    definitionsUrl = it
+                                },
+                                label = {
+                                    Text(
+                                        text = UiText.StringResource(R.string.text_field_definitions_url)
+                                            .asString()
+                                    )
+                                },
+                                trailingIcon = {
+                                    IconButton(
+                                        enabled = enableResetButton,
+                                        onClick = {
+                                            definitionsUrl = Constants.DEFAULT_DEFS_URL
+                                            enableResetButton = false
+                                            focusManager.clearFocus()
+                                        }
+                                    ) {
+                                        Icon(
+                                            Icons.Default.RestartAlt,
+                                            UiText.StringResource(R.string.content_desc_reset)
+                                                .asString()
+                                        )
+                                    }
+                                }
+                            )
+                        }
+                    }
+
+                    Text(
+                        text = UiText.StringResource(R.string.onboarding_landing_definitions_note)
+                            .asString(),
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
+                // endregion:   -- Form
+                // region:      -- Actions
+                Column {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(Spacing.s)
+                    ) {
+                        TextButton(
+                            modifier = Modifier.weight(1f),
+                            enabled = !state.fetching,
+                            onClick = { }
+                        ) {
+                            Icon(
+                                Icons.Default.PrivacyTip,
+                                UiText.StringResource(R.string.content_desc_privacy_policy)
                                     .asString()
                             )
-                        },
-                        trailingIcon = {
-                            IconButton(
-                                enabled = enableResetButton,
-                                onClick = {
-                                    definitionsUrl = Constants.DEFAULT_DEFS_URL
-                                    enableResetButton = false
-                                    focusManager.clearFocus()
-                                }
+                            Spacer(modifier = Modifier.width(Spacing.s))
+                            Text(
+                                text = UiText.StringResource(R.string.button_privacy_policy)
+                                    .asString()
+                            )
+                        }
+
+                        TextButton(
+                            modifier = Modifier.weight(1f),
+                            enabled = !state.fetching,
+                            onClick = {
+                                val intent =
+                                    Intent(Intent.ACTION_VIEW, Constants.GITHUB_URL.toUri())
+                                context.startActivity(intent)
+                            }
+                        ) {
+                            Icon(
+                                Icons.Default.Code,
+                                UiText.StringResource(R.string.content_desc_github).asString()
+                            )
+                            Spacer(modifier = Modifier.width(Spacing.s))
+                            Text(text = UiText.StringResource(R.string.button_github).asString())
+                        }
+                    }
+
+                    AnimatedContent(state.fetching) {
+                        if (it) {
+                            ContainedLoadingIndicator(
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                        } else {
+                            Button(
+                                modifier = Modifier.fillMaxWidth(),
+                                onClick = { onContinue(definitionsUrl, navNext) }
                             ) {
-                                Icon(
-                                    Icons.Default.RestartAlt,
-                                    UiText.StringResource(R.string.content_desc_reset)
+                                Text(
+                                    text = UiText.StringResource(R.string.button_continue)
                                         .asString()
                                 )
                             }
                         }
-                    )
-                }
-            }
-
-            Text(
-                text = UiText.StringResource(R.string.onboarding_landing_definitions_note)
-                    .asString(),
-                style = MaterialTheme.typography.labelSmall
-            )
-        }
-        // endregion:   -- Form
-        // region:      -- Actions
-        Column {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(Spacing.s)
-            ) {
-                TextButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = { }
-                ) {
-                    Icon(
-                        Icons.Default.PrivacyTip,
-                        UiText.StringResource(R.string.content_desc_privacy_policy).asString()
-                    )
-                    Spacer(modifier = Modifier.width(Spacing.s))
-                    Text(
-                        text = UiText.StringResource(R.string.button_privacy_policy).asString()
-                    )
-                }
-
-                TextButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = {
-                        val intent = Intent(Intent.ACTION_VIEW, Constants.GITHUB_URL.toUri())
-                        context.startActivity(intent)
-                    }
-                ) {
-                    Icon(
-                        Icons.Default.Code,
-                        UiText.StringResource(R.string.content_desc_github).asString()
-                    )
-                    Spacer(modifier = Modifier.width(Spacing.s))
-                    Text(text = UiText.StringResource(R.string.button_github).asString())
-                }
-            }
-
-            AnimatedContent(state.fetching) {
-                if (it) {
-                    ContainedLoadingIndicator(
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                } else {
-                    Button(
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = { onContinue(definitionsUrl, navNext) }
-                    ) {
-                        Text(text = UiText.StringResource(R.string.button_continue).asString())
                     }
                 }
+                // endregion:   -- Actions
             }
         }
-        // endregion:   -- Actions
-    }
+    )
 }
 
 @ScreenPreview
