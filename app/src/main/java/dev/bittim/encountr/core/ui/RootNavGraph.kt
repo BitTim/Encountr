@@ -7,18 +7,17 @@
  * File:       RootNavGraph.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   12.08.25, 01:10
+ * Modified:   13.08.25, 04:24
  */
 
 package dev.bittim.encountr.core.ui
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import dev.bittim.encountr.onboarding.ui.screens.url.OnboardingUrlNav
-import dev.bittim.encountr.onboarding.ui.screens.url.onboardingUrl
+import dev.bittim.encountr.onboarding.ui.container.OnboardingContainerNav
+import dev.bittim.encountr.onboarding.ui.container.onboarding
 
 @Composable
 fun RootNavGraph(
@@ -28,8 +27,8 @@ fun RootNavGraph(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = OnboardingUrlNav,
+        startDestination = OnboardingContainerNav,
     ) {
-        onboardingUrl({ Log.d("RootNavGraph", "navToNext") })
+        onboarding()
     }
 }

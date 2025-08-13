@@ -7,7 +7,7 @@
  * File:       build.gradle.kts
  * Module:     Encountr.app
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.08.25, 17:37
+ * Modified:   13.08.25, 04:24
  */
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -107,6 +107,8 @@ dependencies {
 
     // Coil
     implementation(libs.coil.compose)
+    implementation(libs.coil.gif)
+    implementation(libs.coil.network.ktor3)
 
     // Responsive Material 3
     implementation(libs.androidx.compose.material3.windowsizeclass)

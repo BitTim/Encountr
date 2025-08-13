@@ -4,17 +4,17 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       OnboardingUrlState.kt
+ * File:       LandingState.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   12.08.25, 01:11
+ * Modified:   13.08.25, 04:24
  */
 
-package dev.bittim.encountr.onboarding.ui.screens.url
+package dev.bittim.encountr.onboarding.ui.screens.landing
 
 import dev.bittim.encountr.core.ui.util.UiText
 
-data class OnboardingUrlState(
+data class LandingState(
     val fetching: Boolean = false,
     val urlError: UiText? = null
 )

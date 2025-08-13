@@ -4,13 +4,13 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       OnboardingUrlNav.kt
+ * File:       LandingNav.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   12.08.25, 01:11
+ * Modified:   13.08.25, 04:24
  */
 
-package dev.bittim.encountr.onboarding.ui.screens.url
+package dev.bittim.encountr.onboarding.ui.screens.landing
 
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -22,16 +22,16 @@ import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
 @Serializable
-data object OnboardingUrlNav
+data object LandingNav
 
-fun NavGraphBuilder.onboardingUrl(
+fun NavGraphBuilder.landingScreen(
     navNext: () -> Unit
 ) {
-    composable<OnboardingUrlNav> {
-        val viewModel = koinViewModel<OnboardingUrlViewModel>()
+    composable<LandingNav> {
+        val viewModel = koinViewModel<LandingViewModel>()
         val state by viewModel.state.collectAsStateWithLifecycle()
 
-        OnboardingUrlScreen(
+        LandingScreen(
             state = state,
             resetError = viewModel::resetError,
             onContinue = viewModel::onContinue,
@@ -40,8 +40,8 @@ fun NavGraphBuilder.onboardingUrl(
     }
 }
 
-fun NavController.navToOnboardingUrl() {
-    navigate(OnboardingUrlNav) {
+fun NavController.navToOnboardingLanding() {
+    navigate(LandingNav) {
         popUpTo(graph.findStartDestination().id) {
             inclusive = true
             saveState = true

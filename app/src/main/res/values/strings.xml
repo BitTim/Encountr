@@ -7,14 +7,14 @@
   ~ File:       strings.xml
   ~ Module:     Encountr.app.main
   ~ Author:     Tim Anhalt (BitTim)
-  ~ Modified:   11.08.25, 18:03
+  ~ Modified:   13.08.25, 04:24
   -->
 
 <resources>
     <string name="app_name">Encountr</string>
-    <string name="onboarding_title">Welcome to Encountr!</string>
-    <string name="onboarding_description">This open-source app helps you track and organize your Pokémon adventures. With Encountr, you can manage Pokémon by game, create teams, and access detailed information about Pokémon, their types, and various locations.</string>
-    <string name="onboarding_definitions_note">Note: Definitions will be periodically fetched from the specified URL. Most users should keep the default. Visit the GitHub repository for more information.</string>
+    <string name="onboarding_landing_title">Welcome!</string>
+    <string name="onboarding_landing_description">Welcome to Encountr, an open-source app for tracking Pokémon per game and more. Let’s get started below!</string>
+    <string name="onboarding_landing_definitions_note">Note: Most users should keep the default value</string>
     <string name="content_desc_edit">Edit</string>
     <string name="button_continue">Continue</string>
     <string name="content_desc_privacy_policy">Privacy Policy</string>
@@ -30,4 +30,6 @@
     <string name="error_invalid_response">Invalid response from URL</string>
     <string name="error_invalid_content">Invalid format of response</string>
     <string name="error_cache">Error during cache creation</string>
+    <string name="onboarding_create_save_title">Create Save</string>
+    <string name="onboarding_create_save_description">!! Placeholder</string>
 </resources>

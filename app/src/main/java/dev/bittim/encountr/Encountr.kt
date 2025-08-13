@@ -7,7 +7,7 @@
  * File:       Encountr.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.08.25, 17:54
+ * Modified:   13.08.25, 04:24
  */
 
 package dev.bittim.encountr
@@ -17,6 +17,7 @@ import android.content.SharedPreferences
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
 import dev.bittim.encountr.core.di.Constants
 import dev.bittim.encountr.core.di.appModule
+import dev.bittim.encountr.onboarding.di.onboardingModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -32,7 +33,7 @@ class Encountr : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@Encountr)
-            modules(appModule)
+            modules(appModule, onboardingModule)
         }
 
         fetchDefinitions()
