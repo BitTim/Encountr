@@ -7,7 +7,7 @@
  * File:       DefinitionDto.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.08.25, 17:37
+ * Modified:   14.08.25, 03:28
  */
 
 package dev.bittim.encountr.core.data.defs.remote.dto
@@ -21,9 +21,9 @@ data class DefinitionDto(
     val pokemon: String,
     val form: String?
 ) {
-    fun toEntity(): DefinitionEntity {
+    fun toEntity(index: Int): DefinitionEntity {
         return DefinitionEntity(
-            id = 0,
+            id = index,
             game = this.game,
             pokemon = this.pokemon,
             form = this.form

@@ -7,7 +7,7 @@
  * File:       OnboardingContainerNav.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   13.08.25, 04:24
+ * Modified:   14.08.25, 03:18
  */
 
 package dev.bittim.encountr.onboarding.ui.container
@@ -23,7 +23,7 @@ import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
 @Serializable
-data object OnboardingContainerNav
+object OnboardingContainerNav
 
 fun NavGraphBuilder.onboarding() {
     composable<OnboardingContainerNav> {

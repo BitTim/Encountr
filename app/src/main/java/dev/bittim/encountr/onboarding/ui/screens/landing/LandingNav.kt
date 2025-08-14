@@ -7,7 +7,7 @@
  * File:       LandingNav.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   13.08.25, 04:24
+ * Modified:   14.08.25, 03:18
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.landing
@@ -15,14 +15,13 @@ package dev.bittim.encountr.onboarding.ui.screens.landing
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
 @Serializable
-data object LandingNav
+object LandingNav
 
 fun NavGraphBuilder.landingScreen(
     navNext: () -> Unit
@@ -42,10 +41,6 @@ fun NavGraphBuilder.landingScreen(
 
 fun NavController.navToOnboardingLanding() {
     navigate(LandingNav) {
-        popUpTo(graph.findStartDestination().id) {
-            inclusive = true
-            saveState = true
-        }
         launchSingleTop = true
         restoreState = true
     }

@@ -7,13 +7,14 @@
  * File:       LandingScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   14.08.25, 01:39
+ * Modified:   14.08.25, 03:47
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.landing
 
 import android.content.Intent
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -90,9 +92,9 @@ fun LandingScreen(
                 contentDescription = null
             )
         },
-        lower = {
+        lower = { modifier ->
             Column(
-                modifier = it,
+                modifier = modifier,
                 verticalArrangement = Arrangement.spacedBy(Spacing.xl)
             ) {
                 // region:      -- Form
@@ -103,25 +105,19 @@ fun LandingScreen(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        AnimatedContent(
-                            modifier = Modifier.fillMaxWidth(),
-                            targetState = state.urlError
-                        ) { error ->
+                        Column {
                             OutlinedTextField(
-                                modifier = Modifier.onFocusChanged {
-                                    if (it.isFocused) enableResetButton = true
-                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .onFocusChanged {
+                                        if (it.isFocused) enableResetButton = true
+                                    },
                                 value = definitionsUrl,
                                 singleLine = true,
-                                isError = error != null,
+                                isError = state.urlError != null,
                                 enabled = !state.fetching,
-                                supportingText = {
-                                    error?.let {
-                                        Text(text = it.asString())
-                                    }
-                                },
                                 onValueChange = {
-                                    if (error != null) resetError()
+                                    if (state.urlError != null) resetError()
                                     definitionsUrl = it
                                 },
                                 label = {
@@ -137,6 +133,7 @@ fun LandingScreen(
                                             definitionsUrl = Constants.DEFAULT_DEFS_URL
                                             enableResetButton = false
                                             focusManager.clearFocus()
+                                            resetError()
                                         }
                                     ) {
                                         Icon(
@@ -147,8 +144,22 @@ fun LandingScreen(
                                     }
                                 }
                             )
+
+                            AnimatedVisibility(
+                                visible = state.urlError != null
+                            ) {
+                                state.urlError?.asString()?.let {
+                                    Text(
+                                        text = it,
+                                        color = MaterialTheme.colorScheme.error,
+                                        style = MaterialTheme.typography.labelSmall
+                                    )
+                                }
+                            }
                         }
                     }
+
+                    Spacer(modifier = Modifier.height(Spacing.xs))
 
                     Text(
                         text = UiText.StringResource(R.string.onboarding_landing_definitions_note)

@@ -7,7 +7,7 @@
  * File:       DefinitionEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.08.25, 17:37
+ * Modified:   14.08.25, 03:30
  */
 
 package dev.bittim.encountr.core.data.defs.local
@@ -18,7 +18,7 @@ import dev.bittim.encountr.core.domain.model.defs.Definition
 
 @Entity(tableName = "definition")
 data class DefinitionEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey val id: Int,
     val game: String,
     val pokemon: String,
     val form: String?

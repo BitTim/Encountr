@@ -7,7 +7,7 @@
  * File:       OnboardingContainerScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   14.08.25, 01:36
+ * Modified:   14.08.25, 03:15
  */
 
 package dev.bittim.encountr.onboarding.ui.container
@@ -34,6 +34,8 @@ import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.UiText
 import dev.bittim.encountr.core.ui.util.annotations.ScreenPreview
 import dev.bittim.encountr.onboarding.ui.components.OnboardingHeader
+import dev.bittim.encountr.onboarding.ui.screens.createSave.createSaveScreen
+import dev.bittim.encountr.onboarding.ui.screens.createSave.navToOnboardingCreateSave
 import dev.bittim.encountr.onboarding.ui.screens.landing.LandingNav
 import dev.bittim.encountr.onboarding.ui.screens.landing.landingScreen
 
@@ -66,7 +68,8 @@ fun OnboardingContainerScreen(
                 navController = navController,
                 startDestination = LandingNav
             ) {
-                landingScreen(navNext = {})
+                landingScreen(navNext = navController::navToOnboardingCreateSave)
+                createSaveScreen(navBack = { navController.navigateUp() })
             }
         }
     }

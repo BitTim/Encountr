@@ -7,12 +7,13 @@
  * File:       OnboardingHeader.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   14.08.25, 01:36
+ * Modified:   14.08.25, 03:45
  */
 
 package dev.bittim.encountr.onboarding.ui.components
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -58,15 +59,21 @@ fun OnboardingHeader(
             horizontalArrangement = Arrangement.spacedBy(Spacing.m),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (icon != null) {
-                Icon(
-                    modifier = Modifier
-                        .height(Spacing.xxl)
-                        .aspectRatio(1f),
-                    imageVector = icon,
-                    contentDescription = title.asString(),
-                    tint = MaterialTheme.colorScheme.primary,
-                )
+            AnimatedVisibility(
+                modifier = Modifier
+                    .height(Spacing.xxl)
+                    .aspectRatio(1f),
+                visible = icon != null
+            ) {
+                AnimatedContent(icon) {
+                    it?.let { imageVector ->
+                        Icon(
+                            imageVector = imageVector,
+                            contentDescription = title.asString(),
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+                }
             }
 
             AnimatedContent(

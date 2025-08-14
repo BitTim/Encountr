@@ -7,13 +7,13 @@
   ~ File:       strings.xml
   ~ Module:     Encountr.app.main
   ~ Author:     Tim Anhalt (BitTim)
-  ~ Modified:   13.08.25, 04:24
+  ~ Modified:   14.08.25, 03:48
   -->
 
 <resources>
     <string name="app_name">Encountr</string>
     <string name="onboarding_landing_title">Willkommen!</string>
-    <string name="onboarding_landing_description">Willkommen bei Encountr, einer Open-Source-App zum Verfolgen von Pokémon pro Spiel und mehr. Lass uns unten anfangen!</string>
+    <string name="onboarding_landing_description">Willkommen bei Encountr, einer Open-Source-App zum Verfolgen von Pokémon pro Spiel und mehr!</string>
     <string name="onboarding_landing_definitions_note">Hinweis: Die meisten Benutzer sollten den Standardwert beibehalten.</string>
     <string name="content_desc_edit">Bearbeiten</string>
     <string name="button_continue">Weiter</string>
@@ -31,4 +31,5 @@
     <string name="error_cache">Fehler beim Erstellen des Caches</string>
     <string name="onboarding_create_save_title">Save Erstellen</string>
     <string name="onboarding_create_save_description">!! Platzhalter</string>
+    <string name="button_back">Zurück</string>
 </resources>

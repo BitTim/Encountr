@@ -7,7 +7,7 @@
  * File:       LandingViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   13.08.25, 04:24
+ * Modified:   14.08.25, 03:24
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.landing
@@ -58,7 +58,8 @@ class LandingViewModel(
                     }
 
                     is Result.Ok -> {
-                        navNext()
+                        launch(Dispatchers.Main) { navNext() }
+                        _state.update { it.copy(fetching = false, urlError = null) }
                     }
                 }
             }

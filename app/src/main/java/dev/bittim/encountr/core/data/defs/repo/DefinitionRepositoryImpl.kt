@@ -7,12 +7,11 @@
  * File:       DefinitionRepositoryImpl.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.08.25, 17:38
+ * Modified:   14.08.25, 03:30
  */
 
 package dev.bittim.encountr.core.data.defs.repo
 
-import androidx.room.withTransaction
 import dev.bittim.encountr.core.data.defs.DefinitionsError
 import dev.bittim.encountr.core.data.defs.local.DefinitionsDatabase
 import dev.bittim.encountr.core.data.defs.remote.DefinitionService
@@ -33,10 +32,9 @@ class DefinitionRepositoryImpl(
         }
 
         try {
-            db.withTransaction {
-                db.definitionDao().deleteAll()
-                db.definitionDao().insert(definitions.definitions.map { it.toEntity() })
-            }
+            db.definitionDao().deleteAll()
+            db.definitionDao()
+                .insert(definitions.definitions.mapIndexed { idx, dto -> dto.toEntity(idx) })
         } catch (_: Exception) {
             return Result.Err(DefinitionsError.Cache)
         }
