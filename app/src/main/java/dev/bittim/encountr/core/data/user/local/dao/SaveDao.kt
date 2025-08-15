@@ -7,7 +7,7 @@
  * File:       SaveDao.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.08.25, 02:35
+ * Modified:   15.08.25, 10:52
  */
 
 package dev.bittim.encountr.core.data.user.local.dao
@@ -45,7 +45,7 @@ interface SaveDao {
 
     @OptIn(ExperimentalUuidApi::class)
     @Query("UPDATE saves SET name = :name, game = :game WHERE id = :id")
-    suspend fun update(id: Uuid, name: String, game: String)
+    suspend fun update(id: Uuid, name: String, game: Int)
 
     @OptIn(ExperimentalUuidApi::class)
     @Query("UPDATE saves SET name = :name WHERE id = :id")
@@ -53,7 +53,7 @@ interface SaveDao {
 
     @OptIn(ExperimentalUuidApi::class)
     @Query("UPDATE saves SET game = :game WHERE id = :id")
-    suspend fun updateGame(id: Uuid, game: String)
+    suspend fun updateGame(id: Uuid, game: Int)
 
     // endregion:   -- Update1
     // region:      -- Delete

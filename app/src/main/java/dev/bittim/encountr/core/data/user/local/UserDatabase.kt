@@ -7,13 +7,14 @@
  * File:       UserDatabase.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   14.08.25, 22:25
+ * Modified:   15.08.25, 09:18
  */
 
 package dev.bittim.encountr.core.data.user.local
 
 import androidx.room.Database
 import dev.bittim.encountr.core.data.user.local.dao.PokemonDao
+import dev.bittim.encountr.core.data.user.local.dao.PokemonTeamRefDao
 import dev.bittim.encountr.core.data.user.local.dao.SaveDao
 import dev.bittim.encountr.core.data.user.local.dao.TeamDao
 import dev.bittim.encountr.core.data.user.local.entity.PokemonEntity
@@ -34,4 +35,5 @@ abstract class UserDatabase {
     abstract val saveDao: SaveDao
     abstract val teamDao: TeamDao
     abstract val pokemonDao: PokemonDao
+    abstract val pokemonTeamRefDao: PokemonTeamRefDao
 }

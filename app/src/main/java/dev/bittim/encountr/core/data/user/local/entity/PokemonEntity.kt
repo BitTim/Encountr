@@ -7,7 +7,7 @@
  * File:       PokemonEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   14.08.25, 22:27
+ * Modified:   15.08.25, 11:01
  */
 
 package dev.bittim.encountr.core.data.user.local.entity
@@ -22,22 +22,22 @@ import kotlin.uuid.Uuid
 @Entity(
     tableName = "pokemon",
     indices = [
-        Index(value = ["id"]),
+        Index(value = ["id", "save"]),
     ],
-    primaryKeys = ["id", "saveId"],
+    primaryKeys = ["id", "save"],
     foreignKeys = [
         ForeignKey(
             entity = SaveEntity::class,
             parentColumns = ["id"],
-            childColumns = ["saveId"],
+            childColumns = ["save"],
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE
         )
     ]
 )
 data class PokemonEntity @OptIn(ExperimentalUuidApi::class) constructor(
-    val id: String,
-    val saveId: Uuid,
+    val id: Int,
+    val save: Uuid,
     val caught: Boolean,
 ) {
     fun toModel(): Pokemon {
@@ -46,4 +46,11 @@ data class PokemonEntity @OptIn(ExperimentalUuidApi::class) constructor(
             caught = caught,
         )
     }
+
+    @OptIn(ExperimentalUuidApi::class)
+    constructor(pokemon: Pokemon, save: Uuid) : this(
+        id = pokemon.id,
+        save = save,
+        caught = pokemon.caught
+    )
 }

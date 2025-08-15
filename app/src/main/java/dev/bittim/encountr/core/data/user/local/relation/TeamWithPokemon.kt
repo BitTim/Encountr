@@ -7,7 +7,7 @@
  * File:       TeamWithPokemon.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   14.08.25, 22:15
+ * Modified:   15.08.25, 10:56
  */
 
 package dev.bittim.encountr.core.data.user.local.relation
@@ -16,6 +16,8 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import dev.bittim.encountr.core.data.user.local.entity.PokemonEntity
 import dev.bittim.encountr.core.data.user.local.entity.TeamEntity
+import dev.bittim.encountr.core.domain.model.user.Team
+import kotlin.uuid.ExperimentalUuidApi
 
 data class TeamWithPokemon(
     @Embedded val team: TeamEntity,
@@ -24,4 +26,13 @@ data class TeamWithPokemon(
         entityColumn = "team_id"
     )
     val pokemon: List<PokemonEntity>
-)
+) {
+    @OptIn(ExperimentalUuidApi::class)
+    fun toModel(): Team {
+        return Team(
+            id = team.id,
+            name = team.name,
+            pokemon = pokemon.map { it.toModel() }
+        )
+    }
+}

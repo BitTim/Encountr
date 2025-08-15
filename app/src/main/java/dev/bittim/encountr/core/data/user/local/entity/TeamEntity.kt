@@ -7,7 +7,7 @@
  * File:       TeamEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   14.08.25, 22:29
+ * Modified:   15.08.25, 11:01
  */
 
 package dev.bittim.encountr.core.data.user.local.entity
@@ -29,7 +29,7 @@ import kotlin.uuid.Uuid
         ForeignKey(
             entity = SaveEntity::class,
             parentColumns = ["id"],
-            childColumns = ["saveId"],
+            childColumns = ["save"],
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE
         )
@@ -37,7 +37,7 @@ import kotlin.uuid.Uuid
 )
 data class TeamEntity @OptIn(ExperimentalUuidApi::class) constructor(
     @PrimaryKey val id: Uuid,
-    val saveId: Uuid,
+    val save: Uuid,
     val name: String,
 ) {
     @OptIn(ExperimentalUuidApi::class)
@@ -48,4 +48,11 @@ data class TeamEntity @OptIn(ExperimentalUuidApi::class) constructor(
             pokemon = emptyList(),
         )
     }
+
+    @OptIn(ExperimentalUuidApi::class)
+    constructor(team: Team, save: Uuid) : this(
+        id = team.id,
+        save = save,
+        name = team.name
+    )
 }

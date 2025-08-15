@@ -7,7 +7,7 @@
  * File:       PokemonTeamCrossRef.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   14.08.25, 20:45
+ * Modified:   15.08.25, 11:01
  */
 
 package dev.bittim.encountr.core.data.user.local.entity
@@ -20,28 +20,36 @@ import kotlin.uuid.Uuid
 
 @Entity(
     tableName = "pokemon_team_ref",
-    primaryKeys = ["pokemonId", "teamId"],
+    primaryKeys = ["save", "team", "pokemon"],
     indices = [
-        Index(value = ["pokemonId", "teamId"]),
+        Index(value = ["save", "team", "pokemon"]),
     ],
     foreignKeys = [
         ForeignKey(
-            entity = PokemonEntity::class,
+            entity = SaveEntity::class,
             parentColumns = ["id"],
-            childColumns = ["pokemonId"],
+            childColumns = ["save"],
             onDelete = ForeignKey.Companion.CASCADE,
             onUpdate = ForeignKey.Companion.CASCADE
         ),
         ForeignKey(
             entity = TeamEntity::class,
             parentColumns = ["id"],
-            childColumns = ["teamId"],
+            childColumns = ["team"],
             onDelete = ForeignKey.Companion.CASCADE,
             onUpdate = ForeignKey.Companion.CASCADE
-        )
+        ),
+        ForeignKey(
+            entity = PokemonEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["pokemon"],
+            onDelete = ForeignKey.Companion.CASCADE,
+            onUpdate = ForeignKey.Companion.CASCADE
+        ),
     ]
 )
 data class PokemonTeamCrossRef @OptIn(ExperimentalUuidApi::class) constructor(
-    val pokemonId: Uuid,
-    val teamId: Uuid
+    val save: Uuid,
+    val team: Uuid,
+    val pokemon: Int,
 )

@@ -7,7 +7,7 @@
  * File:       SaveEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   14.08.25, 22:28
+ * Modified:   15.08.25, 10:50
  */
 
 package dev.bittim.encountr.core.data.user.local.entity
@@ -22,7 +22,7 @@ import kotlin.uuid.Uuid
 data class SaveEntity @OptIn(ExperimentalUuidApi::class) constructor(
     @PrimaryKey val id: Uuid,
     val name: String,
-    val game: String,
+    val game: Int,
 ) {
     @OptIn(ExperimentalUuidApi::class)
     fun toModel(): Save {
@@ -32,4 +32,11 @@ data class SaveEntity @OptIn(ExperimentalUuidApi::class) constructor(
             game = game,
         )
     }
+
+    @OptIn(ExperimentalUuidApi::class)
+    constructor(save: Save) : this(
+        id = save.id,
+        name = save.name,
+        game = save.game,
+    )
 }

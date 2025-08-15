@@ -7,12 +7,12 @@
  * File:       Pokemon.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   14.08.25, 22:27
+ * Modified:   15.08.25, 10:50
  */
 
 package dev.bittim.encountr.core.domain.model.user
 
 data class Pokemon(
-    val id: String,
+    val id: Int,
     val caught: Boolean,
 )

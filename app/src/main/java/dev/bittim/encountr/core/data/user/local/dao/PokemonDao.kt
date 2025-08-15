@@ -7,7 +7,7 @@
  * File:       PokemonDao.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   14.08.25, 22:24
+ * Modified:   15.08.25, 10:52
  */
 
 package dev.bittim.encountr.core.data.user.local.dao
@@ -22,25 +22,42 @@ import kotlin.uuid.Uuid
 
 @Dao
 interface PokemonDao {
+    // region:      -- Create
+
     @Insert
     suspend fun insert(pokemon: PokemonEntity)
 
     @Insert
     suspend fun insert(pokemon: List<PokemonEntity>)
 
-    @OptIn(ExperimentalUuidApi::class)
-    @Query("SELECT * FROM pokemon WHERE id = :id")
-    fun get(id: Uuid): Flow<PokemonEntity?>
+    // endregion:   -- Create
+    // region:      -- Read
 
     @OptIn(ExperimentalUuidApi::class)
-    @Query("SELECT * FROM pokemon WHERE saveId = :saveId")
-    fun getAll(saveId: Uuid): Flow<List<PokemonEntity>>
+    @Query("SELECT * FROM pokemon WHERE save = :save AND id = :id")
+    fun get(save: Uuid, id: Int): Flow<PokemonEntity?>
 
     @OptIn(ExperimentalUuidApi::class)
-    @Query("DELETE FROM pokemon WHERE id = :id AND saveId = :saveId")
-    suspend fun delete(id: Uuid, saveId: Uuid)
+    @Query("SELECT * FROM pokemon WHERE save = :save")
+    fun getAll(save: Uuid): Flow<List<PokemonEntity>>
+
+    // endregion:   -- Read
+    // region:      -- Update
 
     @OptIn(ExperimentalUuidApi::class)
-    @Query("DELETE FROM pokemon WHERE saveId = :saveId")
-    suspend fun deleteAll(saveId: Uuid)
+    @Query("UPDATE pokemon SET caught = :caught WHERE id = :id AND save = :save")
+    suspend fun update(save: Uuid, id: Int, caught: Boolean)
+
+    // endregion:   -- Update
+    // region:      -- Delete
+
+    @OptIn(ExperimentalUuidApi::class)
+    @Query("DELETE FROM pokemon WHERE id = :id AND save = :save")
+    suspend fun delete(save: Uuid, id: Int)
+
+    @OptIn(ExperimentalUuidApi::class)
+    @Query("DELETE FROM pokemon WHERE save = :save")
+    suspend fun deleteAll(save: Uuid)
+
+    // endregion:   -- Delete
 }
