@@ -7,7 +7,7 @@
  * File:       PokemonRepoImpl.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.08.25, 10:53
+ * Modified:   15.08.25, 14:23
  */
 
 package dev.bittim.encountr.core.data.user.repo
@@ -48,11 +48,11 @@ class PokemonRepoImpl(
         save: Uuid,
         pokemon: PokemonVariety
     ): Flow<Pokemon?> {
-        return userDatabase.pokemonDao.get(save, pokemon.id).map { it?.toModel() }
+        return userDatabase.pokemonDao.get(save.toString(), pokemon.id).map { it?.toModel() }
     }
 
     override fun getAll(save: Uuid): Flow<List<Pokemon>> {
-        return userDatabase.pokemonDao.getAll(save)
+        return userDatabase.pokemonDao.getAll(save.toString())
             .map { it.map { pokemonEntity -> pokemonEntity.toModel() } }
     }
 
@@ -60,18 +60,18 @@ class PokemonRepoImpl(
     // region:      -- Update
 
     override suspend fun update(save: Uuid, pokemon: PokemonVariety, caught: Boolean) {
-        userDatabase.pokemonDao.update(save, pokemon.id, caught)
+        userDatabase.pokemonDao.update(save.toString(), pokemon.id, caught)
     }
 
     // endregion:   -- Update
     // region:      -- Delete
 
     override suspend fun delete(save: Uuid, pokemon: PokemonVariety) {
-        userDatabase.pokemonDao.delete(save, pokemon.id)
+        userDatabase.pokemonDao.delete(save.toString(), pokemon.id)
     }
 
     override suspend fun deleteAll(save: Uuid) {
-        userDatabase.pokemonDao.deleteAll(save)
+        userDatabase.pokemonDao.deleteAll(save.toString())
     }
 
     // endregion:   -- Delete

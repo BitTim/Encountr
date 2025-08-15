@@ -7,7 +7,7 @@
  * File:       TeamRepoImpl.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.08.25, 11:03
+ * Modified:   15.08.25, 14:24
  */
 
 package dev.bittim.encountr.core.data.user.repo
@@ -46,11 +46,11 @@ class TeamRepoImpl(
         save: Uuid,
         id: Uuid
     ): Flow<Team?> {
-        return userDatabase.teamDao.get(save, id).map { it?.toModel() }
+        return userDatabase.teamDao.get(save.toString(), id.toString()).map { it?.toModel() }
     }
 
     override fun getAll(save: Uuid): Flow<List<Team>> {
-        return userDatabase.teamDao.getAll(save)
+        return userDatabase.teamDao.getAll(save.toString())
             .map { it.map { teamEntity -> teamEntity.toModel() } }
     }
 
@@ -58,7 +58,7 @@ class TeamRepoImpl(
     // region:      -- Update
 
     override suspend fun update(save: Uuid, id: Uuid, name: String) {
-        userDatabase.teamDao.update(save, id, name)
+        userDatabase.teamDao.update(save.toString(), id.toString(), name)
     }
 
     override suspend fun addPokemon(
@@ -66,7 +66,13 @@ class TeamRepoImpl(
         id: Uuid,
         pokemon: PokemonVariety
     ) {
-        userDatabase.pokemonTeamRefDao.insert(PokemonTeamCrossRef(save, id, pokemon.id))
+        userDatabase.pokemonTeamRefDao.insert(
+            PokemonTeamCrossRef(
+                save.toString(),
+                id.toString(),
+                pokemon.id
+            )
+        )
     }
 
     override suspend fun removePokemon(
@@ -74,18 +80,18 @@ class TeamRepoImpl(
         id: Uuid,
         pokemon: PokemonVariety
     ) {
-        userDatabase.pokemonTeamRefDao.delete(save, id, pokemon.id)
+        userDatabase.pokemonTeamRefDao.delete(save.toString(), id.toString(), pokemon.id)
     }
 
     // endregion:   -- Update
     // region:      -- Delete
 
     override suspend fun delete(save: Uuid, id: Uuid) {
-        userDatabase.teamDao.delete(save, id)
+        userDatabase.teamDao.delete(save.toString(), id.toString())
     }
 
     override suspend fun deleteAll(save: Uuid) {
-        userDatabase.teamDao.deleteAll(save)
+        userDatabase.teamDao.deleteAll(save.toString())
     }
 
     // endregion:   -- Delete

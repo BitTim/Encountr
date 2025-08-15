@@ -7,7 +7,7 @@
  * File:       TeamDao.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.08.25, 09:25
+ * Modified:   15.08.25, 14:21
  */
 
 package dev.bittim.encountr.core.data.user.local.dao
@@ -19,8 +19,6 @@ import androidx.room.Transaction
 import dev.bittim.encountr.core.data.user.local.entity.TeamEntity
 import dev.bittim.encountr.core.data.user.local.relation.TeamWithPokemon
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @Dao
 interface TeamDao {
@@ -35,33 +33,28 @@ interface TeamDao {
     // endregion:   -- Create
     // region:      -- Read
 
-    @OptIn(ExperimentalUuidApi::class)
     @Transaction
     @Query("SELECT * FROM teams WHERE save = :save AND id = :id")
-    fun get(save: Uuid, id: Uuid): Flow<TeamWithPokemon?>
+    fun get(save: String, id: String): Flow<TeamWithPokemon?>
 
-    @OptIn(ExperimentalUuidApi::class)
     @Transaction
     @Query("SELECT * FROM teams WHERE save = :save")
-    fun getAll(save: Uuid): Flow<List<TeamWithPokemon>>
+    fun getAll(save: String): Flow<List<TeamWithPokemon>>
 
     // endregion:   -- Read
     // region:      -- Update
 
-    @OptIn(ExperimentalUuidApi::class)
     @Query("UPDATE teams SET name = :name WHERE save = :save AND id = :id")
-    suspend fun update(save: Uuid, id: Uuid, name: String)
+    suspend fun update(save: String, id: String, name: String)
 
     // endregion:   -- Update
     // region:      -- Delete
 
-    @OptIn(ExperimentalUuidApi::class)
     @Query("DELETE FROM teams WHERE save = :save AND id = :id")
-    suspend fun delete(save: Uuid, id: Uuid)
+    suspend fun delete(save: String, id: String)
 
-    @OptIn(ExperimentalUuidApi::class)
     @Query("DELETE FROM teams WHERE save = :save")
-    suspend fun deleteAll(save: Uuid)
+    suspend fun deleteAll(save: String)
 
     // endregion:   -- Delete
 }

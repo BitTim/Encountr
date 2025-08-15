@@ -7,7 +7,7 @@
  * File:       PokemonTeamCrossRef.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.08.25, 11:01
+ * Modified:   15.08.25, 14:16
  */
 
 package dev.bittim.encountr.core.data.user.local.entity
@@ -16,7 +16,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @Entity(
     tableName = "pokemon_team_ref",
@@ -26,13 +25,6 @@ import kotlin.uuid.Uuid
     ],
     foreignKeys = [
         ForeignKey(
-            entity = SaveEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["save"],
-            onDelete = ForeignKey.Companion.CASCADE,
-            onUpdate = ForeignKey.Companion.CASCADE
-        ),
-        ForeignKey(
             entity = TeamEntity::class,
             parentColumns = ["id"],
             childColumns = ["team"],
@@ -41,15 +33,15 @@ import kotlin.uuid.Uuid
         ),
         ForeignKey(
             entity = PokemonEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["pokemon"],
+            parentColumns = ["id", "save"],
+            childColumns = ["pokemon", "save"],
             onDelete = ForeignKey.Companion.CASCADE,
             onUpdate = ForeignKey.Companion.CASCADE
         ),
     ]
 )
 data class PokemonTeamCrossRef @OptIn(ExperimentalUuidApi::class) constructor(
-    val save: Uuid,
-    val team: Uuid,
+    val save: String,
+    val team: String,
     val pokemon: Int,
 )

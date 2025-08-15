@@ -7,7 +7,7 @@
   ~ File:       strings.xml
   ~ Module:     Encountr.app.main
   ~ Author:     Tim Anhalt (BitTim)
-  ~ Modified:   14.08.25, 03:48
+  ~ Modified:   15.08.25, 15:51
   -->
 
 <resources>
@@ -33,4 +33,5 @@
     <string name="onboarding_create_save_title">Create Save</string>
     <string name="onboarding_create_save_description">!! Placeholder</string>
     <string name="button_back">Back</string>
+    <string name="content_desc_gamesel_arrow_down">Select game</string>
 </resources>

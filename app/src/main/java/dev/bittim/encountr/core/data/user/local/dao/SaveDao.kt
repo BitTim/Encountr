@@ -7,7 +7,7 @@
  * File:       SaveDao.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.08.25, 10:52
+ * Modified:   15.08.25, 14:21
  */
 
 package dev.bittim.encountr.core.data.user.local.dao
@@ -17,8 +17,6 @@ import androidx.room.Insert
 import androidx.room.Query
 import dev.bittim.encountr.core.data.user.local.entity.SaveEntity
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @Dao
 interface SaveDao {
@@ -33,9 +31,8 @@ interface SaveDao {
     // endregion:   -- Create
     // region:      -- Read
 
-    @OptIn(ExperimentalUuidApi::class)
     @Query("SELECT * FROM saves WHERE id = :id")
-    fun get(id: Uuid): Flow<SaveEntity?>
+    fun get(id: String): Flow<SaveEntity?>
 
     @Query("SELECT * FROM saves")
     fun getAll(): Flow<List<SaveEntity>>
@@ -43,24 +40,20 @@ interface SaveDao {
     // endregion:   -- Read
     // region:      -- Update
 
-    @OptIn(ExperimentalUuidApi::class)
     @Query("UPDATE saves SET name = :name, game = :game WHERE id = :id")
-    suspend fun update(id: Uuid, name: String, game: Int)
+    suspend fun update(id: String, name: String, game: Int)
 
-    @OptIn(ExperimentalUuidApi::class)
     @Query("UPDATE saves SET name = :name WHERE id = :id")
-    suspend fun updateName(id: Uuid, name: String)
+    suspend fun updateName(id: String, name: String)
 
-    @OptIn(ExperimentalUuidApi::class)
     @Query("UPDATE saves SET game = :game WHERE id = :id")
-    suspend fun updateGame(id: Uuid, game: Int)
+    suspend fun updateGame(id: String, game: Int)
 
     // endregion:   -- Update1
     // region:      -- Delete
 
-    @OptIn(ExperimentalUuidApi::class)
     @Query("DELETE FROM saves WHERE id = :id")
-    suspend fun delete(id: Uuid)
+    suspend fun delete(id: String)
 
     @Query("DELETE FROM saves")
     suspend fun deleteAll()

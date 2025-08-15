@@ -7,11 +7,12 @@
  * File:       GameIcon.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.08.25, 17:02
+ * Modified:   15.08.25, 14:01
  */
 
 package dev.bittim.encountr.core.ui.components
 
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -40,11 +41,9 @@ import dev.bittim.encountr.core.ui.util.color.ShaderGradient
 @Composable
 fun GameIcon(
     modifier: Modifier = Modifier,
+    image: Bitmap,
 ) {
-    val context = LocalContext.current
-
-    val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.red)
-    val palette = Palette.from(bitmap).generate()
+    val palette = Palette.from(image).generate()
 
     ShaderGradientBackdrop(
         modifier = modifier,
@@ -56,7 +55,7 @@ fun GameIcon(
         ) {
             Image(
                 modifier = Modifier.fillMaxSize(),
-                bitmap = bitmap.asImageBitmap(),
+                bitmap = image.asImageBitmap(),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 filterQuality = FilterQuality.None
@@ -74,7 +73,11 @@ fun GameIconPreview() {
                 modifier = Modifier
                     .width(56.dp)
                     .aspectRatio(1f)
-                    .clip(MaterialTheme.shapes.medium)
+                    .clip(MaterialTheme.shapes.medium),
+                image = BitmapFactory.decodeResource(
+                    LocalContext.current.resources,
+                    R.drawable.red
+                )
             )
         }
     }

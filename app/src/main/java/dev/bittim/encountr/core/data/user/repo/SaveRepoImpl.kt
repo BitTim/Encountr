@@ -7,7 +7,7 @@
  * File:       SaveRepoImpl.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.08.25, 10:52
+ * Modified:   15.08.25, 14:24
  */
 
 package dev.bittim.encountr.core.data.user.repo
@@ -46,7 +46,7 @@ class SaveRepoImpl(
 
     @OptIn(ExperimentalUuidApi::class)
     override fun get(id: Uuid): Flow<Save?> {
-        return userDatabase.saveDao.get(id).map { it?.toModel() }
+        return userDatabase.saveDao.get(id.toString()).map { it?.toModel() }
     }
 
     override fun getAll(): Flow<List<Save>> {
@@ -58,12 +58,12 @@ class SaveRepoImpl(
 
     @OptIn(ExperimentalUuidApi::class)
     override suspend fun update(id: Uuid, name: String, game: Version) {
-        userDatabase.saveDao.update(id, name, game.id)
+        userDatabase.saveDao.update(id.toString(), name, game.id)
     }
 
     @OptIn(ExperimentalUuidApi::class)
     override suspend fun updateName(id: Uuid, name: String) {
-        userDatabase.saveDao.updateName(id, name)
+        userDatabase.saveDao.updateName(id.toString(), name)
     }
 
     @OptIn(ExperimentalUuidApi::class)
@@ -71,7 +71,7 @@ class SaveRepoImpl(
         id: Uuid,
         game: Version
     ) {
-        userDatabase.saveDao.updateGame(id, game.id)
+        userDatabase.saveDao.updateGame(id.toString(), game.id)
     }
 
     // endregion:   -- Update
@@ -79,7 +79,7 @@ class SaveRepoImpl(
 
     @OptIn(ExperimentalUuidApi::class)
     override suspend fun delete(id: Uuid) {
-        userDatabase.saveDao.delete(id)
+        userDatabase.saveDao.delete(id.toString())
     }
 
     override suspend fun deleteAll() {

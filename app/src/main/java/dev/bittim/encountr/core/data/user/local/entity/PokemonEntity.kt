@@ -7,7 +7,7 @@
  * File:       PokemonEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.08.25, 11:01
+ * Modified:   15.08.25, 14:16
  */
 
 package dev.bittim.encountr.core.data.user.local.entity
@@ -37,7 +37,7 @@ import kotlin.uuid.Uuid
 )
 data class PokemonEntity @OptIn(ExperimentalUuidApi::class) constructor(
     val id: Int,
-    val save: Uuid,
+    val save: String,
     val caught: Boolean,
 ) {
     fun toModel(): Pokemon {
@@ -50,7 +50,7 @@ data class PokemonEntity @OptIn(ExperimentalUuidApi::class) constructor(
     @OptIn(ExperimentalUuidApi::class)
     constructor(pokemon: Pokemon, save: Uuid) : this(
         id = pokemon.id,
-        save = save,
+        save = save.toString(),
         caught = pokemon.caught
     )
 }
