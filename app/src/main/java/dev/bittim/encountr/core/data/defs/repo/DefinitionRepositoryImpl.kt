@@ -7,7 +7,7 @@
  * File:       DefinitionRepositoryImpl.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   14.08.25, 03:30
+ * Modified:   15.08.25, 13:02
  */
 
 package dev.bittim.encountr.core.data.defs.repo
@@ -42,7 +42,7 @@ class DefinitionRepositoryImpl(
         return Result.Ok(Unit)
     }
 
-    override suspend fun getDefinitionByGame(game: String): Definition? {
+    override suspend fun getDefinitionByGame(game: Int): Definition? {
         return db.definitionDao().getDefinition(game)?.toModel()
     }
 }

@@ -7,7 +7,7 @@
  * File:       DefinitionDto.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   14.08.25, 03:28
+ * Modified:   15.08.25, 13:01
  */
 
 package dev.bittim.encountr.core.data.defs.remote.dto
@@ -17,9 +17,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DefinitionDto(
-    val game: String,
-    val pokemon: String,
-    val form: String?
+    val game: Int,
+    val pokemon: Int,
+    val form: Int?
 ) {
     fun toEntity(index: Int): DefinitionEntity {
         return DefinitionEntity(

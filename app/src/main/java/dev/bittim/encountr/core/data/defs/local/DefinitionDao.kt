@@ -7,7 +7,7 @@
  * File:       DefinitionDao.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.08.25, 17:37
+ * Modified:   15.08.25, 13:01
  */
 
 package dev.bittim.encountr.core.data.defs.local
@@ -23,7 +23,7 @@ interface DefinitionDao {
     suspend fun insert(definitions: List<DefinitionEntity>)
 
     @Query("SELECT * FROM definition WHERE game = :game")
-    suspend fun getDefinition(game: String): DefinitionEntity?
+    suspend fun getDefinition(game: Int): DefinitionEntity?
 
     @Query("DELETE FROM definition")
     suspend fun deleteAll()

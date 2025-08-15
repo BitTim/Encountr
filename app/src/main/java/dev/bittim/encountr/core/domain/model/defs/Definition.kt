@@ -7,13 +7,13 @@
  * File:       Definition.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.08.25, 17:37
+ * Modified:   15.08.25, 13:01
  */
 
 package dev.bittim.encountr.core.domain.model.defs
 
 data class Definition(
-    val game: String,
-    val pokemon: String,
-    val form: String?
+    val game: Int,
+    val pokemon: Int,
+    val form: Int?
 )
