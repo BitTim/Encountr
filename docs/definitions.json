@@ -3,208 +3,167 @@
   "definitions": [
     {
       "game": 0,
-      "pokemon": 201,
-      "form": 10027
+      "pokemon": 201
     },
     {
       "game": 1,
-      "pokemon": 6,
-      "form": null
+      "pokemon": 6
     },
     {
       "game": 2,
-      "pokemon": 9,
-      "form": null
+      "pokemon": 9
     },
     {
       "game": 3,
-      "pokemon": 25,
-      "form": null
+      "pokemon": 25
     },
     {
       "game": 4,
-      "pokemon": 250,
-      "form": null
+      "pokemon": 250
     },
     {
       "game": 5,
-      "pokemon": 249,
-      "form": null
+      "pokemon": 249
     },
     {
       "game": 6,
-      "pokemon": 245,
-      "form": null
+      "pokemon": 245
     },
     {
       "game": 7,
-      "pokemon": 383,
-      "form": null
+      "pokemon": 383
     },
     {
       "game": 8,
-      "pokemon": 382,
-      "form": null
+      "pokemon": 382
     },
     {
       "game": 9,
-      "pokemon": 384,
-      "form": null
+      "pokemon": 384
     },
     {
       "game": 10,
-      "pokemon": 6,
-      "form": null
+      "pokemon": 6
     },
     {
       "game": 11,
-      "pokemon": 3,
-      "form": null
+      "pokemon": 3
     },
     {
       "game": 12,
-      "pokemon": 483,
-      "form": null
+      "pokemon": 483
     },
     {
       "game": 13,
-      "pokemon": 484,
-      "form": null
+      "pokemon": 484
     },
     {
       "game": 14,
-      "pokemon": 487,
-      "form": null
+      "pokemon": 487
     },
     {
       "game": 15,
-      "pokemon": 250,
-      "form": null
+      "pokemon": 250
     },
     {
       "game": 16,
-      "pokemon": 249,
-      "form": null
+      "pokemon": 249
     },
     {
       "game": 17,
-      "pokemon": 644,
-      "form": null
+      "pokemon": 644
     },
     {
       "game": 18,
-      "pokemon": 643,
-      "form": null
+      "pokemon": 643
     },
     {
       "game": 21,
-      "pokemon": 10022,
-      "form": null
+      "pokemon": 10022
     },
     {
       "game": 22,
-      "pokemon": 10023,
-      "form": null
+      "pokemon": 10023
     },
     {
       "game": 23,
-      "pokemon": 716,
-      "form": null
+      "pokemon": 716
     },
     {
       "game": 24,
-      "pokemon": 717,
-      "form": null
+      "pokemon": 717
     },
     {
       "game": 25,
-      "pokemon": 10078,
-      "form": null
+      "pokemon": 10078
     },
     {
       "game": 26,
-      "pokemon": 10077,
-      "form": null
+      "pokemon": 10077
     },
     {
       "game": 27,
-      "pokemon": 791,
-      "form": null
+      "pokemon": 791
     },
     {
       "game": 28,
-      "pokemon": 792,
-      "form": null
+      "pokemon": 792
     },
     {
       "game": 29,
-      "pokemon": 10155,
-      "form": null
+      "pokemon": 10155
     },
     {
       "game": 30,
-      "pokemon": 10156,
-      "form": null
+      "pokemon": 10156
     },
     {
       "game": 31,
-      "pokemon": 25,
-      "form": null
+      "pokemon": 25
     },
     {
       "game": 32,
-      "pokemon": 123,
-      "form": null
+      "pokemon": 123
     },
     {
       "game": 33,
-      "pokemon": 10188,
-      "form": null
+      "pokemon": 10188
     },
     {
       "game": 34,
-      "pokemon": 10189,
-      "form": null
+      "pokemon": 10189
     },
     {
       "game": 37,
-      "pokemon": 483,
-      "form": null
+      "pokemon": 483
     },
     {
       "game": 38,
-      "pokemon": 484,
-      "form": null
+      "pokemon": 484
     },
     {
       "game": 39,
-      "pokemon": 493,
-      "form": null
+      "pokemon": 493
     },
     {
       "game": 40,
-      "pokemon": 1007,
-      "form": null
+      "pokemon": 1007
     },
     {
       "game": 41,
-      "pokemon": 1008,
-      "form": null
+      "pokemon": 1008
     },
     {
       "game": 44,
-      "pokemon": 6,
-      "form": null
+      "pokemon": 6
     },
     {
       "game": 45,
-      "pokemon": 3,
-      "form": null
+      "pokemon": 3
     },
     {
       "game": 46,
-      "pokemon": 9,
-      "form": null
+      "pokemon": 9
     }
   ]
 }
