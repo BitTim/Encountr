@@ -4,16 +4,15 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       Definition.kt
+ * File:       IconDefinition.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.08.25, 13:01
+ * Modified:   17.08.25, 03:10
  */
 
 package dev.bittim.encountr.core.domain.model.defs
 
-data class Definition(
+data class IconDefinition(
     val game: Int,
-    val pokemon: Int,
-    val form: Int?
+    val pokemon: Int
 )

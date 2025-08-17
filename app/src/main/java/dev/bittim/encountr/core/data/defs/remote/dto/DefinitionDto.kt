@@ -7,26 +7,23 @@
  * File:       DefinitionDto.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.08.25, 13:01
+ * Modified:   17.08.25, 03:13
  */
 
 package dev.bittim.encountr.core.data.defs.remote.dto
 
-import dev.bittim.encountr.core.data.defs.local.DefinitionEntity
+import dev.bittim.encountr.core.data.defs.local.entity.DefinitionEntity
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class DefinitionDto(
-    val game: Int,
-    val pokemon: Int,
-    val form: Int?
+    val version: Int,
+    val ignored: List<Int>,
+    val icons: List<IconDefinitionDto>
 ) {
-    fun toEntity(index: Int): DefinitionEntity {
+    fun toEntity(): DefinitionEntity {
         return DefinitionEntity(
-            id = index,
-            game = this.game,
-            pokemon = this.pokemon,
-            form = this.form
+            ignored = this.ignored
         )
     }
 }

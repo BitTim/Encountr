@@ -7,23 +7,24 @@
  * File:       DefinitionDao.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.08.25, 13:01
+ * Modified:   17.08.25, 03:13
  */
 
-package dev.bittim.encountr.core.data.defs.local
+package dev.bittim.encountr.core.data.defs.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import dev.bittim.encountr.core.data.defs.local.entity.DefinitionEntity
 
 @Dao
 interface DefinitionDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insert(definitions: List<DefinitionEntity>)
 
-    @Query("SELECT * FROM definition WHERE game = :game")
-    suspend fun getDefinition(game: Int): DefinitionEntity?
+    @Query("SELECT * FROM definition WHERE id = 0")
+    suspend fun getDefinition(): DefinitionEntity?
 
     @Query("DELETE FROM definition")
     suspend fun deleteAll()

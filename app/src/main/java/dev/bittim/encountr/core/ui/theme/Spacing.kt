@@ -7,7 +7,7 @@
  * File:       Spacing.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.08.25, 02:32
+ * Modified:   16.08.25, 21:11
  */
 
 package dev.bittim.encountr.core.ui.theme
@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 data object Spacing {
+    val none: Dp = 0.dp
     val xxs: Dp = 2.dp
     val xs: Dp = 4.dp
     val s: Dp = 8.dp

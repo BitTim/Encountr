@@ -7,7 +7,7 @@
   ~ File:       strings.xml
   ~ Module:     Encountr.app.main
   ~ Author:     Tim Anhalt (BitTim)
-  ~ Modified:   14.08.25, 03:48
+  ~ Modified:   16.08.25, 21:48
   -->
 
 <resources>
@@ -32,4 +32,7 @@
     <string name="onboarding_create_save_title">Save Erstellen</string>
     <string name="onboarding_create_save_description">!! Platzhalter</string>
     <string name="button_back">Zurück</string>
+    <string name="content_desc_gamesel_arrow_down">Spiel auswählen</string>
+    <string name="error_invalid_version_group">Ungültige Versionsgruppe (%s)</string>
+    <string name="error_invalid_version">Ungültige Version (%s)</string>
 </resources>

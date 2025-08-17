@@ -7,7 +7,7 @@
  * File:       DefinitionRepositoryImpl.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.08.25, 13:02
+ * Modified:   17.08.25, 03:17
  */
 
 package dev.bittim.encountr.core.data.defs.repo
@@ -16,7 +16,9 @@ import dev.bittim.encountr.core.data.defs.DefinitionsError
 import dev.bittim.encountr.core.data.defs.local.DefinitionsDatabase
 import dev.bittim.encountr.core.data.defs.remote.DefinitionService
 import dev.bittim.encountr.core.domain.error.Result
-import dev.bittim.encountr.core.domain.model.defs.Definition
+import dev.bittim.encountr.core.domain.model.defs.IconDefinition
+import kotlinx.coroutines.ensureActive
+import kotlin.coroutines.coroutineContext
 
 class DefinitionRepositoryImpl(
     private val db: DefinitionsDatabase,
@@ -24,7 +26,7 @@ class DefinitionRepositoryImpl(
 ) : DefinitionRepository {
     override suspend fun fetchDefinitions(urlString: String): Result<Unit, DefinitionsError> {
         val response = api.getDefinitions(urlString)
-        val definitions = when (response) {
+        val definition = when (response) {
             is Result.Ok -> response.data
             is Result.Err -> {
                 return Result.Err(response.error)
@@ -33,16 +35,21 @@ class DefinitionRepositoryImpl(
 
         try {
             db.definitionDao().deleteAll()
-            db.definitionDao()
-                .insert(definitions.definitions.mapIndexed { idx, dto -> dto.toEntity(idx) })
+            db.definitionDao().insert(listOf(definition.toEntity()))
+            db.iconDao().insert(definition.icons.mapIndexed { idx, dto -> dto.toEntity(idx) })
         } catch (_: Exception) {
+            coroutineContext.ensureActive()
             return Result.Err(DefinitionsError.Cache)
         }
 
         return Result.Ok(Unit)
     }
 
-    override suspend fun getDefinitionByGame(game: Int): Definition? {
-        return db.definitionDao().getDefinition(game)?.toModel()
+    override suspend fun getIconByGame(game: Int): IconDefinition? {
+        return db.iconDao().getDefinition(game)?.toModel()
+    }
+
+    override suspend fun checkIgnored(game: Int): Boolean {
+        return db.definitionDao().getDefinition()?.ignored?.contains(game) == true
     }
 }

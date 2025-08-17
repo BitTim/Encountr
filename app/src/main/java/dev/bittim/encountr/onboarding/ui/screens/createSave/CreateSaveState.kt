@@ -7,11 +7,30 @@
  * File:       CreateSaveState.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   14.08.25, 01:42
+ * Modified:   16.08.25, 21:02
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
 
+import dev.bittim.encountr.core.ui.components.GameCardState
+
+data class Game(
+    val id: Int,
+    val localizedName: String,
+    val localizedGeneration: String,
+    val imageUrl: String?
+) {
+    fun toGameSelectorState(): GameCardState {
+        return GameCardState(
+            name = localizedName,
+            generation = localizedGeneration,
+            imageUrl = imageUrl
+        )
+    }
+}
+
 data class CreateSaveState(
-    val tmp: Boolean = false  // TODO: Replace with actual state
+    val games: List<Game>? = null,
+    val isLoading: Boolean = false,
+    val error: String? = null
 )

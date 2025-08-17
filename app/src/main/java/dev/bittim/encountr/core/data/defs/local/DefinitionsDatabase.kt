@@ -7,18 +7,26 @@
  * File:       DefinitionsDatabase.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.08.25, 17:37
+ * Modified:   17.08.25, 03:24
  */
 
 package dev.bittim.encountr.core.data.defs.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import dev.bittim.encountr.core.data.defs.local.converter.IntListConverter
+import dev.bittim.encountr.core.data.defs.local.dao.DefinitionDao
+import dev.bittim.encountr.core.data.defs.local.dao.IconDao
+import dev.bittim.encountr.core.data.defs.local.entity.DefinitionEntity
+import dev.bittim.encountr.core.data.defs.local.entity.IconDefinitionEntity
 
 @Database(
-    entities = [DefinitionEntity::class],
+    entities = [DefinitionEntity::class, IconDefinitionEntity::class],
     version = 1
 )
+@TypeConverters(IntListConverter::class)
 abstract class DefinitionsDatabase : RoomDatabase() {
     abstract fun definitionDao(): DefinitionDao
+    abstract fun iconDao(): IconDao
 }
