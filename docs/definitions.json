@@ -1,5 +1,13 @@
 {
   "version": 1,
+  "ignored": [
+    19,
+    20,
+    35,
+    36,
+    42,
+    43
+  ],
   "definitions": [
     {
       "game": 0,
