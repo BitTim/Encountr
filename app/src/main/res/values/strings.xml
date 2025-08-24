@@ -7,7 +7,7 @@
   ~ File:       strings.xml
   ~ Module:     Encountr.app.main
   ~ Author:     Tim Anhalt (BitTim)
-  ~ Modified:   16.08.25, 21:47
+  ~ Modified:   24.08.25, 20:08
   -->
 
 <resources>
@@ -36,4 +36,6 @@
     <string name="content_desc_gamesel_arrow_down">Select game</string>
     <string name="error_invalid_version_group">Invalid Version Group (%s)</string>
     <string name="error_invalid_version">Invalid Version (%s)</string>
+    <string name="onboarding_select_locale_title">Language</string>
+    <string name="onboarding_select_locale_description">!! Placeholder</string>
 </resources>

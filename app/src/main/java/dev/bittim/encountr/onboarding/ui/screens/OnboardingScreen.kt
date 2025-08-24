@@ -7,12 +7,13 @@
  * File:       OnboardingScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   13.08.25, 04:24
+ * Modified:   24.08.25, 20:12
  */
 
 package dev.bittim.encountr.onboarding.ui.screens
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.WavingHand
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -20,6 +21,7 @@ import dev.bittim.encountr.R
 import dev.bittim.encountr.core.ui.util.UiText
 import dev.bittim.encountr.onboarding.ui.screens.createSave.CreateSaveNav
 import dev.bittim.encountr.onboarding.ui.screens.landing.LandingNav
+import dev.bittim.encountr.onboarding.ui.screens.selectLocale.SelectLocaleNav
 
 enum class OnboardingScreen(
     val route: String,
@@ -36,12 +38,20 @@ enum class OnboardingScreen(
         step = 0
     ),
 
+    SelectLocale(
+        route = SelectLocaleNav::class.java.name,
+        title = UiText.StringResource(R.string.onboarding_select_locale_title),
+        description = UiText.StringResource(R.string.onboarding_select_locale_description),
+        icon = Icons.Default.Language,
+        step = 1
+    ),
+
     CreateSave(
         route = CreateSaveNav::class.java.name,
         title = UiText.StringResource(R.string.onboarding_create_save_title),
         description = UiText.StringResource(R.string.onboarding_create_save_description),
         icon = Icons.Default.Save,
-        step = 1
+        step = 2
     );
 
     companion object {

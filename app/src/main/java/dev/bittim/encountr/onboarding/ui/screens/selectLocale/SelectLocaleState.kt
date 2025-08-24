@@ -7,11 +7,15 @@
  * File:       SelectLocaleState.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   17.08.25, 19:41
+ * Modified:   24.08.25, 20:06
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.selectLocale
 
+import co.pokeapi.pokekotlin.model.Language
+
 data class SelectLocaleState(
-    val locales: List<String> = emptyList()
+    val isLoading: Boolean = false,
+    val error: String? = null,
+    val locales: List<Language>? = null
 )
