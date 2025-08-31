@@ -7,7 +7,7 @@
  * File:       LocaleCard.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   24.08.25, 19:50
+ * Modified:   31.08.25, 17:00
  */
 
 package dev.bittim.encountr.core.ui.components
@@ -20,12 +20,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
@@ -63,7 +65,8 @@ fun LocaleCard(
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(Spacing.xs)
+            horizontalArrangement = Arrangement.spacedBy(Spacing.m),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Crossfade(
                 targetState = state?.countryCode
@@ -72,15 +75,20 @@ fun LocaleCard(
                     Surface(
                         modifier = Modifier
                             .size(iconSize)
-                            .aspectRatio(1f),
+                            .aspectRatio(1f)
+                            .clip(MaterialTheme.shapes.medium),
                         tonalElevation = iconElevation
                     ) {
-                        FlagIcon(countryCode = it)
+                        FlagIcon(
+                            modifier = Modifier.padding(Spacing.s),
+                            countryCode = it
+                        )
                     }
                 } else {
                     Box(modifier = Modifier
                         .size(iconSize)
                         .aspectRatio(1f)
+                        .clip(MaterialTheme.shapes.medium)
                         .pulseAnimation())
                 }
             }
@@ -97,9 +105,11 @@ fun LocaleCard(
                     } else {
                         Box(
                             modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(end = Spacing.l)
                                 .height(with(density) { MaterialTheme.typography.bodyLarge.lineHeight.toDp() })
-                                .pulseAnimation()
                                 .clip(CircleShape)
+                                .pulseAnimation()
                         )
                     }
                 }

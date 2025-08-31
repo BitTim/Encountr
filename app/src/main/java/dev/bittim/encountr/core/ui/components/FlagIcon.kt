@@ -7,7 +7,7 @@
  * File:       FlagIcon.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   24.08.25, 20:15
+ * Modified:   31.08.25, 16:43
  */
 
 package dev.bittim.encountr.core.ui.components
@@ -18,7 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import coil3.compose.AsyncImage
 
 data object FlagIconDefaults {
-    const val BASE_URL: String = "https://flagcdn.com/32x24/"
+    const val BASE_URL: String = "https://flagcdn.com/64x48/"
 }
 
 @Composable

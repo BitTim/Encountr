@@ -1,5 +1,5 @@
 [versions]
-agp = "8.12.1"
+agp = "8.12.2"
 coilCompose = "3.3.0"
 coilGif = "3.3.0"
 coilNetworkKtor3 = "3.3.0"

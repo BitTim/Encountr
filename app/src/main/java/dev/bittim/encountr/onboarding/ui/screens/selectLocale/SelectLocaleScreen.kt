@@ -7,7 +7,7 @@
  * File:       SelectLocaleScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   24.08.25, 20:17
+ * Modified:   31.08.25, 16:37
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.selectLocale
@@ -24,11 +24,13 @@ import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.PagerSnapDistance
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
@@ -74,8 +76,8 @@ fun SelectLocaleScreen(
                         state = pagerState,
                         pagerSnapDistance = PagerSnapDistance.atMost(pagerState.pageCount)
                     ),
-                ) {
-                    val locale = state.locales?.getOrNull(it)
+                ) { index ->
+                    val locale = state.locales?.getOrNull(index)
                     val localeCardState = if (locale == null) null else {
                         LocaleCardState(
                             name = locale.names.find { it.language.name == locale.name }?.name
@@ -84,7 +86,7 @@ fun SelectLocaleScreen(
                         )
                     }
 
-                    val pageOffset = pagerState.getOffsetDistanceInPages(it).absoluteValue
+                    val pageOffset = pagerState.getOffsetDistanceInPages(index).absoluteValue
                     val horizontalPadding = (32f * minOf(pageOffset, 1f)).dp
                     val blur =
                         lerp(
@@ -112,7 +114,8 @@ fun SelectLocaleScreen(
                             }
                             .clickable {
                                 //if (pageOffset <= 1) clickedPage = it
-                            },
+                            }
+                            .clip(MaterialTheme.shapes.medium),
                         state = localeCardState,
                     )
                 }

@@ -7,7 +7,7 @@
  * File:       SelectLocaleViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   24.08.25, 20:06
+ * Modified:   31.08.25, 16:55
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.selectLocale
@@ -15,6 +15,7 @@ package dev.bittim.encountr.onboarding.ui.screens.selectLocale
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.pokeapi.pokekotlin.PokeApi
+import dev.bittim.encountr.core.data.pokeapi.extension.hasSelfLocalizedName
 import dev.bittim.encountr.core.domain.Paginator
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,8 +37,8 @@ class SelectLocaleViewModel : ViewModel() {
         onRequest = { offset ->
             return@Paginator try {
                 val response = PokeApi.getLanguageList(offset, pageSize)
-                val languages = response.results.map { handle ->
-                    PokeApi.getLanguage(handle.id)
+                val languages = response.results.mapNotNull { handle ->
+                    PokeApi.getLanguage(handle.id).takeIf { it.hasSelfLocalizedName() }
                 }
 
                 Result.success(Pair(response.count, languages))
