@@ -7,7 +7,7 @@
  * File:       LocaleCard.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   31.08.25, 17:00
+ * Modified:   31.08.25, 17:13
  */
 
 package dev.bittim.encountr.core.ui.components
@@ -39,7 +39,7 @@ import dev.bittim.encountr.core.ui.util.annotations.ComponentPreview
 import dev.bittim.encountr.core.ui.util.extenstions.modifier.pulseAnimation
 
 data object LocaleCardDefaults {
-    val height = 56.dp
+    val height = 64.dp
     val elevation: Dp = Spacing.xxs
     val iconElevation: Dp = Spacing.xs
 }

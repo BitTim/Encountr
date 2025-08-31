@@ -7,7 +7,7 @@
  * File:       SelectLocaleScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   31.08.25, 16:37
+ * Modified:   31.08.25, 17:03
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.selectLocale
@@ -56,11 +56,9 @@ fun SelectLocaleScreen(
 
     OnboardingLayout(
         modifier = Modifier.fillMaxSize(),
-        upper = {
+        upper = { upperModifier ->
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = Spacing.l),
+                modifier = upperModifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
                 val pageSize = LocaleCardDefaults.height + (Spacing.xs * 2)
@@ -121,9 +119,9 @@ fun SelectLocaleScreen(
                 }
             }
         },
-        lower = {
+        lower = { lowerModifier ->
             OnboardingActions(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = lowerModifier.fillMaxWidth(),
                 onContinue = navNext,
                 onBack = navBack
             )

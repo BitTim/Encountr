@@ -7,7 +7,7 @@
   ~ File:       strings.xml
   ~ Module:     Encountr.app.main
   ~ Author:     Tim Anhalt (BitTim)
-  ~ Modified:   16.08.25, 21:48
+  ~ Modified:   31.08.25, 17:12
   -->
 
 <resources>
@@ -35,4 +35,6 @@
     <string name="content_desc_gamesel_arrow_down">Spiel auswählen</string>
     <string name="error_invalid_version_group">Ungültige Versionsgruppe (%s)</string>
     <string name="error_invalid_version">Ungültige Version (%s)</string>
+    <string name="onboarding_select_locale_title">Sprache</string>
+    <string name="onboarding_select_locale_description">Bitte wähle deine bevorzugte Sprache für die spielinternen Inhalte aus. Dies hat keinen Einfluss auf die App-Sprache.</string>
 </resources>

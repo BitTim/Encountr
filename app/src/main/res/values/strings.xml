@@ -7,7 +7,7 @@
   ~ File:       strings.xml
   ~ Module:     Encountr.app.main
   ~ Author:     Tim Anhalt (BitTim)
-  ~ Modified:   24.08.25, 20:08
+  ~ Modified:   31.08.25, 17:10
   -->
 
 <resources>
@@ -37,5 +37,5 @@
     <string name="error_invalid_version_group">Invalid Version Group (%s)</string>
     <string name="error_invalid_version">Invalid Version (%s)</string>
     <string name="onboarding_select_locale_title">Language</string>
-    <string name="onboarding_select_locale_description">!! Placeholder</string>
+    <string name="onboarding_select_locale_description">Please select your preferred language for in-game content. This will not affect the app language.</string>
 </resources>
