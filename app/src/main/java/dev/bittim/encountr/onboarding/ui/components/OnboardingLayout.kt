@@ -7,7 +7,7 @@
  * File:       OnboardingLayout.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   14.08.25, 01:39
+ * Modified:   02.09.25, 15:54
  */
 
 package dev.bittim.encountr.onboarding.ui.components
@@ -21,12 +21,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import dev.bittim.encountr.core.ui.theme.Spacing
 
+data object OnboardingLayoutDefaults {
+    val spacing: Dp = Spacing.xl
+}
+
 @Composable
 fun OnboardingLayout(
     modifier: Modifier = Modifier,
     upper: @Composable (modifier: Modifier) -> Unit,
     lower: @Composable (modifier: Modifier) -> Unit,
-    spacing: Dp = Spacing.xl
+    spacing: Dp = OnboardingLayoutDefaults.spacing
 ) {
     Column(
         modifier = modifier

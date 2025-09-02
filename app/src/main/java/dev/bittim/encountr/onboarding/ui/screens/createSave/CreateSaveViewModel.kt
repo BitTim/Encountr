@@ -7,7 +7,7 @@
  * File:       CreateSaveViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   17.08.25, 03:20
+ * Modified:   02.09.25, 16:35
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
@@ -107,6 +107,11 @@ class CreateSaveViewModel(
     )
 
     init {
+        viewModelScope.launch {
+            val generationCount = PokeApi.getGenerationList(0, 1).count
+            _state.update { it.copy(generations = generationCount) }
+        }
+
         loadNext()
     }
 

@@ -7,7 +7,7 @@
   ~ File:       strings.xml
   ~ Module:     Encountr.app.main
   ~ Author:     Tim Anhalt (BitTim)
-  ~ Modified:   02.09.25, 04:21
+  ~ Modified:   02.09.25, 17:01
   -->
 
 <resources>
@@ -32,11 +32,13 @@
     <string name="error_invalid_content">Invalid format of response</string>
     <string name="error_cache">Error during cache creation</string>
     <string name="onboarding_create_save_title">Create Save</string>
-    <string name="onboarding_create_save_description">!! Placeholder</string>
+    <string name="onboarding_create_save_description">Start your first save: select a game, give it a name, and you’ll be able to add more whenever you want.</string>
     <string name="button_back">Back</string>
     <string name="content_desc_gamesel_arrow_down">Select game</string>
     <string name="error_invalid_version_group">Invalid Version Group (%s)</string>
     <string name="error_invalid_version">Invalid Version (%s)</string>
     <string name="onboarding_select_locale_title">Language</string>
     <string name="onboarding_select_locale_description">Please select your preferred language for in-game content. This will not affect the app language.</string>
+    <string name="onboarding_create_save_gen_slider_label">Generation</string>
+    <string name="onboarding_create_save_name_field_label">Name</string>
 </resources>

@@ -7,7 +7,7 @@
   ~ File:       strings.xml
   ~ Module:     Encountr.app.main
   ~ Author:     Tim Anhalt (BitTim)
-  ~ Modified:   02.09.25, 04:21
+  ~ Modified:   02.09.25, 17:00
   -->
 
 <resources>
@@ -30,12 +30,14 @@
     <string name="error_invalid_response">Ungültige Antowrt von der URL</string>
     <string name="error_invalid_content">Ungültiges Fromat der Antwort</string>
     <string name="error_cache">Fehler beim Erstellen des Caches</string>
-    <string name="onboarding_create_save_title">Save Erstellen</string>
-    <string name="onboarding_create_save_description">!! Platzhalter</string>
+    <string name="onboarding_create_save_title">Spielstand Erstellen</string>
+    <string name="onboarding_create_save_description">Erstelle jetzt deinen ersten Spielstand – wähle ein Spiel, benenne ihn und füge später weitere hinzu.</string>
     <string name="button_back">Zurück</string>
     <string name="content_desc_gamesel_arrow_down">Spiel auswählen</string>
     <string name="error_invalid_version_group">Ungültige Versionsgruppe (%s)</string>
     <string name="error_invalid_version">Ungültige Version (%s)</string>
     <string name="onboarding_select_locale_title">Sprache</string>
     <string name="onboarding_select_locale_description">Bitte wähle deine bevorzugte Sprache für die spielinternen Inhalte aus. Dies hat keinen Einfluss auf die App-Sprache.</string>
+    <string name="onboarding_create_save_gen_slider_label">Generation</string>
+    <string name="onboarding_create_save_name_field_label">Name</string>
 </resources>

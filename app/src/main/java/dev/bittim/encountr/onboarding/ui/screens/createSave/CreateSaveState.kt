@@ -7,7 +7,7 @@
  * File:       CreateSaveState.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   16.08.25, 21:02
+ * Modified:   02.09.25, 16:35
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
@@ -30,6 +30,7 @@ data class Game(
 }
 
 data class CreateSaveState(
+    val generations: Int? = null,
     val games: List<Game>? = null,
     val isLoading: Boolean = false,
     val error: String? = null
