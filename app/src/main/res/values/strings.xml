@@ -7,7 +7,7 @@
   ~ File:       strings.xml
   ~ Module:     Encountr.app.main
   ~ Author:     Tim Anhalt (BitTim)
-  ~ Modified:   31.08.25, 17:10
+  ~ Modified:   02.09.25, 04:21
   -->
 
 <resources>
@@ -24,6 +24,7 @@
     <string name="text_field_definitions_url">Definitions URL</string>
     <string name="content_desc_confirm">Confirm</string>
     <string name="content_desc_reset">Reset</string>
+    <string name="content_desc_selected">Selected</string>
 
     <string name="error_unknown">Something went wrong</string>
     <string name="error_invalid_url">Invalid URL</string>

@@ -7,12 +7,16 @@
  * File:       LocaleCard.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   31.08.25, 17:13
+ * Modified:   02.09.25, 04:48
  */
 
 package dev.bittim.encountr.core.ui.components
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,7 +27,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,14 +41,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import dev.bittim.encountr.R
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
+import dev.bittim.encountr.core.ui.util.UiText
 import dev.bittim.encountr.core.ui.util.annotations.ComponentPreview
 import dev.bittim.encountr.core.ui.util.extenstions.modifier.pulseAnimation
 
 data object LocaleCardDefaults {
     val height = 64.dp
-    val elevation: Dp = Spacing.xxs
     val iconElevation: Dp = Spacing.xs
 }
 
@@ -53,15 +62,18 @@ data class LocaleCardState(
 fun LocaleCard(
     modifier: Modifier = Modifier,
     state: LocaleCardState?,
+    isSelected: Boolean,
+    onClick: () -> Unit,
     iconSize: Dp = LocaleCardDefaults.height,
-    elevation: Dp = LocaleCardDefaults.elevation,
     iconElevation: Dp = LocaleCardDefaults.iconElevation
 ) {
     val density = LocalDensity.current
+    val outlineColor =
+        animateColorAsState(if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant)
 
-    Surface(
-        modifier = modifier,
-        tonalElevation = elevation
+    OutlinedCard(
+        modifier = modifier.clickable(onClick = onClick),
+        border = BorderStroke(1.dp, outlineColor.value)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -93,25 +105,38 @@ fun LocaleCard(
                 }
             }
 
-            Column(
-                verticalArrangement = Arrangement.spacedBy(Spacing.xs)
+            Crossfade(
+                modifier = Modifier.weight(1f),
+                targetState = state?.name
             ) {
-                Crossfade(targetState = state?.name) {
-                    if (!it.isNullOrEmpty()) {
-                        Text(
-                            text = it,
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    } else {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(end = Spacing.l)
-                                .height(with(density) { MaterialTheme.typography.bodyLarge.lineHeight.toDp() })
-                                .clip(CircleShape)
-                                .pulseAnimation()
-                        )
-                    }
+                if (!it.isNullOrEmpty()) {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = Spacing.l)
+                            .height(with(density) { MaterialTheme.typography.bodyLarge.lineHeight.toDp() })
+                            .clip(CircleShape)
+                            .pulseAnimation()
+                    )
+                }
+            }
+
+            AnimatedContent(
+                modifier = Modifier.padding(end = Spacing.m),
+                targetState = isSelected,
+            ) {
+                if (it) {
+                    Icon(
+                        imageVector = Icons.Filled.CheckCircle,
+                        contentDescription = UiText.StringResource(R.string.content_desc_selected)
+                            .asString(),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
                 }
             }
         }
@@ -126,8 +151,15 @@ fun LocaleCardPreview() {
             Column(
                 verticalArrangement = Arrangement.spacedBy(Spacing.xs)
             ) {
-                LocaleCard(state = null)
-                LocaleCard(state = LocaleCardState(name = "Test", countryCode = "de"))
+                LocaleCard(state = null, isSelected = false, onClick = {})
+                LocaleCard(
+                    state = LocaleCardState(name = "Test", countryCode = "de"),
+                    isSelected = false,
+                    onClick = {})
+                LocaleCard(
+                    state = LocaleCardState(name = "Test", countryCode = "de"),
+                    isSelected = true,
+                    onClick = {})
             }
         }
     }
