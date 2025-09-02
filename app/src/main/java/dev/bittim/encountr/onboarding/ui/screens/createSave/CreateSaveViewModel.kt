@@ -7,7 +7,7 @@
  * File:       CreateSaveViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   02.09.25, 16:35
+ * Modified:   02.09.25, 18:46
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
@@ -20,14 +20,12 @@ import dev.bittim.encountr.R
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
 import dev.bittim.encountr.core.data.pokeapi.GameError
 import dev.bittim.encountr.core.data.pokeapi.mapping.mapPokemonVersionSprite
-import dev.bittim.encountr.core.domain.Paginator
+import dev.bittim.encountr.core.domain.error.Result
 import dev.bittim.encountr.core.ui.util.UiText
-import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.coroutines.coroutineContext
 
 class CreateSaveViewModel(
     private val application: Application,
@@ -36,30 +34,37 @@ class CreateSaveViewModel(
     private val _state = MutableStateFlow(CreateSaveState())
     val state = _state.asStateFlow()
 
-    private val pageSize = 10
-    private val paginator = Paginator(
-        initialKey = 0,
-        onLoadUpdated = { isLoading ->
-            _state.update { it.copy(isLoading = isLoading) }
-        },
-        onRequest = { offset ->
-            return@Paginator try {
-                val response = PokeApi.getVersionList(offset, pageSize)
-                val games = response.results.mapNotNull { handle ->
-                    val version = PokeApi.getVersion(handle.id)
-                    val versionGroup = PokeApi.getVersionGroup(version.versionGroup.id)
-                    val generation = PokeApi.getGeneration(versionGroup.generation.id)
+    init {
+        viewModelScope.launch {
+            val generationCount = PokeApi.getGenerationList(0, 1).count
+            _state.update { it.copy(generations = generationCount) }
 
-                    if (definitionRepository.checkIgnored(handle.id)) return@mapNotNull null
-                    val iconDefinition = definitionRepository.getIconByGame(handle.id)
+            onGenChanged(1)
+        }
+    }
 
+    fun onGenChanged(generationId: Int) {
+        viewModelScope.launch {
+            _state.update { it.copy(games = null) }
+
+            val generation = PokeApi.getGeneration(generationId)
+            val games = generation.versionGroups.flatMap { vgHandle ->
+                val versionGroup = PokeApi.getVersionGroup(vgHandle.id)
+                val versions = versionGroup.versions.mapNotNull { vHandle ->
+                    PokeApi.getVersion(vHandle.id)
+                        .takeIf { !definitionRepository.checkIgnored(it.id) }
+                }
+
+                versions.map { version ->
+                    val iconDefinition = definitionRepository.getIconByGame(version.id)
                     val imageUrl = iconDefinition?.let {
                         val rawSprites = PokeApi.getPokemonVariety(it.pokemon).sprites
                         val result =
                             mapPokemonVersionSprite(rawSprites, generation, versionGroup, version)
-                        val sprites = when (result) {
-                            is dev.bittim.encountr.core.domain.error.Result.Ok -> result.data
-                            is dev.bittim.encountr.core.domain.error.Result.Err -> throw Exception(
+
+                        when (result) {
+                            is Result.Ok -> result.data
+                            is Result.Err -> throw Exception(
                                 when (result.error) {
                                     is GameError.InvalidVersionGroup -> UiText.StringResource(
                                         R.string.error_invalid_version_group,
@@ -75,9 +80,7 @@ class CreateSaveViewModel(
                                         .asString(application.applicationContext)
                                 }
                             )
-                        }
-
-                        sprites.frontDefault
+                        }.frontDefault
                     }
 
                     Game(
@@ -87,37 +90,9 @@ class CreateSaveViewModel(
                         imageUrl = imageUrl
                     )
                 }
-
-                Result.success(Pair(response.count, games))
-            } catch (e: Exception) {
-                coroutineContext.ensureActive()
-                Result.failure(e)
             }
-        },
-        getNextKey = { currentKey, _ -> currentKey + pageSize },
-        onError = { throwable ->
-            _state.update { it.copy(error = throwable?.localizedMessage ?: throwable?.message) }
-        },
-        onSuccess = { item, newKey ->
-            _state.update { it.copy(games = if (it.games == null) item.second else it.games + item.second) }
-        },
-        checkFinished = { currentKey, item ->
-            currentKey >= item.first
-        }
-    )
 
-    init {
-        viewModelScope.launch {
-            val generationCount = PokeApi.getGenerationList(0, 1).count
-            _state.update { it.copy(generations = generationCount) }
-        }
-
-        loadNext()
-    }
-
-    fun loadNext() {
-        viewModelScope.launch {
-            paginator.next()
+            _state.update { it.copy(games = games) }
         }
     }
 }

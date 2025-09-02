@@ -7,7 +7,7 @@
  * File:       GameCard.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   16.08.25, 22:05
+ * Modified:   02.09.25, 18:42
  */
 
 package dev.bittim.encountr.core.ui.components
@@ -16,16 +16,17 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
@@ -38,7 +39,7 @@ import dev.bittim.encountr.core.ui.util.annotations.ComponentPreview
 import dev.bittim.encountr.core.ui.util.extenstions.modifier.pulseAnimation
 
 data object GameCardDefaults {
-    val iconSize: Dp = 56.dp
+    val iconSize: Dp = 180.dp
     val shape = RoundedCornerShape(Spacing.m)
     val elevation = Spacing.xxs
 }
@@ -64,15 +65,12 @@ fun GameCard(
         shape = shape,
         tonalElevation = elevation
     ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(Spacing.m),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Column {
             Crossfade(state?.imageUrl) {
                 if (it != null) {
                     GameIcon(
                         modifier = Modifier
-                            .height(iconSize)
+                            .width(iconSize)
                             .aspectRatio(1f)
                             .clip(MaterialTheme.shapes.medium),
                         imageUrl = it
@@ -80,7 +78,7 @@ fun GameCard(
                 } else {
                     Box(
                         modifier = Modifier
-                            .height(iconSize)
+                            .width(iconSize)
                             .aspectRatio(1f)
                             .clip(MaterialTheme.shapes.medium)
                             .pulseAnimation()
@@ -89,7 +87,9 @@ fun GameCard(
             }
 
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .width(iconSize)
+                    .padding(Spacing.m)
             ) {
                 Crossfade(state?.generation) {
                     if (it != null) {
@@ -101,7 +101,9 @@ fun GameCard(
                     } else {
                         Box(
                             modifier = Modifier
-                                .height(with(density) { MaterialTheme.typography.labelSmall.lineHeight.toDp() })
+                                .fillMaxWidth()
+                                .height(with(density) { MaterialTheme.typography.labelSmall.lineHeight.toDp() - 1.dp })
+                                .padding(bottom = 1.dp)
                                 .clip(CircleShape)
                                 .pulseAnimation()
                         )
@@ -117,9 +119,11 @@ fun GameCard(
                     } else {
                         Box(
                             modifier = Modifier
-                                .height(with(density) { MaterialTheme.typography.bodyLarge.lineHeight.toDp() })
-                                .pulseAnimation()
+                                .fillMaxWidth()
+                                .height(with(density) { MaterialTheme.typography.bodyLarge.lineHeight.toDp() - 1.dp })
+                                .padding(top = 1.dp)
                                 .clip(CircleShape)
+                                .pulseAnimation()
                         )
                     }
                 }

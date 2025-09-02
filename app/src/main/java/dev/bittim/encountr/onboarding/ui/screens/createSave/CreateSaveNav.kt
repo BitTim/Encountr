@@ -7,7 +7,7 @@
  * File:       CreateSaveNav.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   16.08.25, 21:15
+ * Modified:   02.09.25, 18:28
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
@@ -32,7 +32,7 @@ fun NavGraphBuilder.createSaveScreen(
 
         CreateSaveScreen(
             state = state.value,
-            loadNext = viewModel::loadNext,
+            onGenChanged = viewModel::onGenChanged,
             navBack = navBack,
             navNext = { Log.d("CreateSaveScreen", "Next") }
         )

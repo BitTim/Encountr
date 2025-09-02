@@ -7,7 +7,7 @@
  * File:       CreateSaveScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   02.09.25, 16:54
+ * Modified:   02.09.25, 18:49
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
@@ -17,7 +17,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.pager.PageSize
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,11 +29,14 @@ import androidx.compose.material3.SliderState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import dev.bittim.encountr.R
+import dev.bittim.encountr.core.ui.components.GameCard
+import dev.bittim.encountr.core.ui.components.GameCardDefaults
 import dev.bittim.encountr.core.ui.components.LabeledSlider
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
@@ -45,11 +49,18 @@ import dev.bittim.encountr.onboarding.ui.components.OnboardingLayout
 @Composable
 fun CreateSaveScreen(
     state: CreateSaveState,
-    loadNext: () -> Unit,
+    onGenChanged: (generationId: Int) -> Unit,
     navBack: () -> Unit,
     navNext: () -> Unit,
 ) {
-    val pagerState = rememberPagerState(pageCount = { 0 })
+    val pagerState by remember(state.games) {
+        mutableStateOf(
+            PagerState(
+                currentPage = 0,
+                pageCount = { state.games?.count() ?: 3 },
+            )
+        )
+    }
     val sliderState by remember(state.generations) {
         mutableStateOf(
             SliderState(
@@ -60,14 +71,25 @@ fun CreateSaveScreen(
     }
     val textFieldState = rememberTextFieldState()
 
+    LaunchedEffect(sliderState.value) {
+        onGenChanged(sliderState.value.toInt() + 1)
+    }
+
     OnboardingLayout(
         modifier = Modifier.fillMaxSize(),
         upper = { upperModifier ->
             HorizontalPager(
                 modifier = upperModifier,
-                state = pagerState
-            ) {
-
+                state = pagerState,
+                pageSize = PageSize.Fixed(GameCardDefaults.iconSize),
+                pageSpacing = Spacing.m
+            ) { index ->
+                state.games?.get(index)?.toGameSelectorState()?.let {
+                    GameCard(
+                        modifier = Modifier.fillMaxWidth(),
+                        state = it
+                    )
+                }
             }
         },
         lower = { lowerModifier ->
@@ -77,7 +99,7 @@ fun CreateSaveScreen(
             ) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(Spacing.m)
+                    verticalArrangement = Arrangement.spacedBy(Spacing.s)
                 ) {
                     LabeledSlider(
                         modifier = Modifier.fillMaxWidth(),
@@ -118,7 +140,7 @@ fun CreateSaveScreenPreview() {
         Surface {
             CreateSaveScreen(
                 state = CreateSaveState(),
-                loadNext = {},
+                onGenChanged = {},
                 navBack = {},
                 navNext = {}
             )
