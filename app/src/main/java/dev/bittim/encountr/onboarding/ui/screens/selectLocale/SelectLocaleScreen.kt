@@ -7,7 +7,7 @@
  * File:       SelectLocaleScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   02.09.25, 04:43
+ * Modified:   02.09.25, 04:53
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.selectLocale
@@ -20,7 +20,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import dev.bittim.encountr.core.ui.components.LocaleCard
@@ -41,7 +41,7 @@ fun SelectLocaleScreen(
     navNext: () -> Unit = {},
     navBack: () -> Unit = {}
 ) {
-    var selectedLocale by remember { mutableIntStateOf(0) }
+    var selectedLocale by rememberSaveable { mutableIntStateOf(0) }
 
     OnboardingLayout(
         modifier = Modifier.fillMaxSize(),

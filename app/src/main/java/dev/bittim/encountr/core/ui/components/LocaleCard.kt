@@ -7,7 +7,7 @@
  * File:       LocaleCard.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   02.09.25, 04:48
+ * Modified:   02.09.25, 04:53
  */
 
 package dev.bittim.encountr.core.ui.components
@@ -69,10 +69,10 @@ fun LocaleCard(
 ) {
     val density = LocalDensity.current
     val outlineColor =
-        animateColorAsState(if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant)
+        animateColorAsState(if (isSelected && state != null) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant)
 
     OutlinedCard(
-        modifier = modifier.clickable(onClick = onClick),
+        modifier = modifier.clickable(onClick = onClick, enabled = state != null),
         border = BorderStroke(1.dp, outlineColor.value)
     ) {
         Row(
@@ -128,7 +128,7 @@ fun LocaleCard(
 
             AnimatedContent(
                 modifier = Modifier.padding(end = Spacing.m),
-                targetState = isSelected,
+                targetState = isSelected && state != null,
             ) {
                 if (it) {
                     Icon(
