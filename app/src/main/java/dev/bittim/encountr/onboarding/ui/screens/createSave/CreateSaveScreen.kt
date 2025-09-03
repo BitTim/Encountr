@@ -7,17 +7,23 @@
  * File:       CreateSaveScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   02.09.25, 18:49
+ * Modified:   03.09.25, 03:50
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
+import androidx.compose.foundation.pager.PagerDefaults
+import androidx.compose.foundation.pager.PagerSnapDistance
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -33,7 +39,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.lerp
 import dev.bittim.encountr.R
 import dev.bittim.encountr.core.ui.components.GameCard
 import dev.bittim.encountr.core.ui.components.GameCardDefaults
@@ -42,8 +55,11 @@ import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.UiText
 import dev.bittim.encountr.core.ui.util.annotations.ScreenPreview
+import dev.bittim.encountr.core.ui.util.extenstions.modifier.SATURATION_DESATURATED
+import dev.bittim.encountr.core.ui.util.extenstions.modifier.saturation
 import dev.bittim.encountr.onboarding.ui.components.OnboardingActions
 import dev.bittim.encountr.onboarding.ui.components.OnboardingLayout
+import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -53,6 +69,9 @@ fun CreateSaveScreen(
     navBack: () -> Unit,
     navNext: () -> Unit,
 ) {
+    val density = LocalDensity.current
+    val windowInfo = LocalWindowInfo.current
+
     val pagerState by remember(state.games) {
         mutableStateOf(
             PagerState(
@@ -78,23 +97,64 @@ fun CreateSaveScreen(
     OnboardingLayout(
         modifier = Modifier.fillMaxSize(),
         upper = { upperModifier ->
-            HorizontalPager(
-                modifier = upperModifier,
-                state = pagerState,
-                pageSize = PageSize.Fixed(GameCardDefaults.iconSize),
-                pageSpacing = Spacing.m
-            ) { index ->
-                state.games?.get(index)?.toGameSelectorState()?.let {
+            Box(
+                modifier = upperModifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                val pageSize = GameCardDefaults.iconSize
+                val contentPadding =
+                    with(density) { (windowInfo.containerSize.width.toDp() - pageSize) / 2 }
+
+                HorizontalPager(
+                    modifier = upperModifier,
+                    state = pagerState,
+                    pageSize = PageSize.Fixed(pageSize),
+                    pageSpacing = Spacing.s,
+                    contentPadding = PaddingValues(horizontal = contentPadding),
+                    flingBehavior = PagerDefaults.flingBehavior(
+                        state = pagerState,
+                        pagerSnapDistance = PagerSnapDistance.atMost(pagerState.pageCount)
+                    ),
+                ) { index ->
+                    val pageOffset = pagerState.getOffsetDistanceInPages(index).absoluteValue
+                    val topPadding = (32f * minOf(pageOffset, 1f)).dp
+                    val bottomPadding = 32.dp - topPadding
+                    val blur =
+                        lerp(start = 0f, stop = 4f, fraction = pageOffset.coerceIn(0f, 1f)).dp
+                    val saturation = lerp(
+                        start = SATURATION_DESATURATED,
+                        stop = 1f,
+                        fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                    )
+
+                    val gameCardState = state.games?.get(index)?.toGameSelectorState()
+
                     GameCard(
-                        modifier = Modifier.fillMaxWidth(),
-                        state = it
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .blur(blur)
+                            .padding(
+                                start = Spacing.xs,
+                                end = Spacing.xs,
+                                top = Spacing.xs + topPadding,
+                                bottom = Spacing.xs + bottomPadding
+                            )
+                            .saturation(saturation)
+                            .graphicsLayer {
+                                alpha = lerp(
+                                    start = 0f,
+                                    stop = 1f,
+                                    fraction = 2f - pageOffset.coerceIn(0f, 2f)
+                                )
+                            },
+                        state = gameCardState
                     )
                 }
             }
         },
         lower = { lowerModifier ->
             Column(
-                modifier = lowerModifier,
+                modifier = lowerModifier.safeContentPadding(),
                 verticalArrangement = Arrangement.spacedBy(Spacing.l)
             ) {
                 Column(

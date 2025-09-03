@@ -7,7 +7,7 @@
  * File:       SelectLocaleScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   02.09.25, 04:53
+ * Modified:   03.09.25, 03:11
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.selectLocale
@@ -15,6 +15,7 @@ package dev.bittim.encountr.onboarding.ui.screens.selectLocale
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -44,7 +45,9 @@ fun SelectLocaleScreen(
     var selectedLocale by rememberSaveable { mutableIntStateOf(0) }
 
     OnboardingLayout(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .safeContentPadding(),
         upper = { upperModifier ->
             LazyColumn(
                 modifier = upperModifier.fillMaxSize(),

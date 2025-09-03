@@ -7,7 +7,7 @@
  * File:       CreateSaveViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   02.09.25, 18:46
+ * Modified:   03.09.25, 03:52
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
@@ -22,6 +22,7 @@ import dev.bittim.encountr.core.data.pokeapi.GameError
 import dev.bittim.encountr.core.data.pokeapi.mapping.mapPokemonVersionSprite
 import dev.bittim.encountr.core.domain.error.Result
 import dev.bittim.encountr.core.ui.util.UiText
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -34,6 +35,8 @@ class CreateSaveViewModel(
     private val _state = MutableStateFlow(CreateSaveState())
     val state = _state.asStateFlow()
 
+    var fetchGamesByGenJob: Job? = null
+
     init {
         viewModelScope.launch {
             val generationCount = PokeApi.getGenerationList(0, 1).count
@@ -44,7 +47,8 @@ class CreateSaveViewModel(
     }
 
     fun onGenChanged(generationId: Int) {
-        viewModelScope.launch {
+        fetchGamesByGenJob?.cancel()
+        fetchGamesByGenJob = viewModelScope.launch {
             _state.update { it.copy(games = null) }
 
             val generation = PokeApi.getGeneration(generationId)

@@ -7,7 +7,7 @@
  * File:       LandingScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   14.08.25, 03:47
+ * Modified:   03.09.25, 03:11
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.landing
@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Code
@@ -82,7 +83,9 @@ fun LandingScreen(
     val index by remember { mutableIntStateOf(Random.nextInt(1, 1026)) } // TODO: Temporary
 
     OnboardingLayout(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .safeContentPadding(),
         upper = {
             // TODO: Temporary
             AsyncImage(

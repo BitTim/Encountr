@@ -7,14 +7,18 @@
  * File:       OnboardingContainerScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   24.08.25, 20:10
+ * Modified:   03.09.25, 03:35
  */
 
 package dev.bittim.encountr.onboarding.ui.container
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,6 +29,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -46,6 +51,8 @@ fun OnboardingContainerScreen(
     state: OnboardingContainerState,
     navController: NavHostController,
 ) {
+    val layoutDirection = LocalLayoutDirection.current
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets.safeContent
@@ -53,11 +60,22 @@ fun OnboardingContainerScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it),
+                .consumeWindowInsets(
+                    PaddingValues(
+                        top = it.calculateTopPadding(),
+                        bottom = it.calculateBottomPadding()
+                    )
+                )
+                .padding(top = it.calculateTopPadding(), bottom = it.calculateBottomPadding()),
             verticalArrangement = Arrangement.spacedBy(Spacing.xl),
         ) {
             OnboardingHeader(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = it.calculateStartPadding(layoutDirection),
+                        end = it.calculateEndPadding(layoutDirection)
+                    ),
                 title = state.title ?: UiText.DynamicString(""),
                 progress = state.progress ?: 0.0f,
                 description = state.description ?: UiText.DynamicString(""),

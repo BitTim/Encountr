@@ -7,7 +7,7 @@
  * File:       GameCard.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   02.09.25, 18:42
+ * Modified:   03.09.25, 04:12
  */
 
 package dev.bittim.encountr.core.ui.components
@@ -30,13 +30,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.annotations.ComponentPreview
 import dev.bittim.encountr.core.ui.util.extenstions.modifier.pulseAnimation
+import dev.bittim.encountr.core.ui.util.font.getScaledLineHeightFromFontStyle
 
 data object GameCardDefaults {
     val iconSize: Dp = 180.dp
@@ -59,6 +62,7 @@ fun GameCard(
     elevation: Dp = GameCardDefaults.elevation
 ) {
     val density = LocalDensity.current
+    val configuration = LocalConfiguration.current
 
     Surface(
         modifier = modifier,
@@ -96,13 +100,19 @@ fun GameCard(
                         Text(
                             text = it,
                             style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     } else {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(with(density) { MaterialTheme.typography.labelSmall.lineHeight.toDp() - 1.dp })
+                                .height(
+                                    getScaledLineHeightFromFontStyle(
+                                        density, configuration, MaterialTheme.typography.labelSmall
+                                    ) - 1.dp
+                                )
                                 .padding(bottom = 1.dp)
                                 .clip(CircleShape)
                                 .pulseAnimation()
@@ -114,13 +124,19 @@ fun GameCard(
                     if (it != null) {
                         Text(
                             text = it,
-                            style = MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodyLarge,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     } else {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(with(density) { MaterialTheme.typography.bodyLarge.lineHeight.toDp() - 1.dp })
+                                .height(
+                                    getScaledLineHeightFromFontStyle(
+                                        density, configuration, MaterialTheme.typography.bodyLarge
+                                    ) - 1.dp
+                                )
                                 .padding(top = 1.dp)
                                 .clip(CircleShape)
                                 .pulseAnimation()
