@@ -7,7 +7,7 @@
  * File:       CreateSaveViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 18:06
+ * Modified:   04.09.25, 23:26
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
@@ -21,6 +21,7 @@ import dev.bittim.encountr.core.data.config.ConfigStateHolder
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
 import dev.bittim.encountr.core.data.pokeapi.GameError
 import dev.bittim.encountr.core.data.pokeapi.mapping.mapPokemonVersionSprite
+import dev.bittim.encountr.core.data.user.repo.SaveRepository
 import dev.bittim.encountr.core.di.Constants
 import dev.bittim.encountr.core.domain.error.Result
 import dev.bittim.encountr.core.ui.util.UiText
@@ -30,11 +31,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.uuid.ExperimentalUuidApi
 
 class CreateSaveViewModel(
     private val application: Application,
     private val configStateHolder: ConfigStateHolder,
     private val definitionRepository: DefinitionRepository,
+    private val saveRepository: SaveRepository
 ) : AndroidViewModel(application) {
     private val _state = MutableStateFlow(CreateSaveState())
     val state = _state.asStateFlow()
@@ -112,8 +115,13 @@ class CreateSaveViewModel(
         }
     }
 
-    fun onContinue(navNext: () -> Unit) {
+    @OptIn(ExperimentalUuidApi::class)
+    fun onContinue(gameId: Int, name: String, navNext: () -> Unit) {
+        if (gameId == 0) return
+
         viewModelScope.launch {
+            val save = saveRepository.create(name, gameId)
+            configStateHolder.setCurrentSaveUuid(save.id)
             launch(Dispatchers.Main) { navNext() }
         }
     }

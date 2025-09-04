@@ -4,10 +4,10 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       PokemonRepoImpl.kt
+ * File:       PokemonRepositoryImpl.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.08.25, 14:23
+ * Modified:   04.09.25, 23:26
  */
 
 package dev.bittim.encountr.core.data.user.repo
@@ -22,19 +22,21 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-class PokemonRepoImpl(
+class PokemonRepositoryImpl(
     private val userDatabase: UserDatabase
-) : PokemonRepo {
+) : PokemonRepository {
     // region:      -- Create
 
     override suspend fun create(
         save: Uuid,
         pokemon: PokemonVariety,
-        caught: Boolean
+        caught: Boolean,
+        shiny: Boolean
     ): Pokemon {
         val pokemon = Pokemon(
             id = pokemon.id,
-            caught = caught
+            caught = caught,
+            shiny = shiny
         )
 
         userDatabase.pokemonDao.insert(PokemonEntity(pokemon, save))

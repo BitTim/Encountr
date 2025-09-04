@@ -7,7 +7,7 @@
  * File:       AppModule.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 18:06
+ * Modified:   04.09.25, 23:26
  */
 
 package dev.bittim.encountr.core.di
@@ -24,6 +24,13 @@ import dev.bittim.encountr.core.data.defs.remote.DefinitionKtorService
 import dev.bittim.encountr.core.data.defs.remote.DefinitionService
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepositoryImpl
+import dev.bittim.encountr.core.data.user.local.UserDatabase
+import dev.bittim.encountr.core.data.user.repo.PokemonRepository
+import dev.bittim.encountr.core.data.user.repo.PokemonRepositoryImpl
+import dev.bittim.encountr.core.data.user.repo.SaveRepository
+import dev.bittim.encountr.core.data.user.repo.SaveRepositoryImpl
+import dev.bittim.encountr.core.data.user.repo.TeamRepository
+import dev.bittim.encountr.core.data.user.repo.TeamRepositoryImpl
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -72,10 +79,22 @@ val appModule = module {
         ).build()
     }
 
+    single {
+        Room.databaseBuilder(
+            androidApplication(),
+            UserDatabase::class.java,
+            "user"
+        ).build()
+    }
+
     // endregion:   -- Databases
     // region:      -- Repositories
 
     single<DefinitionRepository> { DefinitionRepositoryImpl(get(), get()) }
+
+    single<PokemonRepository> { PokemonRepositoryImpl(get()) }
+    single<SaveRepository> { SaveRepositoryImpl(get()) }
+    single<TeamRepository> { TeamRepositoryImpl(get()) }
 
     // endregion:   -- Repositories
 }

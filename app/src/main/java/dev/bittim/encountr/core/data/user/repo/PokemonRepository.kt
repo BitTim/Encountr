@@ -4,10 +4,10 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       PokemonRepo.kt
+ * File:       PokemonRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.08.25, 10:53
+ * Modified:   04.09.25, 23:26
  */
 
 package dev.bittim.encountr.core.data.user.repo
@@ -19,10 +19,15 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-interface PokemonRepo {
+interface PokemonRepository {
     // region:      -- Create
 
-    suspend fun create(save: Uuid, pokemon: PokemonVariety, caught: Boolean = false): Pokemon
+    suspend fun create(
+        save: Uuid,
+        pokemon: PokemonVariety,
+        caught: Boolean = false,
+        shiny: Boolean = false
+    ): Pokemon
 
     // endregion:   -- Create
     // region:      -- Read

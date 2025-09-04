@@ -7,7 +7,7 @@
  * File:       ConfigStateHolderImpl.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 18:06
+ * Modified:   04.09.25, 23:26
  */
 
 package dev.bittim.encountr.core.data.config
@@ -20,20 +20,25 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class ConfigStateHolderImpl(
     private val dataStore: DataStore<Preferences>
 ) : ConfigStateHolder {
+    @OptIn(ExperimentalUuidApi::class)
     private val _configState = MutableStateFlow(ConfigState())
     override val configState = _configState
 
     // region:      -- Initializer
 
+    @OptIn(ExperimentalUuidApi::class)
     override suspend fun init() {
         val config = dataStore.data.map { config ->
             ConfigState(
                 definitionsUrl = config[Constants.DS_KEY_DEFS_URL],
                 languageName = config[Constants.DS_KEY_LANG_NAME],
+                currentSaveUuid = config[Constants.DS_KEY_CURR_SAVE_UUID]?.let { Uuid.parse(it) }
             )
         }.firstOrNull()
 
@@ -51,6 +56,7 @@ class ConfigStateHolderImpl(
     // endregion:   -- Initializer
     // region:      -- Setters
 
+    @OptIn(ExperimentalUuidApi::class)
     override suspend fun setDefinitionsUrl(url: String) {
         _configState.update { it.copy(definitionsUrl = url) }
         dataStore.edit { config ->
@@ -58,6 +64,7 @@ class ConfigStateHolderImpl(
         }
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     override suspend fun setLanguageName(name: String) {
         _configState.update { it.copy(languageName = name) }
         dataStore.edit { config ->
@@ -65,12 +72,22 @@ class ConfigStateHolderImpl(
         }
     }
 
+    @OptIn(ExperimentalUuidApi::class)
+    override suspend fun setCurrentSaveUuid(uuid: Uuid) {
+        _configState.update { it.copy(currentSaveUuid = uuid) }
+        dataStore.edit { configState ->
+            configState[Constants.DS_KEY_CURR_SAVE_UUID] = uuid.toString()
+        }
+    }
+
     // endregion:   -- Setters
 
+    @OptIn(ExperimentalUuidApi::class)
     companion object {
         val DEFAULT_CONFIG_STATE = ConfigState(
             definitionsUrl = Constants.DEFAULT_DEFS_URL,
             languageName = Constants.DEFAULT_LANG_NAME,
+            currentSaveUuid = Uuid.NIL
         )
     }
 }

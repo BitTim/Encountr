@@ -7,7 +7,7 @@
  * File:       Constants.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 18:06
+ * Modified:   04.09.25, 23:26
  */
 
 package dev.bittim.encountr.core.di
@@ -31,6 +31,7 @@ object Constants {
     const val DS_NAME = "EncountrConfig"
     val DS_KEY_DEFS_URL = stringPreferencesKey("definitionsUrl")
     val DS_KEY_LANG_NAME = stringPreferencesKey("languageName")
+    val DS_KEY_CURR_SAVE_UUID = stringPreferencesKey("currentSaveUuid")
 
     // endregion:   -- DataStore Keys
 }

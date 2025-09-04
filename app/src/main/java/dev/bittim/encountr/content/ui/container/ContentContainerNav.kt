@@ -4,13 +4,13 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       OnboardingContainerNav.kt
+ * File:       ContentContainerNav.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
  * Modified:   04.09.25, 23:26
  */
 
-package dev.bittim.encountr.onboarding.ui.container
+package dev.bittim.encountr.content.ui.container
 
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -19,35 +19,30 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import dev.bittim.encountr.onboarding.ui.screens.landing.LandingNav
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
 @Serializable
-object OnboardingContainerNav
+object ContentContainerNav
 
-fun NavGraphBuilder.onboarding(
-    navToContent: () -> Unit,
+fun NavGraphBuilder.content(
+    navToOnboarding: () -> Unit,
 ) {
-    composable<OnboardingContainerNav> {
-        val viewModel = koinViewModel<OnboardingContainerViewModel>()
+    composable<ContentContainerNav> {
+        val viewModel: ContentContainerViewModel = koinViewModel()
         val state by viewModel.state.collectAsStateWithLifecycle()
 
         val subNavController = rememberNavController()
-        subNavController.addOnDestinationChangedListener { _, destination, _ ->
-            viewModel.onDestinationChanged(destination.route ?: "")
-        }
 
-        OnboardingContainerScreen(
+        ContentContainerScreen(
             state = state,
             navController = subNavController,
-            navToContent = navToContent
         )
     }
 }
 
-fun NavController.navToOnboarding() {
-    navigate(LandingNav) {
+fun NavController.navToContent() {
+    navigate(ContentContainerNav) {
         popUpTo(graph.findStartDestination().id) {
             inclusive = true
             saveState = true

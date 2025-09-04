@@ -4,16 +4,14 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       Pokemon.kt
+ * File:       ContentContainerState.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
  * Modified:   04.09.25, 23:26
  */
 
-package dev.bittim.encountr.core.domain.model.user
+package dev.bittim.encountr.content.ui.container
 
-data class Pokemon(
-    val id: Int,
-    val caught: Boolean,
-    val shiny: Boolean,
+data class ContentContainerState(
+    val placeholder: Boolean? = null
 )

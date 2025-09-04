@@ -4,45 +4,42 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       CreateSaveNav.kt
+ * File:       PokemonListNav.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
  * Modified:   04.09.25, 23:26
  */
 
-package dev.bittim.encountr.onboarding.ui.screens.createSave
+package dev.bittim.encountr.content.ui.screens.pokemon.list
 
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import dev.bittim.encountr.onboarding.ui.screens.createSave.CreateSaveNav
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
 @Serializable
-object CreateSaveNav
+object PokemonListNav
 
-fun NavGraphBuilder.createSaveScreen(
-    navBack: () -> Unit,
-    navNext: () -> Unit
-) {
-    composable<CreateSaveNav> {
-        val viewModel = koinViewModel<CreateSaveViewModel>()
+fun NavGraphBuilder.pokemonListScreen() {
+    composable<PokemonListNav> {
+        val viewModel = koinViewModel<PokemonListViewModel>()
         val state by viewModel.state.collectAsStateWithLifecycle()
 
-        CreateSaveScreen(
-            state = state,
-            onGenChanged = viewModel::onGenChanged,
-            onContinue = viewModel::onContinue,
-            navBack = navBack,
-            navNext = navNext
-        )
+        PokemonListScreen(state = state)
     }
 }
 
-fun NavController.navToOnboardingCreateSave() {
+fun NavController.navToPokemonListScreen() {
     navigate(CreateSaveNav) {
+        popUpTo(graph.findStartDestination().id) {
+            saveState = true
+            inclusive = true
+        }
         launchSingleTop = true
         restoreState = true
     }

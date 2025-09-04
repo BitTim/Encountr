@@ -4,15 +4,14 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       SaveRepoImpl.kt
+ * File:       SaveRepositoryImpl.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.08.25, 14:24
+ * Modified:   04.09.25, 23:26
  */
 
 package dev.bittim.encountr.core.data.user.repo
 
-import co.pokeapi.pokekotlin.model.Version
 import dev.bittim.encountr.core.data.user.local.UserDatabase
 import dev.bittim.encountr.core.data.user.local.entity.SaveEntity
 import dev.bittim.encountr.core.domain.model.user.Save
@@ -21,20 +20,20 @@ import kotlinx.coroutines.flow.map
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-class SaveRepoImpl(
+class SaveRepositoryImpl(
     private val userDatabase: UserDatabase
-) : SaveRepo {
+) : SaveRepository {
     // region:      -- Create
 
     @OptIn(ExperimentalUuidApi::class)
     override suspend fun create(
         name: String,
-        game: Version
+        gameId: Int
     ): Save {
         val save = Save(
             id = Uuid.random(),
             name = name,
-            game = game.id
+            game = gameId
         )
 
         userDatabase.saveDao.insert(SaveEntity(save))
@@ -57,8 +56,8 @@ class SaveRepoImpl(
     // region:      -- Update
 
     @OptIn(ExperimentalUuidApi::class)
-    override suspend fun update(id: Uuid, name: String, game: Version) {
-        userDatabase.saveDao.update(id.toString(), name, game.id)
+    override suspend fun update(id: Uuid, name: String, gameId: Int) {
+        userDatabase.saveDao.update(id.toString(), name, gameId)
     }
 
     @OptIn(ExperimentalUuidApi::class)
@@ -69,9 +68,9 @@ class SaveRepoImpl(
     @OptIn(ExperimentalUuidApi::class)
     override suspend fun updateGame(
         id: Uuid,
-        game: Version
+        gameId: Int
     ) {
-        userDatabase.saveDao.updateGame(id.toString(), game.id)
+        userDatabase.saveDao.updateGame(id.toString(), gameId)
     }
 
     // endregion:   -- Update

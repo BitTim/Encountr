@@ -7,12 +7,13 @@
  * File:       Encountr.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 18:06
+ * Modified:   04.09.25, 23:26
  */
 
 package dev.bittim.encountr
 
 import android.app.Application
+import dev.bittim.encountr.content.di.contentModule
 import dev.bittim.encountr.core.data.config.ConfigStateHolder
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
 import dev.bittim.encountr.core.di.appModule
@@ -32,7 +33,7 @@ class Encountr : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@Encountr)
-            modules(appModule, onboardingModule)
+            modules(appModule, onboardingModule, contentModule)
         }
 
         fetchDefinitions()

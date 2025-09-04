@@ -7,13 +7,16 @@
  * File:       ConfigStateHolder.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 18:06
+ * Modified:   04.09.25, 23:26
  */
 
 package dev.bittim.encountr.core.data.config
 
 import kotlinx.coroutines.flow.StateFlow
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 interface ConfigStateHolder {
     val configState: StateFlow<ConfigState>
 
@@ -22,4 +25,5 @@ interface ConfigStateHolder {
 
     suspend fun setDefinitionsUrl(url: String)
     suspend fun setLanguageName(name: String)
+    suspend fun setCurrentSaveUuid(uuid: Uuid)
 }

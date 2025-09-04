@@ -7,7 +7,7 @@
  * File:       OnboardingContainerScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 18:06
+ * Modified:   04.09.25, 23:26
  */
 
 package dev.bittim.encountr.onboarding.ui.container
@@ -50,6 +50,7 @@ import dev.bittim.encountr.onboarding.ui.screens.selectLanguage.selectLanguageSc
 fun OnboardingContainerScreen(
     state: OnboardingContainerState,
     navController: NavHostController,
+    navToContent: () -> Unit,
 ) {
     val layoutDirection = LocalLayoutDirection.current
 
@@ -90,10 +91,13 @@ fun OnboardingContainerScreen(
             ) {
                 landingScreen(navNext = navController::navToOnboardingSetLanguage)
                 selectLanguageScreen(
-                    navNext = navController::navToOnboardingCreateSave,
-                    navBack = { navController.navigateUp() }
+                    navBack = { navController.navigateUp() },
+                    navNext = navController::navToOnboardingCreateSave
                 )
-                createSaveScreen(navBack = { navController.navigateUp() })
+                createSaveScreen(
+                    navBack = { navController.navigateUp() },
+                    navNext = navToContent
+                )
             }
         }
     }
@@ -112,7 +116,8 @@ private fun OnboardingContainerScreenPreview() {
                     progress = 0.5f,
                     route = null
                 ),
-                navController = rememberNavController()
+                navController = rememberNavController(),
+                navToContent = {}
             )
         }
     }

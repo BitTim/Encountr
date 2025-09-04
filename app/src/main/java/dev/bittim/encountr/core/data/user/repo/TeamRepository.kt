@@ -4,10 +4,10 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       TeamRepo.kt
+ * File:       TeamRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.08.25, 10:58
+ * Modified:   04.09.25, 23:26
  */
 
 package dev.bittim.encountr.core.data.user.repo
@@ -19,7 +19,7 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-interface TeamRepo {
+interface TeamRepository {
     // region:      -- Create
 
     suspend fun create(save: Uuid, name: String): Team

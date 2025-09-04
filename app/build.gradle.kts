@@ -7,7 +7,7 @@
  * File:       build.gradle.kts
  * Module:     Encountr.app
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 18:06
+ * Modified:   04.09.25, 23:26
  */
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -119,6 +119,9 @@ dependencies {
 
     // Navigation
     implementation(libs.androidx.navigation.compose)
+
+    // Adaptive Navigation Suite
+    implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
 
     // Palette (Color extraction)
     implementation(libs.androidx.palette.ktx)

@@ -4,25 +4,24 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       SaveRepo.kt
+ * File:       SaveRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.08.25, 10:51
+ * Modified:   04.09.25, 23:26
  */
 
 package dev.bittim.encountr.core.data.user.repo
 
-import co.pokeapi.pokekotlin.model.Version
 import dev.bittim.encountr.core.domain.model.user.Save
 import kotlinx.coroutines.flow.Flow
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-interface SaveRepo {
+interface SaveRepository {
     // region:      -- Create
 
-    suspend fun create(name: String, game: Version): Save
+    suspend fun create(name: String, gameId: Int): Save
 
     // endregion:   -- Create
     // region:      -- Read
@@ -33,9 +32,9 @@ interface SaveRepo {
     // endregion:   -- Read
     // region:      -- Update
 
-    suspend fun update(id: Uuid, name: String, game: Version)
+    suspend fun update(id: Uuid, name: String, gameId: Int)
     suspend fun updateName(id: Uuid, name: String)
-    suspend fun updateGame(id: Uuid, game: Version)
+    suspend fun updateGame(id: Uuid, gameId: Int)
 
     // endregion:   -- Update
     // region:      -- Delete

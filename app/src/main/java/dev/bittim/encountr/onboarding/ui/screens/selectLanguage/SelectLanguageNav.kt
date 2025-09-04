@@ -7,11 +7,12 @@
  * File:       SelectLanguageNav.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 18:06
+ * Modified:   04.09.25, 23:26
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.selectLanguage
 
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -23,15 +24,15 @@ import org.koin.androidx.compose.koinViewModel
 object SelectLocaleNav
 
 fun NavGraphBuilder.selectLanguageScreen(
-    navNext: () -> Unit,
-    navBack: () -> Unit
+    navBack: () -> Unit,
+    navNext: () -> Unit
 ) {
     composable<SelectLocaleNav> {
         val viewModel: SelectLanguageViewModel = koinViewModel()
-        val state = viewModel.state.collectAsStateWithLifecycle()
+        val state by viewModel.state.collectAsStateWithLifecycle()
 
         SelectLanguageScreen(
-            state = state.value,
+            state = state,
             onContinue = viewModel::onContinue,
             navNext = navNext,
             navBack = navBack

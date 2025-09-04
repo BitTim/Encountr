@@ -4,25 +4,21 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       PokemonDetailsViewModel.kt
+ * File:       PokemonListViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.08.25, 02:32
+ * Modified:   04.09.25, 23:26
  */
 
-package dev.bittim.encountr.content.pokemon.ui.screen.details
+package dev.bittim.encountr.content.ui.screens.pokemon.list
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class PokemonDetailsViewModel(
-    private val id: Int
-) : ViewModel() {
-    private val _state = MutableStateFlow(
-        PokemonDetailsState(
-            id = id
-        )
-    )
+class PokemonListViewModel : ViewModel() {
+    private val _state = MutableStateFlow(PokemonListState())
     val state = _state.asStateFlow()
+
+
 }

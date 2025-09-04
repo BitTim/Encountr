@@ -7,7 +7,7 @@
  * File:       PokemonEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.08.25, 14:16
+ * Modified:   04.09.25, 23:26
  */
 
 package dev.bittim.encountr.core.data.user.local.entity
@@ -39,11 +39,13 @@ data class PokemonEntity @OptIn(ExperimentalUuidApi::class) constructor(
     val id: Int,
     val save: String,
     val caught: Boolean,
+    val shiny: Boolean,
 ) {
     fun toModel(): Pokemon {
         return Pokemon(
             id = id,
             caught = caught,
+            shiny = shiny
         )
     }
 
@@ -51,6 +53,7 @@ data class PokemonEntity @OptIn(ExperimentalUuidApi::class) constructor(
     constructor(pokemon: Pokemon, save: Uuid) : this(
         id = pokemon.id,
         save = save.toString(),
-        caught = pokemon.caught
+        caught = pokemon.caught,
+        shiny = pokemon.shiny
     )
 }
