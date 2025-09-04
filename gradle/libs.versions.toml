@@ -1,32 +1,34 @@
 [versions]
-agp = "8.12.2"
+agp = "8.13.0"
 coilCompose = "3.3.0"
 coilGif = "3.3.0"
 coilNetworkKtor3 = "3.3.0"
-kotlin = "2.2.0"
-coreKtx = "1.16.0"
+datastorePreferences = "1.1.7"
+kotlin = "2.2.10"
+coreKtx = "1.17.0"
 junit = "4.13.2"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
 ktorClientCore = "3.2.3"
-lifecycleRuntimeKtx = "2.9.2"
+lifecycleRuntimeKtx = "2.9.3"
 activityCompose = "1.10.1"
-composeBom = "2025.07.00"
-material3 = "1.5.0-alpha01"
+composeBom = "2025.08.01"
+material3 = "1.5.0-alpha03"
 
 ksp = "2.2.0-2.0.2"
-kotlinSerialization = "2.2.0"
+kotlinSerialization = "2.2.10"
 kotlinxSerializationCore = "1.9.0"
-koin = "4.1.0"
+koin = "4.1.1"
 navigationCompose = "2.9.3"
 paletteKtx = "1.0.0"
 pokekotlin = "3.0.0-pre4"
 roomRuntime = "2.7.2"
 windowsizeclass = "1.3.2"
-material3Adaptive = "1.2.0-alpha10"
+material3Adaptive = "1.2.0-beta01"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-lifecycle-compiler = { module = "androidx.lifecycle:lifecycle-compiler", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "lifecycleRuntimeKtx" }

@@ -7,7 +7,7 @@
  * File:       OnboardingScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   24.08.25, 20:12
+ * Modified:   04.09.25, 18:06
  */
 
 package dev.bittim.encountr.onboarding.ui.screens
@@ -21,7 +21,7 @@ import dev.bittim.encountr.R
 import dev.bittim.encountr.core.ui.util.UiText
 import dev.bittim.encountr.onboarding.ui.screens.createSave.CreateSaveNav
 import dev.bittim.encountr.onboarding.ui.screens.landing.LandingNav
-import dev.bittim.encountr.onboarding.ui.screens.selectLocale.SelectLocaleNav
+import dev.bittim.encountr.onboarding.ui.screens.selectLanguage.SelectLocaleNav
 
 enum class OnboardingScreen(
     val route: String,

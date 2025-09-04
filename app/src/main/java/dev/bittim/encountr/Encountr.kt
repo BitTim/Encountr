@@ -7,15 +7,14 @@
  * File:       Encountr.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   13.08.25, 04:24
+ * Modified:   04.09.25, 18:06
  */
 
 package dev.bittim.encountr
 
 import android.app.Application
-import android.content.SharedPreferences
+import dev.bittim.encountr.core.data.config.ConfigStateHolder
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
-import dev.bittim.encountr.core.di.Constants
 import dev.bittim.encountr.core.di.appModule
 import dev.bittim.encountr.onboarding.di.onboardingModule
 import kotlinx.coroutines.CoroutineScope
@@ -41,14 +40,15 @@ class Encountr : Application() {
 
     private fun fetchDefinitions() {
         val koin = GlobalContext.get()
-        val sharedPreferences = koin.get<SharedPreferences>()
-        val defs_url = sharedPreferences.getString(Constants.SPKEY_DEFS_URL, null)
+        val configStateHolder = koin.get<ConfigStateHolder>()
 
+        ioAppScope.launch {
+            configStateHolder.init()
+            val definitionsUrl = configStateHolder.configState.value.definitionsUrl
 
-        if (defs_url != null) {
-            val definitionRepository = GlobalContext.get().get<DefinitionRepository>()
-            ioAppScope.launch {
-                definitionRepository.fetchDefinitions(defs_url)
+            if (definitionsUrl != null) {
+                val definitionRepository = GlobalContext.get().get<DefinitionRepository>()
+                definitionRepository.fetchDefinitions(definitionsUrl)
             }
         }
     }

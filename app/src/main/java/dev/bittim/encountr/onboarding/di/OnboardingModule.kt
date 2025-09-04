@@ -7,7 +7,7 @@
  * File:       OnboardingModule.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   24.08.25, 20:13
+ * Modified:   04.09.25, 18:06
  */
 
 package dev.bittim.encountr.onboarding.di
@@ -15,7 +15,7 @@ package dev.bittim.encountr.onboarding.di
 import dev.bittim.encountr.onboarding.ui.container.OnboardingContainerViewModel
 import dev.bittim.encountr.onboarding.ui.screens.createSave.CreateSaveViewModel
 import dev.bittim.encountr.onboarding.ui.screens.landing.LandingViewModel
-import dev.bittim.encountr.onboarding.ui.screens.selectLocale.SelectLocaleViewModel
+import dev.bittim.encountr.onboarding.ui.screens.selectLanguage.SelectLanguageViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -24,7 +24,7 @@ val onboardingModule = module {
 
     viewModelOf(::OnboardingContainerViewModel)
     viewModelOf(::LandingViewModel)
-    viewModelOf(::SelectLocaleViewModel)
+    viewModelOf(::SelectLanguageViewModel)
     viewModelOf(::CreateSaveViewModel)
 
     // endregion:   -- ViewModels

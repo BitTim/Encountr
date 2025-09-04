@@ -4,13 +4,13 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       SelectLocaleScreen.kt
+ * File:       SelectLanguageScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   03.09.25, 03:11
+ * Modified:   04.09.25, 18:06
  */
 
-package dev.bittim.encountr.onboarding.ui.screens.selectLocale
+package dev.bittim.encountr.onboarding.ui.screens.selectLanguage
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +24,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import dev.bittim.encountr.core.di.Constants
 import dev.bittim.encountr.core.ui.components.LocaleCard
 import dev.bittim.encountr.core.ui.components.LocaleCardState
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
@@ -37,10 +38,11 @@ data object SelectLocaleScreenDefaults {
 }
 
 @Composable
-fun SelectLocaleScreen(
-    state: SelectLocaleState,
-    navNext: () -> Unit = {},
-    navBack: () -> Unit = {}
+fun SelectLanguageScreen(
+    state: SelectLanguageState,
+    onContinue: (languageName: String, navNext: () -> Unit) -> Unit,
+    navNext: () -> Unit,
+    navBack: () -> Unit
 ) {
     var selectedLocale by rememberSaveable { mutableIntStateOf(0) }
 
@@ -54,9 +56,9 @@ fun SelectLocaleScreen(
                 verticalArrangement = Arrangement.spacedBy(Spacing.s)
             ) {
                 items(
-                    state.locales?.count() ?: SelectLocaleScreenDefaults.NUM_PLACEHOLDERS
+                    state.languages?.count() ?: SelectLocaleScreenDefaults.NUM_PLACEHOLDERS
                 ) { idx ->
-                    val locale = state.locales?.getOrNull(idx)
+                    val locale = state.languages?.getOrNull(idx)
                     val localeCardState = if (locale == null) null else {
                         LocaleCardState(
                             name = locale.names.find { it.language.name == locale.name }?.name
@@ -78,8 +80,14 @@ fun SelectLocaleScreen(
         lower = { lowerModifier ->
             OnboardingActions(
                 modifier = lowerModifier.fillMaxWidth(),
-                onContinue = navNext,
-                onBack = navBack
+                onContinue = {
+                    onContinue(
+                        state.languages?.getOrNull(selectedLocale)?.name
+                            ?: Constants.DEFAULT_LANG_NAME, navNext
+                    )
+                },
+                onBack = navBack,
+                continueEnabled = state.languages != null
             )
         }
     )
@@ -90,8 +98,11 @@ fun SelectLocaleScreen(
 fun SelectLocalScreenPreview() {
     EncountrTheme {
         Surface {
-            SelectLocaleScreen(
-                state = SelectLocaleState()
+            SelectLanguageScreen(
+                state = SelectLanguageState(),
+                onContinue = { _, _ -> },
+                navNext = {},
+                navBack = {}
             )
         }
     }
