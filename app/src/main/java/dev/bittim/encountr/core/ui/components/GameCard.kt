@@ -7,7 +7,7 @@
  * File:       GameCard.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   03.09.25, 04:12
+ * Modified:   04.09.25, 18:06
  */
 
 package dev.bittim.encountr.core.ui.components
@@ -42,7 +42,7 @@ import dev.bittim.encountr.core.ui.util.extenstions.modifier.pulseAnimation
 import dev.bittim.encountr.core.ui.util.font.getScaledLineHeightFromFontStyle
 
 data object GameCardDefaults {
-    val iconSize: Dp = 180.dp
+    val iconSize: Dp = 256.dp
     val shape = RoundedCornerShape(Spacing.m)
     val elevation = Spacing.xxs
 }

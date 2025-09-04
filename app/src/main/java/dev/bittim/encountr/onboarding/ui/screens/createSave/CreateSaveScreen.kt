@@ -7,7 +7,7 @@
  * File:       CreateSaveScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   03.09.25, 03:50
+ * Modified:   04.09.25, 18:06
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
@@ -66,6 +66,7 @@ import kotlin.math.absoluteValue
 fun CreateSaveScreen(
     state: CreateSaveState,
     onGenChanged: (generationId: Int) -> Unit,
+    onContinue: (navNext: () -> Unit) -> Unit,
     navBack: () -> Unit,
     navNext: () -> Unit,
 ) {
@@ -184,7 +185,7 @@ fun CreateSaveScreen(
 
                 OnboardingActions(
                     modifier = Modifier.fillMaxWidth(),
-                    onContinue = navNext,
+                    onContinue = { onContinue(navNext) },
                     onBack = navBack,
                     continueEnabled = false
                 )
@@ -201,6 +202,7 @@ fun CreateSaveScreenPreview() {
             CreateSaveScreen(
                 state = CreateSaveState(),
                 onGenChanged = {},
+                onContinue = {},
                 navBack = {},
                 navNext = {}
             )

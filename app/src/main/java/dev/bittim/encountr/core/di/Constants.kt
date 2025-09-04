@@ -7,14 +7,30 @@
  * File:       Constants.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   13.08.25, 04:24
+ * Modified:   04.09.25, 18:06
  */
 
 package dev.bittim.encountr.core.di
 
+import androidx.datastore.preferences.core.stringPreferencesKey
+
 object Constants {
+    // region:      -- URLs
+
     const val GITHUB_URL = "https://github.com/BitTim/Encountr"
+
+    // endregion:   -- URLs
+    // region:      -- Default Values
+
     const val DEFAULT_DEFS_URL = "https://bittim.github.io/Encountr/definitions.json"
-    const val SPNAME = "EncountrPreferences"
-    const val SPKEY_DEFS_URL = "DEFINITIONS_URL"
+    const val DEFAULT_LANG_NAME = "en"
+
+    // endregion:   -- Default Values
+    // region:      -- DataStore Keys
+
+    const val DS_NAME = "EncountrConfig"
+    val DS_KEY_DEFS_URL = stringPreferencesKey("definitionsUrl")
+    val DS_KEY_LANG_NAME = stringPreferencesKey("languageName")
+
+    // endregion:   -- DataStore Keys
 }

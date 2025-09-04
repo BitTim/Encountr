@@ -7,7 +7,7 @@
  * File:       OnboardingContainerScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   03.09.25, 03:35
+ * Modified:   04.09.25, 18:06
  */
 
 package dev.bittim.encountr.onboarding.ui.container
@@ -43,8 +43,8 @@ import dev.bittim.encountr.onboarding.ui.screens.createSave.createSaveScreen
 import dev.bittim.encountr.onboarding.ui.screens.createSave.navToOnboardingCreateSave
 import dev.bittim.encountr.onboarding.ui.screens.landing.LandingNav
 import dev.bittim.encountr.onboarding.ui.screens.landing.landingScreen
-import dev.bittim.encountr.onboarding.ui.screens.selectLocale.navToOnboardingSetLocale
-import dev.bittim.encountr.onboarding.ui.screens.selectLocale.selectLocaleScreen
+import dev.bittim.encountr.onboarding.ui.screens.selectLanguage.navToOnboardingSetLanguage
+import dev.bittim.encountr.onboarding.ui.screens.selectLanguage.selectLanguageScreen
 
 @Composable
 fun OnboardingContainerScreen(
@@ -88,8 +88,8 @@ fun OnboardingContainerScreen(
                 navController = navController,
                 startDestination = LandingNav
             ) {
-                landingScreen(navNext = navController::navToOnboardingSetLocale)
-                selectLocaleScreen(
+                landingScreen(navNext = navController::navToOnboardingSetLanguage)
+                selectLanguageScreen(
                     navNext = navController::navToOnboardingCreateSave,
                     navBack = { navController.navigateUp() }
                 )

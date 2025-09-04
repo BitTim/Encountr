@@ -7,7 +7,7 @@
  * File:       CreateSaveViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   03.09.25, 03:52
+ * Modified:   04.09.25, 18:06
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
@@ -17,11 +17,14 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import co.pokeapi.pokekotlin.PokeApi
 import dev.bittim.encountr.R
+import dev.bittim.encountr.core.data.config.ConfigStateHolder
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
 import dev.bittim.encountr.core.data.pokeapi.GameError
 import dev.bittim.encountr.core.data.pokeapi.mapping.mapPokemonVersionSprite
+import dev.bittim.encountr.core.di.Constants
 import dev.bittim.encountr.core.domain.error.Result
 import dev.bittim.encountr.core.ui.util.UiText
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,6 +33,7 @@ import kotlinx.coroutines.launch
 
 class CreateSaveViewModel(
     private val application: Application,
+    private val configStateHolder: ConfigStateHolder,
     private val definitionRepository: DefinitionRepository,
 ) : AndroidViewModel(application) {
     private val _state = MutableStateFlow(CreateSaveState())
@@ -87,16 +91,30 @@ class CreateSaveViewModel(
                         }.frontDefault
                     }
 
+                    val languageName = configStateHolder.configState.value.languageName
+                    val localizedName = version.names.find {
+                        it.language.name == (languageName ?: Constants.DEFAULT_LANG_NAME)
+                    }?.name ?: version.name
+                    val localizedGeneration = generation.names.find {
+                        it.language.name == (languageName ?: Constants.DEFAULT_LANG_NAME)
+                    }?.name ?: generation.name
+
                     Game(
                         id = version.id,
-                        localizedName = version.name,
-                        localizedGeneration = generation.name,
+                        localizedName = localizedName,
+                        localizedGeneration = localizedGeneration,
                         imageUrl = imageUrl
                     )
                 }
             }
 
             _state.update { it.copy(games = games) }
+        }
+    }
+
+    fun onContinue(navNext: () -> Unit) {
+        viewModelScope.launch {
+            launch(Dispatchers.Main) { navNext() }
         }
     }
 }

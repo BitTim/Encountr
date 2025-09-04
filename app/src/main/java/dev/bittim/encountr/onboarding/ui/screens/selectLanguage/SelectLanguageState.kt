@@ -4,18 +4,18 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       SelectLocaleState.kt
+ * File:       SelectLanguageState.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   24.08.25, 20:06
+ * Modified:   04.09.25, 18:06
  */
 
-package dev.bittim.encountr.onboarding.ui.screens.selectLocale
+package dev.bittim.encountr.onboarding.ui.screens.selectLanguage
 
 import co.pokeapi.pokekotlin.model.Language
 
-data class SelectLocaleState(
+data class SelectLanguageState(
     val isLoading: Boolean = false,
     val error: String? = null,
-    val locales: List<Language>? = null
+    val languages: List<Language>? = null
 )

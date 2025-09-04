@@ -7,7 +7,7 @@
  * File:       LandingViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   14.08.25, 03:24
+ * Modified:   04.09.25, 18:06
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.landing
@@ -15,6 +15,7 @@ package dev.bittim.encountr.onboarding.ui.screens.landing
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.bittim.encountr.R
+import dev.bittim.encountr.core.data.config.ConfigStateHolder
 import dev.bittim.encountr.core.data.defs.DefinitionsError
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
 import dev.bittim.encountr.core.domain.error.Result
@@ -27,6 +28,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class LandingViewModel(
+    private val configStateHolder: ConfigStateHolder,
     private val definitionRepository: DefinitionRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(LandingState())
@@ -58,8 +60,9 @@ class LandingViewModel(
                     }
 
                     is Result.Ok -> {
-                        launch(Dispatchers.Main) { navNext() }
+                        configStateHolder.setDefinitionsUrl(urlString)
                         _state.update { it.copy(fetching = false, urlError = null) }
+                        launch(Dispatchers.Main) { navNext() }
                     }
                 }
             }

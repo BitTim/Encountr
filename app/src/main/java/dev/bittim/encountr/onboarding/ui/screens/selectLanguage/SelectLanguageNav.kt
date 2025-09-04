@@ -4,13 +4,13 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       SelectLocaleNav.kt
+ * File:       SelectLanguageNav.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   24.08.25, 20:10
+ * Modified:   04.09.25, 18:06
  */
 
-package dev.bittim.encountr.onboarding.ui.screens.selectLocale
+package dev.bittim.encountr.onboarding.ui.screens.selectLanguage
 
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -22,23 +22,24 @@ import org.koin.androidx.compose.koinViewModel
 @Serializable
 object SelectLocaleNav
 
-fun NavGraphBuilder.selectLocaleScreen(
+fun NavGraphBuilder.selectLanguageScreen(
     navNext: () -> Unit,
     navBack: () -> Unit
 ) {
     composable<SelectLocaleNav> {
-        val viewModel: SelectLocaleViewModel = koinViewModel()
+        val viewModel: SelectLanguageViewModel = koinViewModel()
         val state = viewModel.state.collectAsStateWithLifecycle()
 
-        SelectLocaleScreen(
+        SelectLanguageScreen(
             state = state.value,
+            onContinue = viewModel::onContinue,
             navNext = navNext,
             navBack = navBack
         )
     }
 }
 
-fun NavController.navToOnboardingSetLocale() {
+fun NavController.navToOnboardingSetLanguage() {
     navigate(SelectLocaleNav) {
         launchSingleTop = true
         restoreState = true

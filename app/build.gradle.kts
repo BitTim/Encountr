@@ -7,7 +7,7 @@
  * File:       build.gradle.kts
  * Module:     Encountr.app
  * Author:     Tim Anhalt (BitTim)
- * Modified:   13.08.25, 04:24
+ * Modified:   04.09.25, 18:06
  */
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -98,6 +98,9 @@ dependencies {
     implementation(libs.ktor.client.android)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
+
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
 
     // Room
     ksp(libs.androidx.room.compiler)

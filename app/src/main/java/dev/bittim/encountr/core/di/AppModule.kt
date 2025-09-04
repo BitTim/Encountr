@@ -7,13 +7,18 @@
  * File:       AppModule.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   13.08.25, 04:24
+ * Modified:   04.09.25, 18:06
  */
 
 package dev.bittim.encountr.core.di
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
+import dev.bittim.encountr.core.data.config.ConfigStateHolder
+import dev.bittim.encountr.core.data.config.ConfigStateHolderImpl
 import dev.bittim.encountr.core.data.defs.local.DefinitionsDatabase
 import dev.bittim.encountr.core.data.defs.remote.DefinitionKtorService
 import dev.bittim.encountr.core.data.defs.remote.DefinitionService
@@ -24,18 +29,21 @@ import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import org.koin.android.ext.koin.androidApplication
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = Constants.DS_NAME)
 
 val appModule = module {
     // region:      -- Other
 
     // SharedPreferences
     single {
-        androidApplication().getSharedPreferences(
-            Constants.SPNAME,
-            Context.MODE_PRIVATE
-        )
+        androidContext().dataStore
     }
+
+    // Config State
+    single<ConfigStateHolder> { ConfigStateHolderImpl(get()) }
 
     // endregion:   -- Other
     // region:      -- Networking
