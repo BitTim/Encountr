@@ -7,11 +7,12 @@
  * File:       CreateSaveScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 18:06
+ * Modified:   04.09.25, 20:08
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,8 +38,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -91,8 +94,14 @@ fun CreateSaveScreen(
     }
     val textFieldState = rememberTextFieldState()
 
+    var clickedPage by remember { mutableIntStateOf(0) }
+
     LaunchedEffect(sliderState.value) {
         onGenChanged(sliderState.value.toInt() + 1)
+    }
+
+    LaunchedEffect(clickedPage) {
+        pagerState.animateScrollToPage(clickedPage)
     }
 
     OnboardingLayout(
@@ -147,6 +156,9 @@ fun CreateSaveScreen(
                                     stop = 1f,
                                     fraction = 2f - pageOffset.coerceIn(0f, 2f)
                                 )
+                            }
+                            .clickable {
+                                clickedPage = index
                             },
                         state = gameCardState
                     )
@@ -187,7 +199,7 @@ fun CreateSaveScreen(
                     modifier = Modifier.fillMaxWidth(),
                     onContinue = { onContinue(navNext) },
                     onBack = navBack,
-                    continueEnabled = false
+                    continueEnabled = state.games != null && textFieldState.text.isNotEmpty()
                 )
             }
         },
