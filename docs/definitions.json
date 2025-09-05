@@ -1,5 +1,7 @@
 {
   "version": 1,
+  "name": "Encountr Default Definitions",
+  "iconPokemon": 25,
   "ignored": [
     19,
     20,
