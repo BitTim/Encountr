@@ -7,17 +7,19 @@
  * File:       LandingViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 18:06
+ * Modified:   06.09.25, 02:27
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.landing
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.pokeapi.pokekotlin.PokeApi
 import dev.bittim.encountr.R
 import dev.bittim.encountr.core.data.config.ConfigStateHolder
 import dev.bittim.encountr.core.data.defs.DefinitionsError
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
+import dev.bittim.encountr.core.di.Constants
 import dev.bittim.encountr.core.domain.error.Result
 import dev.bittim.encountr.core.ui.util.UiText
 import kotlinx.coroutines.Dispatchers
@@ -34,19 +36,17 @@ class LandingViewModel(
     private val _state = MutableStateFlow(LandingState())
     val state = _state.asStateFlow()
 
-    fun resetError() {
-        _state.update { it.copy(urlError = null) }
+    init {
+        val url = configStateHolder.configState.value.definitionsUrl ?: Constants.DEFAULT_DEFS_URL
+        checkUrl(url)
     }
 
-    fun onContinue(
-        urlString: String,
-        navNext: () -> Unit
-    ) {
+    fun checkUrl(urlString: String) {
         _state.update { it.copy(fetching = true) }
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val result = definitionRepository.fetchDefinitions(urlString)
+                val result = definitionRepository.fetchDefinition(urlString)
                 when (result) {
                     is Result.Err -> {
                         val error = when (result.error) {
@@ -60,12 +60,37 @@ class LandingViewModel(
                     }
 
                     is Result.Ok -> {
-                        configStateHolder.setDefinitionsUrl(urlString)
-                        _state.update { it.copy(fetching = false, urlError = null) }
-                        launch(Dispatchers.Main) { navNext() }
+                        val imageUrl =
+                            PokeApi.getPokemonVariety(definitionRepository.getDefinitionIconPokemon()).sprites.frontDefault
+
+                        _state.update {
+                            it.copy(
+                                imageUrl = imageUrl,
+                                lastValidUrl = urlString,
+                                fetching = false,
+                                urlError = null
+                            )
+                        }
                     }
                 }
             }
+        }
+    }
+
+    fun resetError() {
+        _state.update { it.copy(urlError = null) }
+    }
+
+    fun onContinue(
+        urlString: String,
+        navNext: () -> Unit
+    ) {
+        val lastValidUrl = _state.value.lastValidUrl
+        if (urlString != lastValidUrl) return
+
+        viewModelScope.launch {
+            configStateHolder.setDefinitionsUrl(urlString)
+            launch(Dispatchers.Main) { navNext() }
         }
     }
 }

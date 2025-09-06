@@ -7,7 +7,7 @@
  * File:       ContentContainerNav.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 23:26
+ * Modified:   06.09.25, 02:27
  */
 
 package dev.bittim.encountr.content.ui.container
@@ -31,6 +31,8 @@ fun NavGraphBuilder.content(
     composable<ContentContainerNav> {
         val viewModel: ContentContainerViewModel = koinViewModel()
         val state by viewModel.state.collectAsStateWithLifecycle()
+
+        viewModel.checkOnboarded(navToOnboarding = navToOnboarding)
 
         val subNavController = rememberNavController()
 

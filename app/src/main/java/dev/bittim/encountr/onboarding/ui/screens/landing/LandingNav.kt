@@ -7,14 +7,13 @@
  * File:       LandingNav.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   14.08.25, 03:18
+ * Modified:   06.09.25, 02:27
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.landing
 
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
@@ -32,16 +31,10 @@ fun NavGraphBuilder.landingScreen(
 
         LandingScreen(
             state = state,
+            checkUrl = viewModel::checkUrl,
             resetError = viewModel::resetError,
             onContinue = viewModel::onContinue,
             navNext = navNext
         )
-    }
-}
-
-fun NavController.navToOnboardingLanding() {
-    navigate(LandingNav) {
-        launchSingleTop = true
-        restoreState = true
     }
 }

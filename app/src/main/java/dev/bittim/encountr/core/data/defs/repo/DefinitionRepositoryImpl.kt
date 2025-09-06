@@ -7,7 +7,7 @@
  * File:       DefinitionRepositoryImpl.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   17.08.25, 03:17
+ * Modified:   06.09.25, 02:27
  */
 
 package dev.bittim.encountr.core.data.defs.repo
@@ -24,7 +24,7 @@ class DefinitionRepositoryImpl(
     private val db: DefinitionsDatabase,
     private val api: DefinitionService
 ) : DefinitionRepository {
-    override suspend fun fetchDefinitions(urlString: String): Result<Unit, DefinitionsError> {
+    override suspend fun fetchDefinition(urlString: String): Result<Unit, DefinitionsError> {
         val response = api.getDefinitions(urlString)
         val definition = when (response) {
             is Result.Ok -> response.data
@@ -43,6 +43,10 @@ class DefinitionRepositoryImpl(
         }
 
         return Result.Ok(Unit)
+    }
+
+    override suspend fun getDefinitionIconPokemon(): Int {
+        return db.definitionDao().getDefinition()?.iconPokemon ?: 0
     }
 
     override suspend fun getIconByGame(game: Int): IconDefinition? {

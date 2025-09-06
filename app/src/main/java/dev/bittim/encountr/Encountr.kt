@@ -7,7 +7,7 @@
  * File:       Encountr.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 23:26
+ * Modified:   06.09.25, 02:27
  */
 
 package dev.bittim.encountr
@@ -49,7 +49,7 @@ class Encountr : Application() {
 
             if (definitionsUrl != null) {
                 val definitionRepository = GlobalContext.get().get<DefinitionRepository>()
-                definitionRepository.fetchDefinitions(definitionsUrl)
+                definitionRepository.fetchDefinition(definitionsUrl)
             }
         }
     }

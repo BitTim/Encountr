@@ -7,7 +7,7 @@
  * File:       OnboardingContainerNav.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 23:26
+ * Modified:   06.09.25, 02:27
  */
 
 package dev.bittim.encountr.onboarding.ui.container
@@ -19,7 +19,6 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import dev.bittim.encountr.onboarding.ui.screens.landing.LandingNav
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
@@ -47,7 +46,7 @@ fun NavGraphBuilder.onboarding(
 }
 
 fun NavController.navToOnboarding() {
-    navigate(LandingNav) {
+    navigate(OnboardingContainerNav) {
         popUpTo(graph.findStartDestination().id) {
             inclusive = true
             saveState = true

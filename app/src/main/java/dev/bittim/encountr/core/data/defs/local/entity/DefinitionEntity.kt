@@ -7,7 +7,7 @@
  * File:       DefinitionEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   17.08.25, 03:19
+ * Modified:   06.09.25, 02:27
  */
 
 package dev.bittim.encountr.core.data.defs.local.entity
@@ -21,5 +21,6 @@ import dev.bittim.encountr.core.data.defs.local.converter.IntListConverter
 @TypeConverters(IntListConverter::class)
 data class DefinitionEntity(
     @PrimaryKey val id: Int = 0,
+    val iconPokemon: Int,
     val ignored: List<Int>,
 )

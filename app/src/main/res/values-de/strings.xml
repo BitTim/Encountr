@@ -7,7 +7,7 @@
   ~ File:       strings.xml
   ~ Module:     Encountr.app.main
   ~ Author:     Tim Anhalt (BitTim)
-  ~ Modified:   02.09.25, 17:00
+  ~ Modified:   06.09.25, 02:27
   -->
 
 <resources>
@@ -40,4 +40,8 @@
     <string name="onboarding_select_locale_description">Bitte wähle deine bevorzugte Sprache für die spielinternen Inhalte aus. Dies hat keinen Einfluss auf die App-Sprache.</string>
     <string name="onboarding_create_save_gen_slider_label">Generation</string>
     <string name="onboarding_create_save_name_field_label">Name</string>
+    <string name="nav_destination_pokemon">Pokemon</string>
+    <string name="content_desc_error">Fehler</string>
+    <string name="content_desc_success">Erfolg</string>
+    <string name="content_desc_check">Überprüfen</string>
 </resources>
