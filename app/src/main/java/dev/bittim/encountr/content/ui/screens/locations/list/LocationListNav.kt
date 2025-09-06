@@ -4,13 +4,13 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       PokemonListNav.kt
+ * File:       LocationListNav.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
  * Modified:   07.09.25, 01:07
  */
 
-package dev.bittim.encountr.content.ui.screens.pokemon.list
+package dev.bittim.encountr.content.ui.screens.locations.list
 
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -22,19 +22,19 @@ import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
 @Serializable
-object PokemonListNav
+object LocationListNav
 
-fun NavGraphBuilder.pokemonListScreen() {
-    composable<PokemonListNav> {
-        val viewModel = koinViewModel<PokemonListViewModel>()
+fun NavGraphBuilder.locationListScreen() {
+    composable<LocationListNav> {
+        val viewModel = koinViewModel<LocationListViewModel>()
         val state by viewModel.state.collectAsStateWithLifecycle()
 
-        PokemonListScreen(state = state)
+        LocationListScreen(state = state)
     }
 }
 
-fun NavController.navToPokemonListScreen() {
-    navigate(PokemonListNav) {
+fun NavController.navToLocationListScreen() {
+    navigate(LocationListNav) {
         popUpTo(graph.findStartDestination().id) {
             saveState = true
             inclusive = true

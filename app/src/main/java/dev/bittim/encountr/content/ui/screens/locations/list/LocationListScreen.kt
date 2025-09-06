@@ -4,13 +4,13 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       PokemonListScreen.kt
+ * File:       LocationListScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
  * Modified:   07.09.25, 01:07
  */
 
-package dev.bittim.encountr.content.ui.screens.pokemon.list
+package dev.bittim.encountr.content.ui.screens.locations.list
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,8 +28,8 @@ import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.annotations.ScreenPreview
 
 @Composable
-fun PokemonListScreen(
-    state: PokemonListState,
+fun LocationListScreen(
+    state: LocationListState,
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize()
@@ -45,7 +45,7 @@ fun PokemonListScreen(
                     modifier = Modifier.padding(Spacing.s)
                 ) {
                     Text(
-                        text = "Pokemon $it",
+                        text = "Location $it",
                         style = MaterialTheme.typography.titleLarge
                     )
 
@@ -62,11 +62,11 @@ fun PokemonListScreen(
 
 @ScreenPreview
 @Composable
-fun PokemonListScreenPreview() {
+fun LocationListScreenPreview() {
     EncountrTheme {
         Surface {
-            PokemonListScreen(
-                state = PokemonListState()
+            LocationListScreen(
+                state = LocationListState()
             )
         }
     }

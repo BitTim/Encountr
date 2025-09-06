@@ -7,7 +7,7 @@
   ~ File:       strings.xml
   ~ Module:     Encountr.app.main
   ~ Author:     Tim Anhalt (BitTim)
-  ~ Modified:   06.09.25, 02:27
+  ~ Modified:   07.09.25, 01:07
   -->
 
 <resources>
@@ -34,7 +34,6 @@
     <string name="onboarding_create_save_title">Create Save</string>
     <string name="onboarding_create_save_description">Start your first save: select a game, give it a name, and you’ll be able to add more whenever you want.</string>
     <string name="button_back">Back</string>
-    <string name="content_desc_gamesel_arrow_down">Select game</string>
     <string name="error_invalid_version_group">Invalid Version Group (%s)</string>
     <string name="error_invalid_version">Invalid Version (%s)</string>
     <string name="onboarding_select_locale_title">Language</string>
@@ -45,4 +44,6 @@
     <string name="content_desc_error">Error</string>
     <string name="content_desc_success">Success</string>
     <string name="content_desc_check">Check</string>
+    <string name="nav_destination_locations">Locations</string>
+    <string name="nav_destination_teams">Teams</string>
 </resources>

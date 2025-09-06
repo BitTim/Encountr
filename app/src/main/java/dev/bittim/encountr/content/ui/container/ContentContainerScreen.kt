@@ -7,12 +7,13 @@
  * File:       ContentContainerScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 23:26
+ * Modified:   07.09.25, 01:07
  */
 
 package dev.bittim.encountr.content.ui.container
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
@@ -25,8 +26,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import dev.bittim.encountr.content.ui.screens.ContentNavItem
+import dev.bittim.encountr.content.ui.screens.locations.list.locationListScreen
 import dev.bittim.encountr.content.ui.screens.pokemon.list.PokemonListNav
 import dev.bittim.encountr.content.ui.screens.pokemon.list.pokemonListScreen
+import dev.bittim.encountr.content.ui.screens.teams.list.teamListScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,11 +57,15 @@ fun ContentContainerScreen(
         }
     ) {
         NavHost(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .safeContentPadding(),
             navController = navController,
             startDestination = PokemonListNav
         ) {
             pokemonListScreen()
+            locationListScreen()
+            teamListScreen()
         }
     }
 }

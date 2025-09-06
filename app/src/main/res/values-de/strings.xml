@@ -7,7 +7,7 @@
   ~ File:       strings.xml
   ~ Module:     Encountr.app.main
   ~ Author:     Tim Anhalt (BitTim)
-  ~ Modified:   06.09.25, 02:27
+  ~ Modified:   07.09.25, 01:07
   -->
 
 <resources>
@@ -33,7 +33,6 @@
     <string name="onboarding_create_save_title">Spielstand Erstellen</string>
     <string name="onboarding_create_save_description">Erstelle jetzt deinen ersten Spielstand – wähle ein Spiel, benenne ihn und füge später weitere hinzu.</string>
     <string name="button_back">Zurück</string>
-    <string name="content_desc_gamesel_arrow_down">Spiel auswählen</string>
     <string name="error_invalid_version_group">Ungültige Versionsgruppe (%s)</string>
     <string name="error_invalid_version">Ungültige Version (%s)</string>
     <string name="onboarding_select_locale_title">Sprache</string>
@@ -44,4 +43,6 @@
     <string name="content_desc_error">Fehler</string>
     <string name="content_desc_success">Erfolg</string>
     <string name="content_desc_check">Überprüfen</string>
+    <string name="nav_destination_locations">Orte</string>
+    <string name="nav_destination_teams">Teams</string>
 </resources>
