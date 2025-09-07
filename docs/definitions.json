@@ -7,7 +7,25 @@
     35,
     36,
     42,
-    43
+    43,
+    44,
+    46
+  ],
+  "linkedVersionGroups": [
+    {
+      "parent": 20,
+      "linked": [
+        21,
+        22
+      ]
+    },
+    {
+      "parent": 25,
+      "linked": [
+        26,
+        27
+      ]
+    }
   ],
   "icons": [
     {

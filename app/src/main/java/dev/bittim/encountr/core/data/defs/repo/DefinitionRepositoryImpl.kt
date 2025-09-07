@@ -7,7 +7,7 @@
  * File:       DefinitionRepositoryImpl.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   06.09.25, 02:27
+ * Modified:   07.09.25, 23:55
  */
 
 package dev.bittim.encountr.core.data.defs.repo
@@ -17,6 +17,7 @@ import dev.bittim.encountr.core.data.defs.local.DefinitionsDatabase
 import dev.bittim.encountr.core.data.defs.remote.DefinitionService
 import dev.bittim.encountr.core.domain.error.Result
 import dev.bittim.encountr.core.domain.model.defs.IconDefinition
+import dev.bittim.encountr.core.domain.model.defs.LinkedVersionGroup
 import kotlinx.coroutines.ensureActive
 import kotlin.coroutines.coroutineContext
 
@@ -36,6 +37,8 @@ class DefinitionRepositoryImpl(
         try {
             db.definitionDao().deleteAll()
             db.definitionDao().insert(listOf(definition.toEntity()))
+            db.linkedVersionGroupDao()
+                .insert(definition.versionGroups.mapIndexed { idx, dto -> dto.toEntity(idx) })
             db.iconDao().insert(definition.icons.mapIndexed { idx, dto -> dto.toEntity(idx) })
         } catch (_: Exception) {
             coroutineContext.ensureActive()
@@ -47,6 +50,10 @@ class DefinitionRepositoryImpl(
 
     override suspend fun getDefinitionIconPokemon(): Int {
         return db.definitionDao().getDefinition()?.iconPokemon ?: 0
+    }
+
+    override suspend fun getLinkedVersionGroupByParent(parent: Int): LinkedVersionGroup? {
+        return db.linkedVersionGroupDao().getLinkedVersionGroup(parent)?.toModel()
     }
 
     override suspend fun getIconByGame(game: Int): IconDefinition? {
