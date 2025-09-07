@@ -7,7 +7,7 @@
  * File:       DefinitionRepositoryImpl.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.09.25, 23:55
+ * Modified:   08.09.25, 00:01
  */
 
 package dev.bittim.encountr.core.data.defs.repo
@@ -38,7 +38,7 @@ class DefinitionRepositoryImpl(
             db.definitionDao().deleteAll()
             db.definitionDao().insert(listOf(definition.toEntity()))
             db.linkedVersionGroupDao()
-                .insert(definition.versionGroups.mapIndexed { idx, dto -> dto.toEntity(idx) })
+                .insert(definition.linkedVersionGroups.mapIndexed { idx, dto -> dto.toEntity(idx) })
             db.iconDao().insert(definition.icons.mapIndexed { idx, dto -> dto.toEntity(idx) })
         } catch (_: Exception) {
             coroutineContext.ensureActive()

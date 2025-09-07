@@ -7,7 +7,7 @@
  * File:       DefinitionDto.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.09.25, 23:54
+ * Modified:   08.09.25, 00:01
  */
 
 package dev.bittim.encountr.core.data.defs.remote.dto
@@ -20,7 +20,7 @@ data class DefinitionDto(
     val version: Int,
     val iconPokemon: Int,
     val ignored: List<Int>,
-    val versionGroups: List<LinkedVersionGroupDto>,
+    val linkedVersionGroups: List<LinkedVersionGroupDto>,
     val icons: List<IconDefinitionDto>
 ) {
     fun toEntity(): DefinitionEntity {
