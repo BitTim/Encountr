@@ -7,26 +7,30 @@
  * File:       SpriteMapping.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   16.08.25, 21:51
+ * Modified:   08.09.25, 02:16
  */
 
 package dev.bittim.encountr.core.data.pokeapi.mapping
 
-import co.pokeapi.pokekotlin.model.Generation
+import android.util.Log
+import co.pokeapi.pokekotlin.PokeApi
 import co.pokeapi.pokekotlin.model.PokemonSprites
 import co.pokeapi.pokekotlin.model.Version
-import co.pokeapi.pokekotlin.model.VersionGroup
 import dev.bittim.encountr.core.data.pokeapi.GameError
 import dev.bittim.encountr.core.data.pokeapi.extension.toMappedSprites
 import dev.bittim.encountr.core.domain.error.Result
 import dev.bittim.encountr.core.domain.model.pokeapi.MappedPokemonSprites
 
-fun mapPokemonVersionSprite(
+suspend fun mapPokemonSpriteVersion(
     sprites: PokemonSprites,
-    generation: Generation,
-    versionGroup: VersionGroup,
     version: Version
 ): Result<MappedPokemonSprites, GameError> {
+    val versionGroup = PokeApi.getVersionGroup(version.versionGroup.id)
+    val generation = PokeApi.getGeneration(versionGroup.generation.id)
+    Log.d("PokemonListViewModel", "Generation: $generation")
+    Log.d("PokemonListViewModel", "Version group: $versionGroup")
+    Log.d("PokemonListViewModel", "Version: $version")
+
     return when (generation.name) {
         "generation-i" -> when (versionGroup.name) {
             "red-blue", "red-green-japan", "blue-japan" -> Result.Ok(sprites.versions.generationI.redBlue.toMappedSprites())

@@ -7,7 +7,7 @@
  * File:       LocationListScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.09.25, 01:07
+ * Modified:   08.09.25, 01:50
  */
 
 package dev.bittim.encountr.content.ui.screens.locations.list
@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
@@ -32,7 +33,9 @@ fun LocationListScreen(
     state: LocationListState,
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .safeContentPadding()
     ) {
         items(100)
         {

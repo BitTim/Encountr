@@ -7,7 +7,7 @@
  * File:       CreateSaveViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 23:26
+ * Modified:   08.09.25, 00:53
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
@@ -20,7 +20,7 @@ import dev.bittim.encountr.R
 import dev.bittim.encountr.core.data.config.ConfigStateHolder
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
 import dev.bittim.encountr.core.data.pokeapi.GameError
-import dev.bittim.encountr.core.data.pokeapi.mapping.mapPokemonVersionSprite
+import dev.bittim.encountr.core.data.pokeapi.mapping.mapPokemonSpriteVersion
 import dev.bittim.encountr.core.data.user.repo.SaveRepository
 import dev.bittim.encountr.core.di.Constants
 import dev.bittim.encountr.core.domain.error.Result
@@ -71,7 +71,7 @@ class CreateSaveViewModel(
                     val imageUrl = iconDefinition?.let {
                         val rawSprites = PokeApi.getPokemonVariety(it.pokemon).sprites
                         val result =
-                            mapPokemonVersionSprite(rawSprites, generation, versionGroup, version)
+                            mapPokemonSpriteVersion(rawSprites, version)
 
                         when (result) {
                             is Result.Ok -> result.data
