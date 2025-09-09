@@ -7,7 +7,7 @@
  * File:       SaveRepositoryImpl.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 23:26
+ * Modified:   10.09.25, 00:07
  */
 
 package dev.bittim.encountr.core.data.user.repo
@@ -33,7 +33,7 @@ class SaveRepositoryImpl(
         val save = Save(
             id = Uuid.random(),
             name = name,
-            game = gameId
+            version = gameId
         )
 
         userDatabase.saveDao.insert(SaveEntity(save))

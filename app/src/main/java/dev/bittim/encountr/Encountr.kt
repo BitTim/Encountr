@@ -7,7 +7,7 @@
  * File:       Encountr.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   06.09.25, 02:27
+ * Modified:   10.09.25, 00:07
  */
 
 package dev.bittim.encountr
@@ -45,7 +45,7 @@ class Encountr : Application() {
 
         ioAppScope.launch {
             configStateHolder.init()
-            val definitionsUrl = configStateHolder.configState.value.definitionsUrl
+            val definitionsUrl = configStateHolder.state.value?.definitionsUrl
 
             if (definitionsUrl != null) {
                 val definitionRepository = GlobalContext.get().get<DefinitionRepository>()

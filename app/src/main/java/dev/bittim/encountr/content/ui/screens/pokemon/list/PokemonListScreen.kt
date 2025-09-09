@@ -7,7 +7,7 @@
  * File:       PokemonListScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   09.09.25, 03:54
+ * Modified:   10.09.25, 00:07
  */
 
 package dev.bittim.encountr.content.ui.screens.pokemon.list
@@ -20,30 +20,29 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.ContainedLoadingIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onFirstVisible
 import dev.bittim.encountr.content.ui.components.PokemonCard
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.annotations.ScreenPreview
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PokemonListScreen(
     state: PokemonListState,
-    fetchPokemon: (id: Int) -> Unit
+    onPokedexChanged: (index: Int) -> Unit,
 ) {
-    val pokemon by derivedStateOf { state.pokemon }
-
     var selectedTab by rememberSaveable { mutableIntStateOf(0) }
 
     Column(
@@ -61,11 +60,18 @@ fun PokemonListScreen(
                 state.pokedexes!!.forEachIndexed { idx, pokedex ->
                     Tab(
                         selected = idx == selectedTab,
-                        onClick = { selectedTab = idx },
+                        onClick = {
+                            selectedTab = idx
+                            onPokedexChanged(idx)
+                        },
                         text = { Text(pokedex.name) }
                     )
                 }
             }
+        }
+
+        AnimatedVisibility(visible = state.pokemon == null) {
+            ContainedLoadingIndicator()
         }
 
         LazyColumn(
@@ -73,19 +79,11 @@ fun PokemonListScreen(
             contentPadding = PaddingValues(Spacing.l),
             verticalArrangement = Arrangement.spacedBy(Spacing.s)
         ) {
-            val entries = state.pokedexes?.get(selectedTab)?.pokemon
-
-            items(entries?.count() ?: 0)
+            items(state.pokemon?.count() ?: 0)
             {
-                val entry = entries!![it]
-
                 PokemonCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .onFirstVisible {
-                            fetchPokemon(entry.pokemonSpecies.id)
-                        },
-                    data = pokemon[entry.pokemonSpecies.id]?.toPokemonCardData(entry.entryNumber)
+                    modifier = Modifier.fillMaxWidth(),
+                    data = state.pokemon?.get(it)
                 )
             }
         }
@@ -99,12 +97,9 @@ fun PokemonListScreenPreview() {
         Surface {
             PokemonListScreen(
                 state = PokemonListState(
-                    pokedexes = listOf(
-                        Pokedex(1, "Test", emptyList()),
-                        Pokedex(2, "Test2", emptyList())
-                    )
+                    pokedexes = listOf()
                 ),
-                fetchPokemon = {}
+                onPokedexChanged = {}
             )
         }
     }

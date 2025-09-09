@@ -7,7 +7,7 @@
  * File:       PokemonCard.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   09.09.25, 03:32
+ * Modified:   10.09.25, 00:07
  */
 
 package dev.bittim.encountr.content.ui.components
@@ -62,7 +62,7 @@ data class PokemonCardData(
     val name: String,
     val height: String,
     val weight: String,
-    val imageUrl: String,
+    val imageUrl: String?,
     val types: List<String>,
 )
 

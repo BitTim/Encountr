@@ -7,11 +7,12 @@
  * File:       ContentContainerViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   06.09.25, 00:23
+ * Modified:   10.09.25, 00:07
  */
 
 package dev.bittim.encountr.content.ui.container
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import dev.bittim.encountr.core.data.config.ConfigStateHolder
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,9 +29,8 @@ class ContentContainerViewModel(
     fun checkOnboarded(
         navToOnboarding: () -> Unit,
     ) {
-        val configState = configStateHolder.configState.value
-        val onboarded =
-            configState.definitionsUrl != null && configState.languageName != null && configState.currentSaveUuid != null
-        if (!onboarded) navToOnboarding()
+        val configState = configStateHolder.state.value
+        Log.d("checkOnboarded", "configState: $configState")
+        if (configState == null) navToOnboarding()
     }
 }

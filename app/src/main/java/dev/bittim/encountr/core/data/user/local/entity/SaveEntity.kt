@@ -7,7 +7,7 @@
  * File:       SaveEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.08.25, 14:19
+ * Modified:   10.09.25, 00:07
  */
 
 package dev.bittim.encountr.core.data.user.local.entity
@@ -36,7 +36,7 @@ data class SaveEntity @OptIn(ExperimentalUuidApi::class) constructor(
         return Save(
             id = Uuid.parse(id),
             name = name,
-            game = game,
+            version = game,
         )
     }
 
@@ -44,6 +44,6 @@ data class SaveEntity @OptIn(ExperimentalUuidApi::class) constructor(
     constructor(save: Save) : this(
         id = save.id.toString(),
         name = save.name,
-        game = save.game,
+        game = save.version,
     )
 }

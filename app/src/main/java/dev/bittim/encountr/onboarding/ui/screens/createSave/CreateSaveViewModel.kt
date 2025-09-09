@@ -7,7 +7,7 @@
  * File:       CreateSaveViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   08.09.25, 00:53
+ * Modified:   10.09.25, 00:07
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
@@ -16,15 +16,11 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import co.pokeapi.pokekotlin.PokeApi
-import dev.bittim.encountr.R
 import dev.bittim.encountr.core.data.config.ConfigStateHolder
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
-import dev.bittim.encountr.core.data.pokeapi.GameError
 import dev.bittim.encountr.core.data.pokeapi.mapping.mapPokemonSpriteVersion
 import dev.bittim.encountr.core.data.user.repo.SaveRepository
 import dev.bittim.encountr.core.di.Constants
-import dev.bittim.encountr.core.domain.error.Result
-import dev.bittim.encountr.core.ui.util.UiText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -70,36 +66,16 @@ class CreateSaveViewModel(
                     val iconDefinition = definitionRepository.getIconByGame(version.id)
                     val imageUrl = iconDefinition?.let {
                         val rawSprites = PokeApi.getPokemonVariety(it.pokemon).sprites
-                        val result =
-                            mapPokemonSpriteVersion(rawSprites, version)
-
-                        when (result) {
-                            is Result.Ok -> result.data
-                            is Result.Err -> throw Exception(
-                                when (result.error) {
-                                    is GameError.InvalidVersionGroup -> UiText.StringResource(
-                                        R.string.error_invalid_version_group,
-                                        result.error.versionGroup
-                                    ).asString(application.applicationContext)
-
-                                    is GameError.InvalidVersion -> UiText.StringResource(
-                                        R.string.error_invalid_version,
-                                        result.error.version
-                                    ).asString(application.applicationContext)
-
-                                    else -> UiText.StringResource(R.string.error_unknown)
-                                        .asString(application.applicationContext)
-                                }
-                            )
-                        }.frontDefault
+                        mapPokemonSpriteVersion(rawSprites, version).frontDefault
                     }
 
-                    val languageName = configStateHolder.configState.value.languageName
+                    val languageName =
+                        configStateHolder.state.value?.languageName ?: Constants.DEFAULT_LANG_NAME
                     val localizedName = version.names.find {
-                        it.language.name == (languageName ?: Constants.DEFAULT_LANG_NAME)
+                        it.language.name == languageName
                     }?.name ?: version.name
                     val localizedGeneration = generation.names.find {
-                        it.language.name == (languageName ?: Constants.DEFAULT_LANG_NAME)
+                        it.language.name == languageName
                     }?.name ?: generation.name
 
                     Game(

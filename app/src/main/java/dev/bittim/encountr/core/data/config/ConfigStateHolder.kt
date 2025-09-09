@@ -7,7 +7,7 @@
  * File:       ConfigStateHolder.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 23:26
+ * Modified:   10.09.25, 00:07
  */
 
 package dev.bittim.encountr.core.data.config
@@ -18,7 +18,7 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 interface ConfigStateHolder {
-    val configState: StateFlow<ConfigState>
+    val state: StateFlow<ResolvedConfigState?>
 
     suspend fun init()
     suspend fun reset()

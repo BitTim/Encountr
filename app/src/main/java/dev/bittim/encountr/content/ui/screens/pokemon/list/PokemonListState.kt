@@ -7,12 +7,12 @@
  * File:       PokemonListState.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   09.09.25, 03:50
+ * Modified:   10.09.25, 00:07
  */
 
 package dev.bittim.encountr.content.ui.screens.pokemon.list
 
-import co.pokeapi.pokekotlin.model.PokemonEntry
+import co.pokeapi.pokekotlin.model.Pokedex
 import co.pokeapi.pokekotlin.model.Version
 import dev.bittim.encountr.content.ui.components.PokemonCardData
 
@@ -35,15 +35,8 @@ data class Pokemon(
     )
 }
 
-data class Pokedex(
-    val id: Int,
-    val name: String,
-    val pokemon: List<PokemonEntry>,
-)
-
 data class PokemonListState(
     val version: Version? = null,
-    val selectedPokedexId: Int? = null,
     val pokedexes: List<Pokedex>? = null,
-    val pokemon: Map<Int, Pokemon?> = emptyMap()
+    val pokemon: List<PokemonCardData?>? = null
 )

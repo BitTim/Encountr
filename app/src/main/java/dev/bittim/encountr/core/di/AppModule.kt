@@ -7,7 +7,7 @@
  * File:       AppModule.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 23:26
+ * Modified:   10.09.25, 00:07
  */
 
 package dev.bittim.encountr.core.di
@@ -50,7 +50,7 @@ val appModule = module {
     }
 
     // Config State
-    single<ConfigStateHolder> { ConfigStateHolderImpl(get()) }
+    single<ConfigStateHolder> { ConfigStateHolderImpl(get(), get()) }
 
     // endregion:   -- Other
     // region:      -- Networking

@@ -7,7 +7,7 @@
  * File:       Save.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.08.25, 10:50
+ * Modified:   10.09.25, 00:07
  */
 
 package dev.bittim.encountr.core.domain.model.user
@@ -18,5 +18,5 @@ import kotlin.uuid.Uuid
 data class Save @OptIn(ExperimentalUuidApi::class) constructor(
     val id: Uuid,
     val name: String,
-    val game: Int,
+    val version: Int,
 )
