@@ -7,7 +7,7 @@
  * File:       PokemonListNav.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.09.25, 01:07
+ * Modified:   09.09.25, 03:39
  */
 
 package dev.bittim.encountr.content.ui.screens.pokemon.list
@@ -29,7 +29,7 @@ fun NavGraphBuilder.pokemonListScreen() {
         val viewModel = koinViewModel<PokemonListViewModel>()
         val state by viewModel.state.collectAsStateWithLifecycle()
 
-        PokemonListScreen(state = state)
+        PokemonListScreen(state = state, fetchPokemon = viewModel::fetchPokemon)
     }
 }
 
