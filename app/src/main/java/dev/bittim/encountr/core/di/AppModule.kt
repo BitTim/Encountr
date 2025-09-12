@@ -7,7 +7,7 @@
  * File:       AppModule.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.09.25, 00:07
+ * Modified:   12.09.25, 16:42
  */
 
 package dev.bittim.encountr.core.di
@@ -24,6 +24,8 @@ import dev.bittim.encountr.core.data.defs.remote.DefinitionKtorService
 import dev.bittim.encountr.core.data.defs.remote.DefinitionService
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepositoryImpl
+import dev.bittim.encountr.core.data.pokeapi.repo.LanguagePokeApiRepository
+import dev.bittim.encountr.core.data.pokeapi.repo.LanguageRepository
 import dev.bittim.encountr.core.data.user.local.UserDatabase
 import dev.bittim.encountr.core.data.user.repo.PokemonRepository
 import dev.bittim.encountr.core.data.user.repo.PokemonRepositoryImpl
@@ -91,6 +93,8 @@ val appModule = module {
     // region:      -- Repositories
 
     single<DefinitionRepository> { DefinitionRepositoryImpl(get(), get()) }
+
+    single<LanguageRepository> { LanguagePokeApiRepository() }
 
     single<PokemonRepository> { PokemonRepositoryImpl(get()) }
     single<SaveRepository> { SaveRepositoryImpl(get()) }

@@ -7,7 +7,7 @@
  * File:       TeamWithPokemon.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.08.25, 14:18
+ * Modified:   12.09.25, 16:34
  */
 
 package dev.bittim.encountr.core.data.user.local.relation
@@ -41,7 +41,7 @@ data class TeamWithPokemon(
         return Team(
             id = Uuid.parse(team.id),
             name = team.name,
-            pokemon = pokemon.map { it.toModel() }
+            pokemonStates = pokemon.map { it.toModel() }
         )
     }
 }

@@ -7,7 +7,7 @@
  * File:       SelectLanguageScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 18:06
+ * Modified:   12.09.25, 16:47
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.selectLanguage
@@ -25,8 +25,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import dev.bittim.encountr.core.di.Constants
-import dev.bittim.encountr.core.ui.components.LocaleCard
-import dev.bittim.encountr.core.ui.components.LocaleCardState
+import dev.bittim.encountr.core.ui.components.LanguageCard
+import dev.bittim.encountr.core.ui.components.LanguageCardState
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.annotations.ScreenPreview
@@ -58,17 +58,16 @@ fun SelectLanguageScreen(
                 items(
                     state.languages?.count() ?: SelectLocaleScreenDefaults.NUM_PLACEHOLDERS
                 ) { idx ->
-                    val locale = state.languages?.getOrNull(idx)
-                    val localeCardState = if (locale == null) null else {
-                        LocaleCardState(
-                            name = locale.names.find { it.language.name == locale.name }?.name
-                                ?: locale.name,
-                            countryCode = locale.iso3166
+                    val language = state.languages?.getOrNull(idx)
+                    val languageCardState = if (language == null) null else {
+                        LanguageCardState(
+                            name = language.localizedName,
+                            countryCode = language.countryCode
                         )
                     }
 
-                    LocaleCard(
-                        state = localeCardState,
+                    LanguageCard(
+                        state = languageCardState,
                         isSelected = idx == selectedLocale,
                         onClick = {
                             selectedLocale = idx

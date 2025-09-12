@@ -4,10 +4,10 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       LocaleCard.kt
+ * File:       LanguageCard.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   02.09.25, 04:53
+ * Modified:   12.09.25, 16:46
  */
 
 package dev.bittim.encountr.core.ui.components
@@ -53,15 +53,15 @@ data object LocaleCardDefaults {
     val iconElevation: Dp = Spacing.xs
 }
 
-data class LocaleCardState(
+data class LanguageCardState(
     val name: String,
     val countryCode: String,
 )
 
 @Composable
-fun LocaleCard(
+fun LanguageCard(
     modifier: Modifier = Modifier,
-    state: LocaleCardState?,
+    state: LanguageCardState?,
     isSelected: Boolean,
     onClick: () -> Unit,
     iconSize: Dp = LocaleCardDefaults.height,
@@ -97,11 +97,13 @@ fun LocaleCard(
                         )
                     }
                 } else {
-                    Box(modifier = Modifier
-                        .size(iconSize)
-                        .aspectRatio(1f)
-                        .clip(MaterialTheme.shapes.medium)
-                        .pulseAnimation())
+                    Box(
+                        modifier = Modifier
+                            .size(iconSize)
+                            .aspectRatio(1f)
+                            .clip(MaterialTheme.shapes.medium)
+                            .pulseAnimation()
+                    )
                 }
             }
 
@@ -151,13 +153,13 @@ fun LocaleCardPreview() {
             Column(
                 verticalArrangement = Arrangement.spacedBy(Spacing.xs)
             ) {
-                LocaleCard(state = null, isSelected = false, onClick = {})
-                LocaleCard(
-                    state = LocaleCardState(name = "Test", countryCode = "de"),
+                LanguageCard(state = null, isSelected = false, onClick = {})
+                LanguageCard(
+                    state = LanguageCardState(name = "Test", countryCode = "de"),
                     isSelected = false,
                     onClick = {})
-                LocaleCard(
-                    state = LocaleCardState(name = "Test", countryCode = "de"),
+                LanguageCard(
+                    state = LanguageCardState(name = "Test", countryCode = "de"),
                     isSelected = true,
                     onClick = {})
             }

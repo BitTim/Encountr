@@ -7,7 +7,7 @@
  * File:       TeamRepositoryImpl.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 23:26
+ * Modified:   12.09.25, 16:34
  */
 
 package dev.bittim.encountr.core.data.user.repo
@@ -32,7 +32,7 @@ class TeamRepositoryImpl(
         val team = Team(
             id = Uuid.random(),
             name = name,
-            pokemon = emptyList()
+            pokemonStates = emptyList()
         )
 
         userDatabase.teamDao.insert(TeamEntity(team, save))

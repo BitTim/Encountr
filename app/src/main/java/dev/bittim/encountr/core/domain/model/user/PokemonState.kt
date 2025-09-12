@@ -4,15 +4,15 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       Pokemon.kt
+ * File:       PokemonState.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 23:26
+ * Modified:   12.09.25, 16:34
  */
 
 package dev.bittim.encountr.core.domain.model.user
 
-data class Pokemon(
+data class PokemonState(
     val id: Int,
     val caught: Boolean,
     val shiny: Boolean,

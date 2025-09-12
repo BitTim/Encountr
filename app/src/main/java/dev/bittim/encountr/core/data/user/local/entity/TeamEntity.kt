@@ -7,7 +7,7 @@
  * File:       TeamEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.08.25, 14:19
+ * Modified:   12.09.25, 16:34
  */
 
 package dev.bittim.encountr.core.data.user.local.entity
@@ -45,7 +45,7 @@ data class TeamEntity @OptIn(ExperimentalUuidApi::class) constructor(
         return Team(
             id = Uuid.parse(id),
             name = name,
-            pokemon = emptyList(),
+            pokemonStates = emptyList(),
         )
     }
 

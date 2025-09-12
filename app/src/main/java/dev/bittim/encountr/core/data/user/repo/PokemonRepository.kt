@@ -7,13 +7,13 @@
  * File:       PokemonRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 23:26
+ * Modified:   12.09.25, 16:34
  */
 
 package dev.bittim.encountr.core.data.user.repo
 
 import co.pokeapi.pokekotlin.model.PokemonVariety
-import dev.bittim.encountr.core.domain.model.user.Pokemon
+import dev.bittim.encountr.core.domain.model.user.PokemonState
 import kotlinx.coroutines.flow.Flow
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -27,13 +27,13 @@ interface PokemonRepository {
         pokemon: PokemonVariety,
         caught: Boolean = false,
         shiny: Boolean = false
-    ): Pokemon
+    ): PokemonState
 
     // endregion:   -- Create
     // region:      -- Read
 
-    fun get(save: Uuid, pokemon: PokemonVariety): Flow<Pokemon?>
-    fun getAll(save: Uuid): Flow<List<Pokemon>>
+    fun get(save: Uuid, pokemon: PokemonVariety): Flow<PokemonState?>
+    fun getAll(save: Uuid): Flow<List<PokemonState>>
 
     // endregion:   -- Read
     // region:      -- Update

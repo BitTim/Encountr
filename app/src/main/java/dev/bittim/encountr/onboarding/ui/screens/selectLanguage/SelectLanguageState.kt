@@ -7,12 +7,12 @@
  * File:       SelectLanguageState.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 18:06
+ * Modified:   12.09.25, 16:45
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.selectLanguage
 
-import co.pokeapi.pokekotlin.model.Language
+import dev.bittim.encountr.core.domain.model.pokeapi.Language
 
 data class SelectLanguageState(
     val isLoading: Boolean = false,

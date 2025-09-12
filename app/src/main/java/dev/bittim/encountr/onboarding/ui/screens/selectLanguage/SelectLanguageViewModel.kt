@@ -7,16 +7,16 @@
  * File:       SelectLanguageViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 18:06
+ * Modified:   12.09.25, 17:02
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.selectLanguage
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.pokeapi.pokekotlin.PokeApi
 import dev.bittim.encountr.core.data.config.ConfigStateHolder
-import dev.bittim.encountr.core.data.pokeapi.extension.hasSelfLocalizedName
+import dev.bittim.encountr.core.data.pokeapi.repo.LanguageRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,20 +24,18 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SelectLanguageViewModel(
-    private val configStateHolder: ConfigStateHolder
+    private val configStateHolder: ConfigStateHolder,
+    private val languageRepository: LanguageRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(SelectLanguageState())
     val state = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
-            val count = PokeApi.getLanguageList(0, 1).count
+            Log.d("init", "Loading languages")
+            val languages = languageRepository.getAll()
 
-            val response = PokeApi.getLanguageList(0, count)
-            val languages = response.results.mapNotNull { handle ->
-                PokeApi.getLanguage(handle.id).takeIf { it.hasSelfLocalizedName() }
-            }
-
+            Log.d("init", "Loaded languages: ${languages.count()}")
             _state.update { it.copy(languages = languages) }
         }
     }
