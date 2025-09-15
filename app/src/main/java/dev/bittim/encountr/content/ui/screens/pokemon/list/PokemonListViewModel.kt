@@ -7,7 +7,7 @@
  * File:       PokemonListViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.09.25, 00:07
+ * Modified:   15.09.25, 19:25
  */
 
 package dev.bittim.encountr.content.ui.screens.pokemon.list
@@ -20,6 +20,7 @@ import dev.bittim.encountr.content.ui.components.PokemonCardData
 import dev.bittim.encountr.core.data.config.ConfigStateHolder
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
 import dev.bittim.encountr.core.data.pokeapi.mapping.mapPokemonSpriteVersion
+import dev.bittim.encountr.core.di.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -90,7 +91,10 @@ class PokemonListViewModel(
         return PokemonCardData(
             id = pokemonSpecies.id,
             entryNumber = entryNumber,
-            name = pokemonSpecies.name,
+            name = pokemonSpecies.names.first {
+                it.language.name == (configStateHolder.state.value?.languageName
+                    ?: Constants.DEFAULT_LANG_NAME)
+            }.name,
             height = "${defaultVariety.height.toFloat().div(10)} m",
             weight = "${defaultVariety.weight.toFloat().div(10)} kg",
             imageUrl = imageUrl,

@@ -7,7 +7,7 @@
  * File:       CreateSaveViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.09.25, 18:03
+ * Modified:   15.09.25, 20:25
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
@@ -18,7 +18,6 @@ import co.pokeapi.pokekotlin.PokeApi
 import dev.bittim.encountr.core.data.config.ConfigStateHolder
 import dev.bittim.encountr.core.data.pokeapi.repo.VersionRepository
 import dev.bittim.encountr.core.data.user.repo.SaveRepository
-import dev.bittim.encountr.core.di.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,11 +38,9 @@ class CreateSaveViewModel(
 
     init {
         viewModelScope.launch {
-            configStateHolder.state.collect { config ->
+            configStateHolder.rawState.collect { config ->
                 _state.update {
-                    it.copy(
-                        languageName = config?.languageName ?: Constants.DEFAULT_LANG_NAME
-                    )
+                    it.copy(languageName = config?.languageName)
                 }
             }
         }

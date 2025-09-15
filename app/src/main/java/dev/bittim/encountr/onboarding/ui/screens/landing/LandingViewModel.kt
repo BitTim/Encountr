@@ -7,7 +7,7 @@
  * File:       LandingViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.09.25, 18:11
+ * Modified:   15.09.25, 20:26
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.landing
@@ -38,7 +38,7 @@ class LandingViewModel(
     val state = _state.asStateFlow()
 
     init {
-        val url = configStateHolder.state.value?.definitionsUrl ?: Constants.DEFAULT_DEFS_URL
+        val url = configStateHolder.rawState.value?.definitionsUrl ?: Constants.DEFAULT_DEFS_URL
         checkUrl(url)
     }
 
