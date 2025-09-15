@@ -7,18 +7,18 @@
  * File:       LandingViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.09.25, 00:07
+ * Modified:   15.09.25, 18:11
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.landing
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.pokeapi.pokekotlin.PokeApi
 import dev.bittim.encountr.R
 import dev.bittim.encountr.core.data.config.ConfigStateHolder
 import dev.bittim.encountr.core.data.defs.DefinitionsError
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
+import dev.bittim.encountr.core.data.pokeapi.repo.PokemonVarietyRepository
 import dev.bittim.encountr.core.di.Constants
 import dev.bittim.encountr.core.domain.error.Result
 import dev.bittim.encountr.core.ui.util.UiText
@@ -31,6 +31,7 @@ import kotlinx.coroutines.withContext
 
 class LandingViewModel(
     private val configStateHolder: ConfigStateHolder,
+    private val pokemonVarietyRepository: PokemonVarietyRepository,
     private val definitionRepository: DefinitionRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(LandingState())
@@ -61,7 +62,7 @@ class LandingViewModel(
 
                     is Result.Ok -> {
                         val imageUrl =
-                            PokeApi.getPokemonVariety(definitionRepository.getDefinitionIconPokemon()).sprites.frontDefault
+                            pokemonVarietyRepository.get(definitionRepository.getDefinitionIconPokemon())?.sprites?.frontDefault
 
                         _state.update {
                             it.copy(
