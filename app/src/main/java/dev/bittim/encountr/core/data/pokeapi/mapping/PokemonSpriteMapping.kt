@@ -4,26 +4,26 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       SpriteMapping.kt
+ * File:       PokemonSpriteMapping.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.09.25, 00:07
+ * Modified:   16.09.25, 00:02
  */
 
 package dev.bittim.encountr.core.data.pokeapi.mapping
 
 import co.pokeapi.pokekotlin.PokeApi
 import co.pokeapi.pokekotlin.model.PokemonSprites
-import co.pokeapi.pokekotlin.model.Version
 import dev.bittim.encountr.core.data.pokeapi.GameError
 import dev.bittim.encountr.core.data.pokeapi.extension.toMappedSprites
 import dev.bittim.encountr.core.domain.model.pokeapi.MappedPokemonSprites
+import dev.bittim.encountr.core.domain.model.pokeapi.Version
 
-suspend fun mapPokemonSpriteVersion(
+suspend fun mapPokemonSprite(
     sprites: PokemonSprites,
     version: Version
 ): MappedPokemonSprites {
-    val versionGroup = PokeApi.getVersionGroup(version.versionGroup.id)
+    val versionGroup = PokeApi.getVersionGroup(version.versionGroupId)
     val generation = PokeApi.getGeneration(versionGroup.generation.id)
 
     return when (generation.name) {

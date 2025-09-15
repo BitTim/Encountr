@@ -7,7 +7,7 @@
  * File:       VersionPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.09.25, 18:03
+ * Modified:   16.09.25, 00:53
  */
 
 package dev.bittim.encountr.core.data.pokeapi.repo
@@ -16,7 +16,7 @@ import android.util.Log
 import co.pokeapi.pokekotlin.PokeApi
 import co.pokeapi.pokekotlin.model.Generation
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
-import dev.bittim.encountr.core.data.pokeapi.mapping.mapPokemonSpriteVersion
+import dev.bittim.encountr.core.data.pokeapi.mapping.mapPokemonSprite
 import dev.bittim.encountr.core.domain.model.pokeapi.LocalizedString
 import dev.bittim.encountr.core.domain.model.pokeapi.Version
 import kotlinx.coroutines.Dispatchers
@@ -41,15 +41,7 @@ class VersionPokeApiRepository(
             Log.d("VersionPokeApiRepository", "Fetched Generation: $rawGeneration")
         }
 
-        val iconDefinition = definitionRepository.getIconByVersion(rawVersion.id)
-        Log.d("VersionPokeApiRepository", "Mapped Icon Definition: $iconDefinition")
-        val imageUrl = iconDefinition?.let {
-            val rawSprites = pokemonVarietyRepository.get(it.pokemon)?.sprites ?: return null
-            mapPokemonSpriteVersion(rawSprites, rawVersion).frontDefault
-        }
-        Log.d("VersionPokeApiRepository", "Mapped Icon URL: $imageUrl")
-
-        val version = Version(
+        var version = Version(
             id = rawVersion.id,
             name = rawVersion.name,
             localizedNames = rawVersion.names.map {
@@ -60,8 +52,18 @@ class VersionPokeApiRepository(
                 LocalizedString(it.language.name, it.name)
             },
             versionGroupId = rawVersion.versionGroup.id,
-            imageUrl = imageUrl,
+            imageUrl = null,
         )
+
+        val iconDefinition = definitionRepository.getIconByVersion(rawVersion.id)
+        Log.d("VersionPokeApiRepository", "Mapped Icon Definition: $iconDefinition")
+        val imageUrl = iconDefinition?.let {
+            val rawSprites = pokemonVarietyRepository.get(it.pokemon)?.sprites ?: return null
+            mapPokemonSprite(rawSprites, version).frontDefault
+        }
+        Log.d("VersionPokeApiRepository", "Mapped Icon URL: $imageUrl")
+
+        version = version.copy(imageUrl = imageUrl)
 
         Log.d("VersionPokeApiRepository", "Mapped Version: $version")
         return version

@@ -7,22 +7,21 @@
  * File:       PokemonListViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.09.25, 19:25
+ * Modified:   16.09.25, 00:53
  */
 
 package dev.bittim.encountr.content.ui.screens.pokemon.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.pokeapi.pokekotlin.PokeApi
-import co.pokeapi.pokekotlin.model.Pokedex
-import dev.bittim.encountr.content.ui.components.PokemonCardData
 import dev.bittim.encountr.core.data.config.ConfigStateHolder
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
-import dev.bittim.encountr.core.data.pokeapi.mapping.mapPokemonSpriteVersion
-import dev.bittim.encountr.core.di.Constants
+import dev.bittim.encountr.core.data.pokeapi.repo.PokedexRepository
+import dev.bittim.encountr.core.data.pokeapi.repo.PokemonOverviewRepository
+import dev.bittim.encountr.core.data.pokeapi.repo.VersionRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -38,86 +37,64 @@ import kotlin.uuid.ExperimentalUuidApi
 class PokemonListViewModel(
     private val configStateHolder: ConfigStateHolder,
     private val definitionRepository: DefinitionRepository,
+    private val versionRepository: VersionRepository,
+    private val pokedexRepository: PokedexRepository,
+    private val pokemonOverviewRepository: PokemonOverviewRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(PokemonListState())
     val state = _state.asStateFlow()
 
+    var configFetchJob: Job? = null
+    var pokedexFetchJob: Job? = null
+    var pokemonOverviewFetchJob: Job? = null
+
     init {
-        viewModelScope.launch {
+        configFetchJob?.cancel()
+        configFetchJob = viewModelScope.launch {
+            configStateHolder.state.collect { config ->
+                _state.update {
+                    val version =
+                        versionRepository.get(config?.currentSave?.version ?: return@collect)
+                    it.copy(languageName = config.languageName, version = version)
+                }
+            }
+        }
+
+        pokedexFetchJob?.cancel()
+        pokedexFetchJob = viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 configStateHolder.state.collectLatest { config ->
                     if (config == null) return@collectLatest
 
-                    val version = PokeApi.getVersion(config.currentSave.version)
+                    val version =
+                        versionRepository.get(config.currentSave.version) ?: return@collectLatest
                     val linkedVersionGroup =
-                        definitionRepository.getLinkedVersionGroupByParent(version.versionGroup.id)
+                        definitionRepository.getLinkedVersionGroupByParent(version.versionGroupId)
 
-                    val versionGroupIds = mutableListOf(version.versionGroup.id).union(
+                    val versionGroupIds = mutableListOf(version.versionGroupId).union(
                         linkedVersionGroup?.linked ?: emptyList()
                     )
 
                     val pokedexes = coroutineScope {
                         versionGroupIds.map {
-                            async(Dispatchers.IO) { fetchPokedexesFromVersionGroup(it) }
+                            async(Dispatchers.IO) { pokedexRepository.getByVersionGroupId(it) }
                         }
                     }.awaitAll().flatten()
 
-                    onPokedexChanged(0)
-                    _state.update { it.copy(version = version, pokedexes = pokedexes) }
+                    onPokedexChanged(pokedexes.first().id)
+                    _state.update { it.copy(pokedexes = pokedexes) }
                 }
             }
         }
     }
 
-    suspend fun fetchPokedexesFromVersionGroup(id: Int): List<Pokedex> {
-        val versionGroup = PokeApi.getVersionGroup(id)
-        return coroutineScope {
-            versionGroup.pokedexes.map {
-                async(Dispatchers.IO) { PokeApi.getPokedex(it.id) }
-            }
-        }.awaitAll()
-    }
-
-    suspend fun fetchPokemon(id: Int, entryNumber: Int): PokemonCardData? {
-        val version = _state.value.version ?: return null
-
-        val pokemonSpecies = PokeApi.getPokemonSpecies(id)
-        val defaultVariety =
-            PokeApi.getPokemonVariety(pokemonSpecies.varieties.first { it.isDefault }.variety.id)
-
-        val imageUrl =
-            mapPokemonSpriteVersion(defaultVariety.sprites, version).frontDefault
-
-        return PokemonCardData(
-            id = pokemonSpecies.id,
-            entryNumber = entryNumber,
-            name = pokemonSpecies.names.first {
-                it.language.name == (configStateHolder.state.value?.languageName
-                    ?: Constants.DEFAULT_LANG_NAME)
-            }.name,
-            height = "${defaultVariety.height.toFloat().div(10)} m",
-            weight = "${defaultVariety.weight.toFloat().div(10)} kg",
-            imageUrl = imageUrl,
-            types = defaultVariety.types.map { it.type.name }
-        )
-    }
-
-    fun onPokedexChanged(index: Int) {
-        viewModelScope.launch {
+    fun onPokedexChanged(id: Int) {
+        pokemonOverviewFetchJob?.cancel()
+        pokemonOverviewFetchJob = viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val pokedex = _state.value.pokedexes?.get(index) ?: return@withContext
                 _state.update { it.copy(pokemon = null) }
 
-                val pokemon = coroutineScope {
-                    pokedex.pokemonEntries.map {
-                        async(Dispatchers.IO) {
-                            fetchPokemon(
-                                it.pokemonSpecies.id,
-                                it.entryNumber
-                            )
-                        }
-                    }
-                }.awaitAll()
+                val pokemon = pokemonOverviewRepository.getByPokedex(id)
 
                 _state.update { it.copy(pokemon = pokemon) }
             }

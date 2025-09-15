@@ -7,7 +7,7 @@
  * File:       AppModule.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.09.25, 18:03
+ * Modified:   16.09.25, 00:53
  */
 
 package dev.bittim.encountr.core.di
@@ -26,8 +26,16 @@ import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepositoryImpl
 import dev.bittim.encountr.core.data.pokeapi.repo.LanguagePokeApiRepository
 import dev.bittim.encountr.core.data.pokeapi.repo.LanguageRepository
+import dev.bittim.encountr.core.data.pokeapi.repo.PokedexPokeApiRepository
+import dev.bittim.encountr.core.data.pokeapi.repo.PokedexRepository
+import dev.bittim.encountr.core.data.pokeapi.repo.PokemonOverviewPokeApiRepository
+import dev.bittim.encountr.core.data.pokeapi.repo.PokemonOverviewRepository
+import dev.bittim.encountr.core.data.pokeapi.repo.PokemonSpeciesPokeApiRepository
+import dev.bittim.encountr.core.data.pokeapi.repo.PokemonSpeciesRepository
 import dev.bittim.encountr.core.data.pokeapi.repo.PokemonVarietyPokeApiRepository
 import dev.bittim.encountr.core.data.pokeapi.repo.PokemonVarietyRepository
+import dev.bittim.encountr.core.data.pokeapi.repo.TypePokeApiRepository
+import dev.bittim.encountr.core.data.pokeapi.repo.TypeRepository
 import dev.bittim.encountr.core.data.pokeapi.repo.VersionPokeApiRepository
 import dev.bittim.encountr.core.data.pokeapi.repo.VersionRepository
 import dev.bittim.encountr.core.data.user.local.UserDatabase
@@ -100,7 +108,18 @@ val appModule = module {
 
     single<LanguageRepository> { LanguagePokeApiRepository() }
     single<PokemonVarietyRepository> { PokemonVarietyPokeApiRepository() }
+    single<PokemonSpeciesRepository> { PokemonSpeciesPokeApiRepository() }
+    single<PokedexRepository> { PokedexPokeApiRepository() }
     single<VersionRepository> { VersionPokeApiRepository(get(), get()) }
+    single<TypeRepository> { TypePokeApiRepository() }
+    single<PokemonOverviewRepository> {
+        PokemonOverviewPokeApiRepository(
+            get(),
+            get(),
+            get(),
+            get()
+        )
+    }
 
     single<PokemonRepository> { PokemonRepositoryImpl(get()) }
     single<SaveRepository> { SaveRepositoryImpl(get()) }

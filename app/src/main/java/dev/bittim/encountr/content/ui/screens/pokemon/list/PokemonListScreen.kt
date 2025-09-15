@@ -7,11 +7,12 @@
  * File:       PokemonListScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.09.25, 00:07
+ * Modified:   16.09.25, 00:53
  */
 
 package dev.bittim.encountr.content.ui.screens.pokemon.list
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,8 +32,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import dev.bittim.encountr.content.ui.components.PokemonCard
+import dev.bittim.encountr.content.ui.components.PokemonCardData
+import dev.bittim.encountr.core.di.Constants
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.annotations.ScreenPreview
@@ -62,16 +66,39 @@ fun PokemonListScreen(
                         selected = idx == selectedTab,
                         onClick = {
                             selectedTab = idx
-                            onPokedexChanged(idx)
+                            onPokedexChanged(pokedex.id)
                         },
-                        text = { Text(pokedex.name) }
+                        text = {
+                            Log.d(
+                                "PokemonListScreen",
+                                "Localized names available: ${pokedex.names}"
+                            )
+                            Log.d(
+                                "PokemonListScreen", "Selected lang: ${
+                                    (state.languageName
+                                        ?: Constants.DEFAULT_LANG_NAME)
+                                }"
+                            )
+                            Text(
+                                text = pokedex.names.find {
+                                    it.language.name == state.languageName
+                                }?.name
+                                    ?: pokedex.names.find { it.language.name == Constants.DEFAULT_LANG_NAME }?.name
+                                    ?: pokedex.name
+                            )
+                        }
                     )
                 }
             }
         }
 
         AnimatedVisibility(visible = state.pokemon == null) {
-            ContainedLoadingIndicator()
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                ContainedLoadingIndicator()
+            }
         }
 
         LazyColumn(
@@ -81,9 +108,19 @@ fun PokemonListScreen(
         ) {
             items(state.pokemon?.count() ?: 0)
             {
+                val pokemon = state.pokemon?.get(it) ?: return@items
+                val pokedexId = state.pokedexes?.get(selectedTab)?.id ?: return@items
+                val languageName = state.languageName ?: return@items
+                val version = state.version ?: return@items
+
                 PokemonCard(
                     modifier = Modifier.fillMaxWidth(),
-                    data = state.pokemon?.get(it)
+                    data = PokemonCardData(
+                        pokemonOverview = pokemon,
+                        pokedexId = pokedexId,
+                        languageName = languageName,
+                        version = version
+                    )
                 )
             }
         }
