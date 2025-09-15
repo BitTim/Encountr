@@ -7,18 +7,16 @@
  * File:       CreateSaveViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.09.25, 00:07
+ * Modified:   15.09.25, 18:03
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.pokeapi.pokekotlin.PokeApi
 import dev.bittim.encountr.core.data.config.ConfigStateHolder
-import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
-import dev.bittim.encountr.core.data.pokeapi.mapping.mapPokemonSpriteVersion
+import dev.bittim.encountr.core.data.pokeapi.repo.VersionRepository
 import dev.bittim.encountr.core.data.user.repo.SaveRepository
 import dev.bittim.encountr.core.di.Constants
 import kotlinx.coroutines.Dispatchers
@@ -30,17 +28,26 @@ import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
 
 class CreateSaveViewModel(
-    private val application: Application,
     private val configStateHolder: ConfigStateHolder,
-    private val definitionRepository: DefinitionRepository,
+    private val versionRepository: VersionRepository,
     private val saveRepository: SaveRepository
-) : AndroidViewModel(application) {
+) : ViewModel() {
     private val _state = MutableStateFlow(CreateSaveState())
     val state = _state.asStateFlow()
 
     var fetchGamesByGenJob: Job? = null
 
     init {
+        viewModelScope.launch {
+            configStateHolder.state.collect { config ->
+                _state.update {
+                    it.copy(
+                        languageName = config?.languageName ?: Constants.DEFAULT_LANG_NAME
+                    )
+                }
+            }
+        }
+
         viewModelScope.launch {
             val generationCount = PokeApi.getGenerationList(0, 1).count
             _state.update { it.copy(generations = generationCount) }
@@ -52,42 +59,11 @@ class CreateSaveViewModel(
     fun onGenChanged(generationId: Int) {
         fetchGamesByGenJob?.cancel()
         fetchGamesByGenJob = viewModelScope.launch {
-            _state.update { it.copy(games = null) }
+            _state.update { it.copy(versions = null) }
 
-            val generation = PokeApi.getGeneration(generationId)
-            val games = generation.versionGroups.flatMap { vgHandle ->
-                val versionGroup = PokeApi.getVersionGroup(vgHandle.id)
-                val versions = versionGroup.versions.mapNotNull { vHandle ->
-                    PokeApi.getVersion(vHandle.id)
-                        .takeIf { !definitionRepository.checkIgnored(it.id) }
-                }
+            val versions = versionRepository.getByGeneration(generationId)
 
-                versions.map { version ->
-                    val iconDefinition = definitionRepository.getIconByGame(version.id)
-                    val imageUrl = iconDefinition?.let {
-                        val rawSprites = PokeApi.getPokemonVariety(it.pokemon).sprites
-                        mapPokemonSpriteVersion(rawSprites, version).frontDefault
-                    }
-
-                    val languageName =
-                        configStateHolder.state.value?.languageName ?: Constants.DEFAULT_LANG_NAME
-                    val localizedName = version.names.find {
-                        it.language.name == languageName
-                    }?.name ?: version.name
-                    val localizedGeneration = generation.names.find {
-                        it.language.name == languageName
-                    }?.name ?: generation.name
-
-                    Game(
-                        id = version.id,
-                        localizedName = localizedName,
-                        localizedGeneration = localizedGeneration,
-                        imageUrl = imageUrl
-                    )
-                }
-            }
-
-            _state.update { it.copy(games = games) }
+            _state.update { it.copy(versions = versions) }
         }
     }
 

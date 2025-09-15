@@ -7,7 +7,7 @@
  * File:       CreateSaveScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 23:26
+ * Modified:   15.09.25, 18:03
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
@@ -51,9 +51,10 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import dev.bittim.encountr.R
-import dev.bittim.encountr.core.ui.components.GameCard
 import dev.bittim.encountr.core.ui.components.GameCardDefaults
 import dev.bittim.encountr.core.ui.components.LabeledSlider
+import dev.bittim.encountr.core.ui.components.VersionCard
+import dev.bittim.encountr.core.ui.components.VersionCardState
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.UiText
@@ -76,11 +77,11 @@ fun CreateSaveScreen(
     val density = LocalDensity.current
     val windowInfo = LocalWindowInfo.current
 
-    val pagerState by remember(state.games) {
+    val pagerState by remember(state.versions) {
         mutableStateOf(
             PagerState(
                 currentPage = 0,
-                pageCount = { state.games?.count() ?: 3 },
+                pageCount = { state.versions?.count() ?: 3 },
             )
         )
     }
@@ -117,6 +118,7 @@ fun CreateSaveScreen(
 
                 HorizontalPager(
                     modifier = upperModifier,
+                    userScrollEnabled = state.versions != null,
                     state = pagerState,
                     pageSize = PageSize.Fixed(pageSize),
                     pageSpacing = Spacing.s,
@@ -137,9 +139,13 @@ fun CreateSaveScreen(
                         fraction = 1f - pageOffset.coerceIn(0f, 1f)
                     )
 
-                    val gameCardState = state.games?.get(index)?.toGameSelectorState()
+                    val versionCardState = state.versions?.get(index)?.let { version ->
+                        state.languageName?.let { langName ->
+                            VersionCardState(version, langName)
+                        }
+                    }
 
-                    GameCard(
+                    VersionCard(
                         modifier = Modifier
                             .fillMaxWidth()
                             .blur(blur)
@@ -157,10 +163,12 @@ fun CreateSaveScreen(
                                     fraction = 2f - pageOffset.coerceIn(0f, 2f)
                                 )
                             }
-                            .clickable {
+                            .clickable(
+                                enabled = state.versions != null,
+                            ) {
                                 clickedPage = index
                             },
-                        state = gameCardState
+                        state = versionCardState
                     )
                 }
             }
@@ -199,13 +207,13 @@ fun CreateSaveScreen(
                     modifier = Modifier.fillMaxWidth(),
                     onContinue = {
                         onContinue(
-                            state.games?.get(pagerState.currentPage)?.id ?: 0,
+                            state.versions?.get(pagerState.currentPage)?.id ?: 0,
                             textFieldState.text.toString(),
                             navNext
                         )
                     },
                     onBack = navBack,
-                    continueEnabled = state.games != null && textFieldState.text.isNotEmpty()
+                    continueEnabled = state.versions != null && textFieldState.text.isNotEmpty()
                 )
             }
         },

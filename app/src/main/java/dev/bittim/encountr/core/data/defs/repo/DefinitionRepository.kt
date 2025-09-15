@@ -7,7 +7,7 @@
  * File:       DefinitionRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.09.25, 23:54
+ * Modified:   15.09.25, 18:03
  */
 
 package dev.bittim.encountr.core.data.defs.repo
@@ -21,6 +21,6 @@ interface DefinitionRepository {
     suspend fun fetchDefinition(urlString: String): Result<Unit, DefinitionsError>
     suspend fun getDefinitionIconPokemon(): Int
     suspend fun getLinkedVersionGroupByParent(parent: Int): LinkedVersionGroup?
-    suspend fun getIconByGame(game: Int): IconDefinition?
+    suspend fun getIconByVersion(versionId: Int): IconDefinition?
     suspend fun checkIgnored(game: Int): Boolean
 }

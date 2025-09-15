@@ -4,10 +4,10 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       GameCard.kt
+ * File:       VersionCard.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 18:06
+ * Modified:   15.09.25, 18:03
  */
 
 package dev.bittim.encountr.core.ui.components
@@ -35,6 +35,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import dev.bittim.encountr.core.domain.model.pokeapi.Version
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.annotations.ComponentPreview
@@ -47,16 +48,24 @@ data object GameCardDefaults {
     val elevation = Spacing.xxs
 }
 
-data class GameCardState(
+data class VersionCardState(
     val name: String,
     val generation: String,
     val imageUrl: String?
-)
+) {
+    constructor(version: Version, languageName: String) : this(
+        name = version.localizedNames.find { it.languageName == languageName }?.value
+            ?: version.name,
+        generation = version.localizedGenerationNames.find { it.languageName == languageName }?.value
+            ?: version.generationName,
+        imageUrl = version.imageUrl
+    )
+}
 
 @Composable
-fun GameCard(
+fun VersionCard(
     modifier: Modifier = Modifier,
-    state: GameCardState?,
+    state: VersionCardState?,
     iconSize: Dp = GameCardDefaults.iconSize,
     shape: Shape = GameCardDefaults.shape,
     elevation: Dp = GameCardDefaults.elevation
@@ -156,10 +165,10 @@ fun GameCardPreview() {
             Column(
                 verticalArrangement = Arrangement.spacedBy(Spacing.xs)
             ) {
-                GameCard(state = null)
+                VersionCard(state = null)
 
-                GameCard(
-                    state = GameCardState(
+                VersionCard(
+                    state = VersionCardState(
                         name = "Red",
                         generation = "Generation I",
                         imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-i/red-blue/transparent/6.png"

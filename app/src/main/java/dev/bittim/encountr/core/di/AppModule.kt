@@ -7,7 +7,7 @@
  * File:       AppModule.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   12.09.25, 16:42
+ * Modified:   15.09.25, 18:03
  */
 
 package dev.bittim.encountr.core.di
@@ -26,6 +26,10 @@ import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepositoryImpl
 import dev.bittim.encountr.core.data.pokeapi.repo.LanguagePokeApiRepository
 import dev.bittim.encountr.core.data.pokeapi.repo.LanguageRepository
+import dev.bittim.encountr.core.data.pokeapi.repo.PokemonVarietyPokeApiRepository
+import dev.bittim.encountr.core.data.pokeapi.repo.PokemonVarietyRepository
+import dev.bittim.encountr.core.data.pokeapi.repo.VersionPokeApiRepository
+import dev.bittim.encountr.core.data.pokeapi.repo.VersionRepository
 import dev.bittim.encountr.core.data.user.local.UserDatabase
 import dev.bittim.encountr.core.data.user.repo.PokemonRepository
 import dev.bittim.encountr.core.data.user.repo.PokemonRepositoryImpl
@@ -95,6 +99,8 @@ val appModule = module {
     single<DefinitionRepository> { DefinitionRepositoryImpl(get(), get()) }
 
     single<LanguageRepository> { LanguagePokeApiRepository() }
+    single<PokemonVarietyRepository> { PokemonVarietyPokeApiRepository() }
+    single<VersionRepository> { VersionPokeApiRepository(get(), get()) }
 
     single<PokemonRepository> { PokemonRepositoryImpl(get()) }
     single<SaveRepository> { SaveRepositoryImpl(get()) }

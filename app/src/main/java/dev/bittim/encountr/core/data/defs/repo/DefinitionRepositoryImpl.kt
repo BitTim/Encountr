@@ -7,7 +7,7 @@
  * File:       DefinitionRepositoryImpl.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   08.09.25, 00:01
+ * Modified:   15.09.25, 18:03
  */
 
 package dev.bittim.encountr.core.data.defs.repo
@@ -56,8 +56,8 @@ class DefinitionRepositoryImpl(
         return db.linkedVersionGroupDao().getLinkedVersionGroup(parent)?.toModel()
     }
 
-    override suspend fun getIconByGame(game: Int): IconDefinition? {
-        return db.iconDao().getDefinition(game)?.toModel()
+    override suspend fun getIconByVersion(versionId: Int): IconDefinition? {
+        return db.iconDao().getDefinition(versionId)?.toModel()
     }
 
     override suspend fun checkIgnored(game: Int): Boolean {
