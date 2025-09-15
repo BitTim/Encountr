@@ -13,13 +13,6 @@
   ],
   "linkedVersionGroups": [
     {
-      "parent": 20,
-      "linked": [
-        21,
-        22
-      ]
-    },
-    {
       "parent": 25,
       "linked": [
         26,
