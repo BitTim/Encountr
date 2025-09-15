@@ -7,7 +7,7 @@
  * File:       ConfigState.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.09.25, 00:07
+ * Modified:   15.09.25, 18:30
  */
 
 package dev.bittim.encountr.core.data.config
@@ -17,7 +17,7 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 data class ConfigState(
-    val finishedLoading: Boolean = false,
+    val isInitialized: Boolean = false,
 
     val definitionsUrl: String? = null,
     val languageName: String? = null,

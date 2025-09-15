@@ -7,7 +7,7 @@
  * File:       ConfigStateHolder.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.09.25, 00:07
+ * Modified:   15.09.25, 19:14
  */
 
 package dev.bittim.encountr.core.data.config
@@ -22,6 +22,8 @@ interface ConfigStateHolder {
 
     suspend fun init()
     suspend fun reset()
+
+    suspend fun getOnboardingCompleted(): StateFlow<Boolean?>
 
     suspend fun setDefinitionsUrl(url: String)
     suspend fun setLanguageName(name: String)

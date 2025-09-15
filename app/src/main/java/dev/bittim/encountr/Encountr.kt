@@ -7,12 +7,13 @@
  * File:       Encountr.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.09.25, 00:07
+ * Modified:   15.09.25, 19:07
  */
 
 package dev.bittim.encountr
 
 import android.app.Application
+import android.util.Log
 import dev.bittim.encountr.content.di.contentModule
 import dev.bittim.encountr.core.data.config.ConfigStateHolder
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
@@ -22,6 +23,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext
 import org.koin.core.context.GlobalContext.startKoin
@@ -43,8 +45,17 @@ class Encountr : Application() {
         val koin = GlobalContext.get()
         val configStateHolder = koin.get<ConfigStateHolder>()
 
-        ioAppScope.launch {
+        runBlocking {
+            Log.d("fetchDefinitions", "fetchDefinitions")
             configStateHolder.init()
+            configStateHolder.state
+            Log.d(
+                "fetchDefinitions",
+                "configStateHolder.state.value: ${configStateHolder.state.value}"
+            )
+        }
+
+        ioAppScope.launch {
             val definitionsUrl = configStateHolder.state.value?.definitionsUrl
 
             if (definitionsUrl != null) {

@@ -7,11 +7,12 @@
  * File:       ConfigStateHolderImpl.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.09.25, 00:07
+ * Modified:   15.09.25, 19:14
  */
 
 package dev.bittim.encountr.core.data.config
 
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -22,9 +23,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -34,7 +36,7 @@ import kotlin.uuid.Uuid
 
 class ConfigStateHolderImpl(
     private val dataStore: DataStore<Preferences>,
-    private val saveRepository: SaveRepository
+    private val saveRepository: SaveRepository,
 ) : ConfigStateHolder {
     @OptIn(ExperimentalUuidApi::class)
     private val _state = MutableStateFlow(ConfigState())
@@ -43,12 +45,16 @@ class ConfigStateHolderImpl(
     override val state = _state.filter {
         it.definitionsUrl != null && it.languageName != null && it.currentSaveUuid != null
     }.flatMapLatest { rawState ->
+        Log.d("ConfigStateHolderImpl", "rawState: rawState = $rawState")
         saveRepository.get(rawState.currentSaveUuid!!).filterNotNull().map { save ->
-            ResolvedConfigState(
+            val resolvedConfigState = ResolvedConfigState(
                 definitionsUrl = rawState.definitionsUrl!!,
                 languageName = rawState.languageName!!,
                 currentSave = save
             )
+
+            Log.d("ConfigStateHolderImpl", "state: resolvedConfigState = $resolvedConfigState")
+            resolvedConfigState
         }
     }.stateIn(
         scope = CoroutineScope(Dispatchers.IO),
@@ -60,24 +66,42 @@ class ConfigStateHolderImpl(
 
     @OptIn(ExperimentalUuidApi::class)
     override suspend fun init() {
-        val config = dataStore.data.map { config ->
+        Log.d("ConfigStateHolderImpl", "init")
+        val config = dataStore.data.map { rawConfig ->
+            Log.d("ConfigStateHolderImpl", "init: rawConfig = $rawConfig")
             ConfigState(
-                finishedLoading = true,
-                definitionsUrl = config[Constants.DS_KEY_DEFS_URL],
-                languageName = config[Constants.DS_KEY_LANG_NAME],
-                currentSaveUuid = config[Constants.DS_KEY_CURR_SAVE_UUID]?.let { Uuid.parse(it) }
+                isInitialized = true,
+                definitionsUrl = rawConfig[Constants.DS_KEY_DEFS_URL],
+                languageName = rawConfig[Constants.DS_KEY_LANG_NAME],
+                currentSaveUuid = rawConfig[Constants.DS_KEY_CURR_SAVE_UUID]?.let { Uuid.parse(it) }
             )
-        }.firstOrNull()
+        }.first()
 
-        _state.update { config ?: ConfigState() }
+        Log.d("ConfigStateHolderImpl", "init: config = $config")
+        _state.update { config }
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     override suspend fun reset() {
         _state.update { DEFAULT_CONFIG_STATE }
         dataStore.edit { config ->
             config[Constants.DS_KEY_DEFS_URL] = DEFAULT_CONFIG_STATE.definitionsUrl!!
             config[Constants.DS_KEY_LANG_NAME] = DEFAULT_CONFIG_STATE.languageName!!
+            config[Constants.DS_KEY_CURR_SAVE_UUID] =
+                DEFAULT_CONFIG_STATE.currentSaveUuid!!.toString()
+            Log.d("ConfigStateHolderImpl", "reset: config = $config")
         }
+    }
+
+    @OptIn(ExperimentalUuidApi::class)
+    override suspend fun getOnboardingCompleted(): StateFlow<Boolean?> {
+        return _state.map {
+            it.isInitialized && it.definitionsUrl != null && it.languageName != null && it.currentSaveUuid != null
+        }.stateIn(
+            scope = CoroutineScope(Dispatchers.IO),
+            started = WhileSubscribed(5000),
+            initialValue = null
+        )
     }
 
     // endregion:   -- Initializer
@@ -112,7 +136,7 @@ class ConfigStateHolderImpl(
     @OptIn(ExperimentalUuidApi::class)
     companion object {
         val DEFAULT_CONFIG_STATE = ConfigState(
-            finishedLoading = true,
+            isInitialized = true,
             definitionsUrl = Constants.DEFAULT_DEFS_URL,
             languageName = Constants.DEFAULT_LANG_NAME,
             currentSaveUuid = Uuid.NIL
