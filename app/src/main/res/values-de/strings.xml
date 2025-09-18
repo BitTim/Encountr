@@ -7,7 +7,7 @@
   ~ File:       strings.xml
   ~ Module:     Encountr.app.main
   ~ Author:     Tim Anhalt (BitTim)
-  ~ Modified:   07.09.25, 01:07
+  ~ Modified:   19.09.25, 01:56
   -->
 
 <resources>
@@ -45,4 +45,6 @@
     <string name="content_desc_check">Überprüfen</string>
     <string name="nav_destination_locations">Orte</string>
     <string name="nav_destination_teams">Teams</string>
+    <string name="search">Suchen</string>
+    <string name="filter">Filtern</string>
 </resources>
