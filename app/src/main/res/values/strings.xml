@@ -7,7 +7,7 @@
   ~ File:       strings.xml
   ~ Module:     Encountr.app.main
   ~ Author:     Tim Anhalt (BitTim)
-  ~ Modified:   19.09.25, 01:57
+  ~ Modified:   19.09.25, 20:08
   -->
 
 <resources>
@@ -46,6 +46,6 @@
     <string name="content_desc_check">Check</string>
     <string name="nav_destination_locations">Locations</string>
     <string name="nav_destination_teams">Teams</string>
-    <string name="search">Search</string>
-    <string name="filter">Filter</string>
+    <string name="search_pokemon">Search Pokémon</string>
+    <string name="filter_pokemon">Filter Pokémon</string>
 </resources>

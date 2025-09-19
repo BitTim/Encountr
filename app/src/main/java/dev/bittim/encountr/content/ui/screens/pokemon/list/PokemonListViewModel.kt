@@ -7,7 +7,7 @@
  * File:       PokemonListViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   16.09.25, 00:53
+ * Modified:   19.09.25, 20:02
  */
 
 package dev.bittim.encountr.content.ui.screens.pokemon.list
@@ -81,23 +81,35 @@ class PokemonListViewModel(
                         }
                     }.awaitAll().flatten()
 
-                    onPokedexChanged(pokedexes.first().id)
+                    onPokedexChanged(pokedexes.first().id, "")
                     _state.update { it.copy(pokedexes = pokedexes) }
                 }
             }
         }
     }
 
-    fun onPokedexChanged(id: Int) {
+    fun onPokedexChanged(id: Int, searchQuery: String) {
         pokemonOverviewFetchJob?.cancel()
         pokemonOverviewFetchJob = viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                _state.update { it.copy(pokemon = null) }
+                _state.update { it.copy(filteredPokemon = null, pokemon = null) }
 
                 val pokemon = pokemonOverviewRepository.getByPokedex(id)
 
                 _state.update { it.copy(pokemon = pokemon) }
+                applyFilter(searchQuery)
             }
         }
+    }
+
+    fun applyFilter(searchQuery: String) {
+        val filteredPokemon = _state.value.pokemon?.filter {
+            it.name.contains(
+                searchQuery,
+                true
+            ) || it.localizedNames.any { name -> name.value.contains(searchQuery, true) }
+        }
+
+        _state.update { it.copy(filteredPokemon = filteredPokemon) }
     }
 }

@@ -4,10 +4,10 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       GameIcon.kt
+ * File:       VersionIcon.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   16.08.25, 19:37
+ * Modified:   19.09.25, 18:23
  */
 
 package dev.bittim.encountr.core.ui.components
@@ -53,7 +53,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @Composable
-fun GameIcon(
+fun VersionIcon(
     modifier: Modifier = Modifier,
     imageUrl: String?,
 ) {
@@ -119,7 +119,7 @@ fun GameIconPreview() {
             Column(
                 verticalArrangement = Arrangement.spacedBy(Spacing.xs)
             ) {
-                GameIcon(
+                VersionIcon(
                     modifier = Modifier
                         .width(56.dp)
                         .aspectRatio(1f)
@@ -127,7 +127,7 @@ fun GameIconPreview() {
                     imageUrl = null
                 )
 
-                GameIcon(
+                VersionIcon(
                     modifier = Modifier
                         .width(56.dp)
                         .aspectRatio(1f)

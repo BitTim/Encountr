@@ -7,7 +7,7 @@
  * File:       VersionCard.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.09.25, 18:03
+ * Modified:   19.09.25, 18:24
  */
 
 package dev.bittim.encountr.core.ui.components
@@ -35,6 +35,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import dev.bittim.encountr.core.di.Constants
 import dev.bittim.encountr.core.domain.model.pokeapi.Version
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
@@ -55,8 +56,10 @@ data class VersionCardState(
 ) {
     constructor(version: Version, languageName: String) : this(
         name = version.localizedNames.find { it.languageName == languageName }?.value
+            ?: version.localizedNames.find { it.languageName == Constants.DEFAULT_LANG_NAME }?.value
             ?: version.name,
         generation = version.localizedGenerationNames.find { it.languageName == languageName }?.value
+            ?: version.localizedGenerationNames.find { it.languageName == Constants.DEFAULT_LANG_NAME }?.value
             ?: version.generationName,
         imageUrl = version.imageUrl
     )
@@ -81,7 +84,7 @@ fun VersionCard(
         Column {
             Crossfade(state?.imageUrl) {
                 if (it != null) {
-                    GameIcon(
+                    VersionIcon(
                         modifier = Modifier
                             .width(iconSize)
                             .aspectRatio(1f)

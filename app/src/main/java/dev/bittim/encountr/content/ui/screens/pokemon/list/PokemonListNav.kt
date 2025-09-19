@@ -7,7 +7,7 @@
  * File:       PokemonListNav.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.09.25, 00:07
+ * Modified:   19.09.25, 20:02
  */
 
 package dev.bittim.encountr.content.ui.screens.pokemon.list
@@ -31,7 +31,8 @@ fun NavGraphBuilder.pokemonListScreen() {
 
         PokemonListScreen(
             state = state,
-            onPokedexChanged = viewModel::onPokedexChanged
+            onPokedexChanged = viewModel::onPokedexChanged,
+            applyFilter = viewModel::applyFilter
         )
     }
 }

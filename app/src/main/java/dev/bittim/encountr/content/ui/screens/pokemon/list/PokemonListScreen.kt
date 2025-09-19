@@ -7,7 +7,7 @@
  * File:       PokemonListScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   19.09.25, 01:57
+ * Modified:   19.09.25, 20:08
  */
 
 package dev.bittim.encountr.content.ui.screens.pokemon.list
@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.aspectRatio
@@ -33,11 +32,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
-import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearWavyProgressIndicator
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.SearchBar
@@ -59,9 +58,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.bittim.encountr.R
 import dev.bittim.encountr.content.ui.components.PokemonCard
-import dev.bittim.encountr.content.ui.components.PokemonCardData
+import dev.bittim.encountr.content.ui.components.PokemonCardState
+import dev.bittim.encountr.content.ui.screens.pokemon.list.PokemonListScreenDefaults.PLACEHOLDER_COUNT
 import dev.bittim.encountr.core.di.Constants
-import dev.bittim.encountr.core.ui.components.GameIcon
+import dev.bittim.encountr.core.ui.components.VersionIcon
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.UiText
@@ -69,19 +69,23 @@ import dev.bittim.encountr.core.ui.util.annotations.ScreenPreview
 
 data object PokemonListScreenDefaults {
     val saveIconSize: Dp = 48.dp
+    const val PLACEHOLDER_COUNT: Int = 10
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PokemonListScreen(
     state: PokemonListState,
-    onPokedexChanged: (index: Int) -> Unit,
+    onPokedexChanged: (index: Int, searchQuery: String) -> Unit,
+    applyFilter: (searchQuery: String) -> Unit,
 ) {
     var selectedTab by rememberSaveable { mutableIntStateOf(0) }
 
     val searchBarState = rememberSearchBarState()
     val textFieldState = rememberTextFieldState()
     var searchExpanded by rememberSaveable { mutableStateOf(false) }
+
+    val searchQuery = textFieldState.text.toString()
 
     Column(
         modifier = Modifier
@@ -96,21 +100,23 @@ fun PokemonListScreen(
             inputField = {
                 SearchBarDefaults.InputField(
                     query = textFieldState.text.toString(),
-                    onQueryChange = { textFieldState.edit { replace(0, length, it) } },
-                    onSearch = {
-                        Log.d(
-                            "Search",
-                            "Search not yet implemented.. Searching for ${textFieldState.text}"
-                        )
-                        searchExpanded = false
+                    onQueryChange = {
+                        textFieldState.edit { replace(0, length, it) }
+                        applyFilter(it)
                     },
+                    onSearch = { searchExpanded = false },
                     expanded = searchExpanded,
+                    enabled = state.pokemon != null,
                     onExpandedChange = { searchExpanded = it },
-                    placeholder = { Text(UiText.StringResource(R.string.search).asString()) },
+                    placeholder = {
+                        Text(
+                            UiText.StringResource(R.string.search_pokemon).asString()
+                        )
+                    },
                     leadingIcon = {
                         Icon(
                             Icons.Default.Search,
-                            UiText.StringResource(R.string.search).asString()
+                            UiText.StringResource(R.string.search_pokemon).asString()
                         )
                     },
                     trailingIcon = {
@@ -120,7 +126,7 @@ fun PokemonListScreen(
                             ) {
                                 Icon(
                                     Icons.Default.FilterAlt,
-                                    UiText.StringResource(R.string.filter).asString()
+                                    UiText.StringResource(R.string.filter_pokemon).asString()
                                 )
                             }
 
@@ -128,7 +134,7 @@ fun PokemonListScreen(
                                 shape = MaterialShapes.Cookie12Sided.toShape(),
                                 onClick = {}
                             ) {
-                                GameIcon(
+                                VersionIcon(
                                     modifier = Modifier
                                         .height(PokemonListScreenDefaults.saveIconSize)
                                         .aspectRatio(1f),
@@ -141,21 +147,34 @@ fun PokemonListScreen(
             }
         )
 
-        Spacer(modifier = Modifier.height(Spacing.s))
+        AnimatedVisibility(visible = state.filteredPokemon == null) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = Spacing.s, start = Spacing.l, end = Spacing.l),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                LinearWavyProgressIndicator(
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
 
         AnimatedVisibility(
             visible = state.pokedexes != null && state.pokedexes.count() > 1
         ) {
             PrimaryScrollableTabRow(
                 selectedTabIndex = selectedTab,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = Spacing.s)
             ) {
                 state.pokedexes!!.forEachIndexed { idx, pokedex ->
                     Tab(
                         selected = idx == selectedTab,
                         onClick = {
                             selectedTab = idx
-                            onPokedexChanged(pokedex.id)
+                            onPokedexChanged(pokedex.id, searchQuery)
                         },
                         text = {
                             Log.d(
@@ -181,37 +200,33 @@ fun PokemonListScreen(
             }
         }
 
-        AnimatedVisibility(visible = state.pokemon == null) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = Spacing.s),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                ContainedLoadingIndicator()
-            }
-        }
-
         LazyColumn(
             modifier = Modifier.weight(1f),
             contentPadding = PaddingValues(Spacing.l),
             verticalArrangement = Arrangement.spacedBy(Spacing.s)
         ) {
-            items(state.pokemon?.count() ?: 0)
-            {
-                val pokemon = state.pokemon?.get(it) ?: return@items
-                val pokedexId = state.pokedexes?.get(selectedTab)?.id ?: return@items
-                val languageName = state.languageName ?: return@items
-                val version = state.version ?: return@items
+            items(state.filteredPokemon?.count() ?: PLACEHOLDER_COUNT) { idx ->
+                val pokemonCardState = if (
+                    state.filteredPokemon?.get(idx) == null ||
+                    state.pokedexes?.get(selectedTab) == null ||
+                    state.languageName == null ||
+                    state.version == null
+                ) {
+                    null
+                } else {
+                    PokemonCardState(
+                        pokemonOverview = state.filteredPokemon[idx],
+                        pokedexId = state.pokedexes[selectedTab].id,
+                        languageName = state.languageName,
+                        version = state.version
+                    )
+                }
 
                 PokemonCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    data = PokemonCardData(
-                        pokemonOverview = pokemon,
-                        pokedexId = pokedexId,
-                        languageName = languageName,
-                        version = version
-                    )
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateItem(),
+                    state = pokemonCardState
                 )
             }
         }
@@ -227,7 +242,8 @@ fun PokemonListScreenPreview() {
                 state = PokemonListState(
                     pokedexes = listOf()
                 ),
-                onPokedexChanged = {}
+                onPokedexChanged = { _, _ -> },
+                applyFilter = {}
             )
         }
     }

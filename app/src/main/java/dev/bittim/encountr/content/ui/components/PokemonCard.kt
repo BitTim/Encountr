@@ -7,7 +7,7 @@
  * File:       PokemonCard.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   16.09.25, 00:53
+ * Modified:   19.09.25, 19:49
  */
 
 package dev.bittim.encountr.content.ui.components
@@ -66,14 +66,14 @@ data object PokemonCardDefaults {
     val iconWidth = 96.dp
 }
 
-data class PokemonCardData(
+data class PokemonCardState(
     val id: Int,
     val entryNumber: Int,
     val name: String,
     val height: String,
     val weight: String,
     val sprites: MappedPokemonSprites,
-    val types: List<PokemonCardTypeData>,
+    val types: List<PokemonCardTypeState>,
 ) {
     constructor(
         pokemonOverview: PokemonOverview,
@@ -90,12 +90,12 @@ data class PokemonCardData(
         weight = pokemonOverview.weight,
         sprites = runBlocking { mapPokemonSprite(pokemonOverview.sprites, version) },
         types = pokemonOverview.types.map {
-            PokemonCardTypeData(it, languageName, version)
+            PokemonCardTypeState(it, languageName, version)
         }
     )
 }
 
-data class PokemonCardTypeData(
+data class PokemonCardTypeState(
     val name: String,
     val imageUrl: String?
 ) {
@@ -113,7 +113,7 @@ data class PokemonCardTypeData(
 @Composable
 fun PokemonCard(
     modifier: Modifier = Modifier,
-    data: PokemonCardData?,
+    state: PokemonCardState?,
     iconWidth: Dp = PokemonCardDefaults.iconWidth,
     elevation: Dp = PokemonCardDefaults.elevation
 ) {
@@ -134,7 +134,7 @@ fun PokemonCard(
                     .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             ) {
                 Crossfade(
-                    targetState = data,
+                    targetState = state,
                 ) {
                     if (it != null) {
                         AsyncImage(
@@ -162,7 +162,7 @@ fun PokemonCard(
                 modifier = Modifier.weight(1f),
             ) {
                 Crossfade(
-                    targetState = data,
+                    targetState = state,
                 ) {
                     if (it != null) {
                         Row(
@@ -204,7 +204,7 @@ fun PokemonCard(
                 }
 
                 Crossfade(
-                    targetState = data,
+                    targetState = state,
                 ) {
                     if (it != null) {
                         Row(
@@ -242,7 +242,7 @@ fun PokemonCard(
                 Spacer(modifier = Modifier.height(Spacing.xs))
 
                 Crossfade(
-                    targetState = data,
+                    targetState = state,
                 ) {
                     if (it != null) {
                         LazyRow(
@@ -317,7 +317,8 @@ fun PokemonCard(
                     shape = IconButtonDefaults.smallRoundShape,
                     pressedShape = IconButtonDefaults.smallPressedShape,
                     checkedShape = IconButtonDefaults.smallSelectedRoundShape
-                )
+                ),
+                enabled = state != null,
             ) {
                 Icon(Icons.Default.CatchingPokemon, contentDescription = null)
             }
@@ -334,7 +335,7 @@ fun PokemonCardPreview() {
                 verticalArrangement = Arrangement.spacedBy(Spacing.s),
             ) {
                 PokemonCard(
-                    data = PokemonCardData(
+                    state = PokemonCardState(
                         id = 1,
                         entryNumber = 1,
                         name = "Bulbasaur",
@@ -351,13 +352,13 @@ fun PokemonCardPreview() {
                             backShinyFemale = null,
                         ),
                         types = listOf(
-                            PokemonCardTypeData("Grass", ""),
-                            PokemonCardTypeData("Poison", ""),
+                            PokemonCardTypeState("Grass", ""),
+                            PokemonCardTypeState("Poison", ""),
                         )
                     )
                 )
 
-                PokemonCard(data = null)
+                PokemonCard(state = null)
             }
         }
     }
