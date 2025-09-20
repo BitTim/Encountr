@@ -7,7 +7,7 @@
  * File:       PokemonVarietyPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.09.25, 17:01
+ * Modified:   20.09.25, 02:04
  */
 
 package dev.bittim.encountr.core.data.pokeapi.repo
@@ -15,8 +15,10 @@ package dev.bittim.encountr.core.data.pokeapi.repo
 import co.pokeapi.pokekotlin.PokeApi
 import co.pokeapi.pokekotlin.model.PokemonVariety
 
-class PokemonVarietyPokeApiRepository : PokemonVarietyRepository {
+class PokemonVarietyPokeApiRepository(
+    private val pokeApi: PokeApi
+) : PokemonVarietyRepository {
     override suspend fun get(id: Int): PokemonVariety? {
-        return PokeApi.getPokemonVariety(id)
+        return pokeApi.getPokemonVariety(id)
     }
 }

@@ -7,7 +7,7 @@
  * File:       VersionPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   16.09.25, 00:53
+ * Modified:   20.09.25, 02:00
  */
 
 package dev.bittim.encountr.core.data.pokeapi.repo
@@ -16,7 +16,7 @@ import android.util.Log
 import co.pokeapi.pokekotlin.PokeApi
 import co.pokeapi.pokekotlin.model.Generation
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
-import dev.bittim.encountr.core.data.pokeapi.mapping.mapPokemonSprite
+import dev.bittim.encountr.core.data.pokeapi.mapping.PokemonSpriteMapper
 import dev.bittim.encountr.core.domain.model.pokeapi.LocalizedString
 import dev.bittim.encountr.core.domain.model.pokeapi.Version
 import kotlinx.coroutines.Dispatchers
@@ -25,19 +25,20 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
 class VersionPokeApiRepository(
+    private val pokeApi: PokeApi,
     private val definitionRepository: DefinitionRepository,
     private val pokemonVarietyRepository: PokemonVarietyRepository
 ) : VersionRepository {
     override suspend fun get(id: Int, providedRawGeneration: Generation?): Version? {
-        val rawVersion = PokeApi.getVersion(id)
+        val rawVersion = pokeApi.getVersion(id)
         Log.d("VersionPokeApiRepository", "Fetched Version: $rawVersion")
 
         var rawGeneration = providedRawGeneration
         if (rawGeneration == null) {
             Log.d("VersionPokeApiRepository", "No provided raw generation, fetching from API")
-            val rawVersionGroup = PokeApi.getVersionGroup(rawVersion.versionGroup.id)
+            val rawVersionGroup = pokeApi.getVersionGroup(rawVersion.versionGroup.id)
             Log.d("VersionPokeApiRepository", "Fetched Version Group: $rawVersionGroup")
-            rawGeneration = PokeApi.getGeneration(rawVersionGroup.generation.id)
+            rawGeneration = pokeApi.getGeneration(rawVersionGroup.generation.id)
             Log.d("VersionPokeApiRepository", "Fetched Generation: $rawGeneration")
         }
 
@@ -59,7 +60,7 @@ class VersionPokeApiRepository(
         Log.d("VersionPokeApiRepository", "Mapped Icon Definition: $iconDefinition")
         val imageUrl = iconDefinition?.let {
             val rawSprites = pokemonVarietyRepository.get(it.pokemon)?.sprites ?: return null
-            mapPokemonSprite(rawSprites, version).frontDefault
+            PokemonSpriteMapper().map(rawSprites, version).frontDefault
         }
         Log.d("VersionPokeApiRepository", "Mapped Icon URL: $imageUrl")
 
@@ -70,13 +71,13 @@ class VersionPokeApiRepository(
     }
 
     override suspend fun getByGeneration(generationId: Int): List<Version> {
-        val rawGeneration = PokeApi.getGeneration(generationId)
+        val rawGeneration = pokeApi.getGeneration(generationId)
         Log.d("VersionPokeApiRepository", "Fetched Generation: $rawGeneration")
 
         val versions = coroutineScope {
             rawGeneration.versionGroups.map { versionGroupHandle ->
                 async(Dispatchers.IO) {
-                    val rawVersionGroup = PokeApi.getVersionGroup(versionGroupHandle.id)
+                    val rawVersionGroup = pokeApi.getVersionGroup(versionGroupHandle.id)
                     rawVersionGroup.versions.map { versionHandle ->
                         async(Dispatchers.IO) {
                             get(id = versionHandle.id, providedRawGeneration = rawGeneration)

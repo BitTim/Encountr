@@ -7,7 +7,7 @@
  * File:       TypePokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   16.09.25, 00:53
+ * Modified:   20.09.25, 02:03
  */
 
 package dev.bittim.encountr.core.data.pokeapi.repo
@@ -18,9 +18,11 @@ import dev.bittim.encountr.core.domain.model.pokeapi.DamageRelations
 import dev.bittim.encountr.core.domain.model.pokeapi.LocalizedString
 import dev.bittim.encountr.core.domain.model.pokeapi.Type
 
-class TypePokeApiRepository : TypeRepository {
+class TypePokeApiRepository(
+    private val pokeApi: PokeApi
+) : TypeRepository {
     override suspend fun get(id: Int): Type? {
-        val rawType = PokeApi.getType(id)
+        val rawType = pokeApi.getType(id)
         Log.d("TypePokeApiRepository", "Raw type: $rawType")
 
         val type = Type(

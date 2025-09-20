@@ -7,7 +7,7 @@
  * File:       LanguagePokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   12.09.25, 17:05
+ * Modified:   20.09.25, 02:04
  */
 
 package dev.bittim.encountr.core.data.pokeapi.repo
@@ -20,9 +20,11 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
-class LanguagePokeApiRepository : LanguageRepository {
+class LanguagePokeApiRepository(
+    private val pokeApi: PokeApi
+) : LanguageRepository {
     override suspend fun get(id: Int): Language? {
-        val rawLanguage = PokeApi.getLanguage(id)
+        val rawLanguage = pokeApi.getLanguage(id)
         Log.d("LanguagePokeApiRepository", "Fetched Language: $rawLanguage")
 
         val language = Language(
@@ -38,8 +40,8 @@ class LanguagePokeApiRepository : LanguageRepository {
     }
 
     override suspend fun get(name: String): Language? {
-        val count = PokeApi.getLanguageList(0, 0).count
-        val langList = PokeApi.getLanguageList(0, count).results
+        val count = pokeApi.getLanguageList(0, 0).count
+        val langList = pokeApi.getLanguageList(0, count).results
 
         return langList.find { it.name == name }?.let { get(it.id) }
     }
@@ -47,10 +49,10 @@ class LanguagePokeApiRepository : LanguageRepository {
     override suspend fun getAll(): List<Language> {
         Log.d("LanguagePokeApiRepository", "Fetching Languages")
 
-        val count = PokeApi.getLanguageList(0, 1).count
+        val count = pokeApi.getLanguageList(0, 1).count
         Log.d("LanguagePokeApiRepository", "Fetched Language Count: $count")
 
-        val rawLangList = PokeApi.getLanguageList(0, count).results
+        val rawLangList = pokeApi.getLanguageList(0, count).results
         Log.d("LanguagePokeApiRepository", "Fetched ${rawLangList.size} Languages")
 
         val langList = coroutineScope {

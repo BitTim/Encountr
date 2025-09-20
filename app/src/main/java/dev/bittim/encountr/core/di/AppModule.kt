@@ -7,7 +7,7 @@
  * File:       AppModule.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   16.09.25, 00:53
+ * Modified:   20.09.25, 03:26
  */
 
 package dev.bittim.encountr.core.di
@@ -17,6 +17,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
+import co.pokeapi.pokekotlin.PokeApi
 import dev.bittim.encountr.core.data.config.ConfigStateHolder
 import dev.bittim.encountr.core.data.config.ConfigStateHolderImpl
 import dev.bittim.encountr.core.data.defs.local.DefinitionsDatabase
@@ -46,12 +47,16 @@ import dev.bittim.encountr.core.data.user.repo.SaveRepositoryImpl
 import dev.bittim.encountr.core.data.user.repo.TeamRepository
 import dev.bittim.encountr.core.data.user.repo.TeamRepositoryImpl
 import io.ktor.client.HttpClient
+import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.android.Android
+import io.ktor.client.plugins.cache.storage.FileStorage
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
+import java.io.File
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = Constants.DS_NAME)
 
@@ -69,8 +74,14 @@ val appModule = module {
     // endregion:   -- Other
     // region:      -- Networking
 
+    single<HttpClientEngine> {
+        Android.create {
+            dispatcher = Dispatchers.IO
+        }
+    }
+
     single {
-        HttpClient(Android) {
+        HttpClient(engine = get()) {
             install(ContentNegotiation) {
                 json()
             }
@@ -80,6 +91,12 @@ val appModule = module {
     // endregion:   -- Networking
     // region:      -- Services
 
+    single<PokeApi> {
+        PokeApi.Custom(
+            engine = get(),
+            cacheStorage = FileStorage(File(androidContext().cacheDir, "pokeapi_cache")),
+        )
+    }
     single<DefinitionService> { DefinitionKtorService(get()) }
 
     // endregion:   -- Services
@@ -106,12 +123,12 @@ val appModule = module {
 
     single<DefinitionRepository> { DefinitionRepositoryImpl(get(), get()) }
 
-    single<LanguageRepository> { LanguagePokeApiRepository() }
-    single<PokemonVarietyRepository> { PokemonVarietyPokeApiRepository() }
-    single<PokemonSpeciesRepository> { PokemonSpeciesPokeApiRepository() }
-    single<PokedexRepository> { PokedexPokeApiRepository() }
-    single<VersionRepository> { VersionPokeApiRepository(get(), get()) }
-    single<TypeRepository> { TypePokeApiRepository() }
+    single<LanguageRepository> { LanguagePokeApiRepository(get()) }
+    single<PokemonVarietyRepository> { PokemonVarietyPokeApiRepository(get()) }
+    single<PokemonSpeciesRepository> { PokemonSpeciesPokeApiRepository(get()) }
+    single<PokedexRepository> { PokedexPokeApiRepository(get()) }
+    single<VersionRepository> { VersionPokeApiRepository(get(), get(), get()) }
+    single<TypeRepository> { TypePokeApiRepository(get()) }
     single<PokemonOverviewRepository> {
         PokemonOverviewPokeApiRepository(
             get(),

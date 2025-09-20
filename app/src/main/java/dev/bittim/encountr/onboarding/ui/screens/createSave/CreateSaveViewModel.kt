@@ -7,7 +7,7 @@
  * File:       CreateSaveViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.09.25, 20:25
+ * Modified:   20.09.25, 01:24
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
 
 class CreateSaveViewModel(
+    private val pokeApi: PokeApi,
     private val configStateHolder: ConfigStateHolder,
     private val versionRepository: VersionRepository,
     private val saveRepository: SaveRepository
@@ -46,7 +47,7 @@ class CreateSaveViewModel(
         }
 
         viewModelScope.launch {
-            val generationCount = PokeApi.getGenerationList(0, 1).count
+            val generationCount = pokeApi.getGenerationList(0, 1).count
             _state.update { it.copy(generations = generationCount) }
 
             onGenChanged(1)

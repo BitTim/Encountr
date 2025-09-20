@@ -7,7 +7,7 @@
  * File:       PokemonCard.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   19.09.25, 19:49
+ * Modified:   20.09.25, 02:02
  */
 
 package dev.bittim.encountr.content.ui.components
@@ -48,8 +48,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import dev.bittim.encountr.core.data.pokeapi.mapping.mapPokemonSprite
-import dev.bittim.encountr.core.data.pokeapi.mapping.mapTypeSprite
+import dev.bittim.encountr.core.data.pokeapi.mapping.PokemonSpriteMapper
+import dev.bittim.encountr.core.data.pokeapi.mapping.TypeSpriteMapper
 import dev.bittim.encountr.core.domain.model.pokeapi.MappedPokemonSprites
 import dev.bittim.encountr.core.domain.model.pokeapi.PokemonOverview
 import dev.bittim.encountr.core.domain.model.pokeapi.Type
@@ -88,7 +88,7 @@ data class PokemonCardState(
             ?: pokemonOverview.name,
         height = pokemonOverview.height,
         weight = pokemonOverview.weight,
-        sprites = runBlocking { mapPokemonSprite(pokemonOverview.sprites, version) },
+        sprites = runBlocking { PokemonSpriteMapper().map(pokemonOverview.sprites, version) },
         types = pokemonOverview.types.map {
             PokemonCardTypeState(it, languageName, version)
         }
@@ -105,7 +105,7 @@ data class PokemonCardTypeState(
         version: Version
     ) : this(
         name = type.localizedNames.find { it.languageName == languageName }?.value ?: type.name,
-        imageUrl = runBlocking { mapTypeSprite(type.sprites, version) }
+        imageUrl = runBlocking { TypeSpriteMapper().map(type.sprites, version) }
     )
 }
 

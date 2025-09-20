@@ -7,7 +7,7 @@
  * File:       PokedexPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   16.09.25, 00:53
+ * Modified:   20.09.25, 02:04
  */
 
 package dev.bittim.encountr.core.data.pokeapi.repo
@@ -19,13 +19,15 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
-class PokedexPokeApiRepository : PokedexRepository {
+class PokedexPokeApiRepository(
+    private val pokeApi: PokeApi
+) : PokedexRepository {
     override suspend fun get(id: Int): Pokedex? {
-        return PokeApi.getPokedex(id)
+        return pokeApi.getPokedex(id)
     }
 
     override suspend fun getByVersionGroupId(id: Int): List<Pokedex> {
-        val versionGroup = PokeApi.getVersionGroup(id)
+        val versionGroup = pokeApi.getVersionGroup(id)
         return coroutineScope {
             versionGroup.pokedexes.map { handle ->
                 async(Dispatchers.IO) { get(handle.id) }
