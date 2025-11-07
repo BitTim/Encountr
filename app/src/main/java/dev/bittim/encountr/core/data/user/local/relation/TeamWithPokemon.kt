@@ -7,7 +7,7 @@
  * File:       TeamWithPokemon.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   12.09.25, 16:34
+ * Modified:   07.11.25, 01:13
  */
 
 package dev.bittim.encountr.core.data.user.local.relation
@@ -15,8 +15,8 @@ package dev.bittim.encountr.core.data.user.local.relation
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
-import dev.bittim.encountr.core.data.user.local.entity.PokemonEntity
-import dev.bittim.encountr.core.data.user.local.entity.PokemonTeamCrossRef
+import dev.bittim.encountr.core.data.user.local.entity.PokemonStateEntity
+import dev.bittim.encountr.core.data.user.local.entity.PokemonTeamJunction
 import dev.bittim.encountr.core.data.user.local.entity.TeamEntity
 import dev.bittim.encountr.core.domain.model.user.Team
 import kotlin.uuid.ExperimentalUuidApi
@@ -25,16 +25,16 @@ import kotlin.uuid.Uuid
 data class TeamWithPokemon(
     @Embedded val team: TeamEntity,
     @Relation(
+        entity = PokemonStateEntity::class,
         parentColumn = "id",
-        entity = PokemonEntity::class,
         entityColumn = "id",
         associateBy = Junction(
-            value = PokemonTeamCrossRef::class,
+            value = PokemonTeamJunction::class,
             parentColumn = "team",
-            entityColumn = "pokemon"
+            entityColumn = "pokemonId"
         )
     )
-    val pokemon: List<PokemonEntity>
+    val pokemon: List<PokemonStateEntity>
 ) {
     @OptIn(ExperimentalUuidApi::class)
     fun toModel(): Team {

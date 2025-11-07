@@ -7,15 +7,16 @@
  * File:       TeamRepositoryImpl.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   12.09.25, 16:34
+ * Modified:   07.11.25, 01:13
  */
 
 package dev.bittim.encountr.core.data.user.repo
 
-import co.pokeapi.pokekotlin.model.PokemonVariety
 import dev.bittim.encountr.core.data.user.local.UserDatabase
-import dev.bittim.encountr.core.data.user.local.entity.PokemonTeamCrossRef
+import dev.bittim.encountr.core.data.user.local.entity.PokemonTeamJunction
 import dev.bittim.encountr.core.data.user.local.entity.TeamEntity
+import dev.bittim.encountr.core.domain.model.api.Handle
+import dev.bittim.encountr.core.domain.model.api.pokemon.Pokemon
 import dev.bittim.encountr.core.domain.model.user.Team
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -62,13 +63,11 @@ class TeamRepositoryImpl(
     }
 
     override suspend fun addPokemon(
-        save: Uuid,
         id: Uuid,
-        pokemon: PokemonVariety
+        pokemon: Handle<Pokemon>
     ) {
         userDatabase.pokemonTeamRefDao.insert(
-            PokemonTeamCrossRef(
-                save.toString(),
+            PokemonTeamJunction(
                 id.toString(),
                 pokemon.id
             )
@@ -76,11 +75,10 @@ class TeamRepositoryImpl(
     }
 
     override suspend fun removePokemon(
-        save: Uuid,
         id: Uuid,
-        pokemon: PokemonVariety
+        pokemon: Handle<Pokemon>
     ) {
-        userDatabase.pokemonTeamRefDao.delete(save.toString(), id.toString(), pokemon.id)
+        userDatabase.pokemonTeamRefDao.delete(id.toString(), pokemon.id)
     }
 
     // endregion:   -- Update

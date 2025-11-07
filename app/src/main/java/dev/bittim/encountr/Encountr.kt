@@ -7,7 +7,7 @@
  * File:       Encountr.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.09.25, 19:07
+ * Modified:   07.11.25, 01:13
  */
 
 package dev.bittim.encountr
@@ -25,6 +25,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.GlobalContext
 import org.koin.core.context.GlobalContext.startKoin
 
@@ -35,6 +36,7 @@ class Encountr : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@Encountr)
+            workManagerFactory()
             modules(appModule, onboardingModule, contentModule)
         }
 
@@ -56,12 +58,8 @@ class Encountr : Application() {
         }
 
         ioAppScope.launch {
-            val definitionsUrl = configStateHolder.state.value?.definitionsUrl
-
-            if (definitionsUrl != null) {
-                val definitionRepository = GlobalContext.get().get<DefinitionRepository>()
-                definitionRepository.fetchDefinition(definitionsUrl)
-            }
+            val definitionRepository = GlobalContext.get().get<DefinitionRepository>()
+            definitionRepository.loadDefinition()
         }
     }
 }

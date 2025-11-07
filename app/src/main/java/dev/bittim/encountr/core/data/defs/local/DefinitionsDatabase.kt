@@ -7,7 +7,7 @@
  * File:       DefinitionsDatabase.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.09.25, 23:54
+ * Modified:   07.11.25, 01:13
  */
 
 package dev.bittim.encountr.core.data.defs.local
@@ -15,21 +15,23 @@ package dev.bittim.encountr.core.data.defs.local
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import dev.bittim.encountr.core.data.defs.local.converter.IntListConverter
+import dev.bittim.encountr.core.data.common.converter.IntListConverter
 import dev.bittim.encountr.core.data.defs.local.dao.DefinitionDao
-import dev.bittim.encountr.core.data.defs.local.dao.IconDao
-import dev.bittim.encountr.core.data.defs.local.dao.LinkedVersionGroupDao
+import dev.bittim.encountr.core.data.defs.local.dao.PokedexAdditionDao
+import dev.bittim.encountr.core.data.defs.local.dao.VersionAdditionDao
 import dev.bittim.encountr.core.data.defs.local.entity.DefinitionEntity
-import dev.bittim.encountr.core.data.defs.local.entity.IconDefinitionEntity
-import dev.bittim.encountr.core.data.defs.local.entity.LinkedVersionGroupEntity
+import dev.bittim.encountr.core.data.defs.local.entity.PokedexAdditionEntity
+import dev.bittim.encountr.core.data.defs.local.entity.VersionAdditionEntity
 
-@Database(
-    entities = [DefinitionEntity::class, IconDefinitionEntity::class, LinkedVersionGroupEntity::class],
-    version = 1
-)
 @TypeConverters(IntListConverter::class)
+@Database(
+    version = 1,
+    entities = [
+        DefinitionEntity::class, VersionAdditionEntity::class, PokedexAdditionEntity::class
+    ],
+)
 abstract class DefinitionsDatabase : RoomDatabase() {
     abstract fun definitionDao(): DefinitionDao
-    abstract fun iconDao(): IconDao
-    abstract fun linkedVersionGroupDao(): LinkedVersionGroupDao
+    abstract fun versionAdditionDao(): VersionAdditionDao
+    abstract fun pokedexAdditionDao(): PokedexAdditionDao
 }

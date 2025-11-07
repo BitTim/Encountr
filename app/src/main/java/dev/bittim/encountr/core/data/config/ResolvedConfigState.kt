@@ -7,7 +7,7 @@
  * File:       ResolvedConfigState.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   09.09.25, 20:21
+ * Modified:   07.11.25, 01:13
  */
 
 package dev.bittim.encountr.core.data.config
@@ -15,7 +15,6 @@ package dev.bittim.encountr.core.data.config
 import dev.bittim.encountr.core.domain.model.user.Save
 
 data class ResolvedConfigState(
-    val definitionsUrl: String,
-    val languageName: String,
+    val languageId: Int,
     val currentSave: Save,
 )

@@ -7,7 +7,7 @@
  * File:       AppModule.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   20.09.25, 03:26
+ * Modified:   07.11.25, 01:13
  */
 
 package dev.bittim.encountr.core.di
@@ -17,35 +17,39 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
+import androidx.work.WorkManager
 import co.pokeapi.pokekotlin.PokeApi
+import dev.bittim.encountr.core.data.api.local.ApiDatabase
+import dev.bittim.encountr.core.data.api.repo.generation.GenerationPokeApiRepository
+import dev.bittim.encountr.core.data.api.repo.generation.GenerationRepository
+import dev.bittim.encountr.core.data.api.repo.language.LanguagePokeApiRepository
+import dev.bittim.encountr.core.data.api.repo.language.LanguageRepository
+import dev.bittim.encountr.core.data.api.repo.pokedex.PokedexPokeApiRepository
+import dev.bittim.encountr.core.data.api.repo.pokedex.PokedexRepository
+import dev.bittim.encountr.core.data.api.repo.pokemon.PokemonPokeApiRepository
+import dev.bittim.encountr.core.data.api.repo.pokemon.PokemonRepository
+import dev.bittim.encountr.core.data.api.repo.type.TypePokeApiRepository
+import dev.bittim.encountr.core.data.api.repo.type.TypeRepository
+import dev.bittim.encountr.core.data.api.repo.version.VersionPokeApiRepository
+import dev.bittim.encountr.core.data.api.repo.version.VersionRepository
+import dev.bittim.encountr.core.data.api.repo.versionGroup.VersionGroupPokeApiRepository
+import dev.bittim.encountr.core.data.api.repo.versionGroup.VersionGroupRepository
+import dev.bittim.encountr.core.data.api.worker.ApiSyncWorker
 import dev.bittim.encountr.core.data.config.ConfigStateHolder
 import dev.bittim.encountr.core.data.config.ConfigStateHolderImpl
+import dev.bittim.encountr.core.data.defs.file.DefinitionFileLoader
+import dev.bittim.encountr.core.data.defs.file.DefinitionLoader
 import dev.bittim.encountr.core.data.defs.local.DefinitionsDatabase
-import dev.bittim.encountr.core.data.defs.remote.DefinitionKtorService
-import dev.bittim.encountr.core.data.defs.remote.DefinitionService
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepositoryImpl
-import dev.bittim.encountr.core.data.pokeapi.repo.LanguagePokeApiRepository
-import dev.bittim.encountr.core.data.pokeapi.repo.LanguageRepository
-import dev.bittim.encountr.core.data.pokeapi.repo.PokedexPokeApiRepository
-import dev.bittim.encountr.core.data.pokeapi.repo.PokedexRepository
-import dev.bittim.encountr.core.data.pokeapi.repo.PokemonOverviewPokeApiRepository
-import dev.bittim.encountr.core.data.pokeapi.repo.PokemonOverviewRepository
-import dev.bittim.encountr.core.data.pokeapi.repo.PokemonSpeciesPokeApiRepository
-import dev.bittim.encountr.core.data.pokeapi.repo.PokemonSpeciesRepository
-import dev.bittim.encountr.core.data.pokeapi.repo.PokemonVarietyPokeApiRepository
-import dev.bittim.encountr.core.data.pokeapi.repo.PokemonVarietyRepository
-import dev.bittim.encountr.core.data.pokeapi.repo.TypePokeApiRepository
-import dev.bittim.encountr.core.data.pokeapi.repo.TypeRepository
-import dev.bittim.encountr.core.data.pokeapi.repo.VersionPokeApiRepository
-import dev.bittim.encountr.core.data.pokeapi.repo.VersionRepository
 import dev.bittim.encountr.core.data.user.local.UserDatabase
-import dev.bittim.encountr.core.data.user.repo.PokemonRepository
-import dev.bittim.encountr.core.data.user.repo.PokemonRepositoryImpl
+import dev.bittim.encountr.core.data.user.repo.PokemonStateRepository
+import dev.bittim.encountr.core.data.user.repo.PokemonStateRepositoryImpl
 import dev.bittim.encountr.core.data.user.repo.SaveRepository
 import dev.bittim.encountr.core.data.user.repo.SaveRepositoryImpl
 import dev.bittim.encountr.core.data.user.repo.TeamRepository
 import dev.bittim.encountr.core.data.user.repo.TeamRepositoryImpl
+import dev.bittim.encountr.core.domain.useCase.api.GetVersionsByGeneration
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.android.Android
@@ -55,6 +59,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.workmanager.dsl.workerOf
 import org.koin.dsl.module
 import java.io.File
 
@@ -70,6 +75,9 @@ val appModule = module {
 
     // Config State
     single<ConfigStateHolder> { ConfigStateHolderImpl(get(), get()) }
+
+    // Work Manager
+    single<WorkManager> { WorkManager.getInstance(androidContext()) }
 
     // endregion:   -- Other
     // region:      -- Networking
@@ -97,7 +105,7 @@ val appModule = module {
             cacheStorage = FileStorage(File(androidContext().cacheDir, "pokeapi_cache")),
         )
     }
-    single<DefinitionService> { DefinitionKtorService(get()) }
+    single<DefinitionLoader> { DefinitionFileLoader(get()) }
 
     // endregion:   -- Services
     // region:      -- Databases
@@ -107,6 +115,14 @@ val appModule = module {
             androidApplication(),
             DefinitionsDatabase::class.java,
             "definitions"
+        ).build()
+    }
+
+    single {
+        Room.databaseBuilder(
+            androidApplication(),
+            ApiDatabase::class.java,
+            "api"
         ).build()
     }
 
@@ -123,24 +139,27 @@ val appModule = module {
 
     single<DefinitionRepository> { DefinitionRepositoryImpl(get(), get()) }
 
-    single<LanguageRepository> { LanguagePokeApiRepository(get()) }
-    single<PokemonVarietyRepository> { PokemonVarietyPokeApiRepository(get()) }
-    single<PokemonSpeciesRepository> { PokemonSpeciesPokeApiRepository(get()) }
-    single<PokedexRepository> { PokedexPokeApiRepository(get()) }
-    single<VersionRepository> { VersionPokeApiRepository(get(), get(), get()) }
-    single<TypeRepository> { TypePokeApiRepository(get()) }
-    single<PokemonOverviewRepository> {
-        PokemonOverviewPokeApiRepository(
-            get(),
-            get(),
-            get(),
-            get()
-        )
-    }
+    single<GenerationRepository> { GenerationPokeApiRepository(get(), get(), get()) }
+    single<LanguageRepository> { LanguagePokeApiRepository(get(), get(), get()) }
+    single<PokedexRepository> { PokedexPokeApiRepository(get(), get(), get()) }
+    single<PokemonRepository> { PokemonPokeApiRepository(get(), get(), get()) }
+    single<TypeRepository> { TypePokeApiRepository(get(), get(), get()) }
+    single<VersionRepository> { VersionPokeApiRepository(get(), get(), get(), get()) }
+    single<VersionGroupRepository> { VersionGroupPokeApiRepository(get(), get(), get(), get()) }
 
-    single<PokemonRepository> { PokemonRepositoryImpl(get()) }
+    single<PokemonStateRepository> { PokemonStateRepositoryImpl(get()) }
     single<SaveRepository> { SaveRepositoryImpl(get()) }
     single<TeamRepository> { TeamRepositoryImpl(get()) }
 
     // endregion:   -- Repositories
+    // region:      -- UseCases
+
+    single<GetVersionsByGeneration> { GetVersionsByGeneration(get(), get(), get()) }
+
+    // endregion:   -- UseCases
+    // region:      -- Workers
+
+    workerOf(::ApiSyncWorker)
+
+    // endregion:   -- Workers
 }

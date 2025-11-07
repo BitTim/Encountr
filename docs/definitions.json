@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "iconPokemon": 493,
-  "ignored": [
+  "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/479.png",
+  "ignoredVersionIds": [
     19,
     20,
     35,
@@ -11,179 +11,255 @@
     44,
     46
   ],
-  "linkedVersionGroups": [
+  "pokedexAdditions": [
     {
-      "parent": 25,
-      "linked": [
-        26,
-        27
+      "versionGroupId": 25,
+      "pokedexIds": [
+        32,
+        33
       ]
     }
   ],
-  "icons": [
+  "versionAdditions": [
     {
-      "game": 0,
-      "pokemon": 201
+      "versionId": 0,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-question.png",
+      "pokemonSpriteVariant": null,
+      "typeSpriteVariant": null
     },
     {
-      "game": 1,
-      "pokemon": 6
+      "versionId": 1,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-i/red-blue/transparent/6.png",
+      "pokemonSpriteVariant": "RED_BLUE",
+      "typeSpriteVariant": null
     },
     {
-      "game": 2,
-      "pokemon": 9
+      "versionId": 2,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-i/red-blue/transparent/9.png",
+      "pokemonSpriteVariant": "RED_BLUE",
+      "typeSpriteVariant": null
     },
     {
-      "game": 3,
-      "pokemon": 25
+      "versionId": 45,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-i/red-blue/transparent/3.png",
+      "pokemonSpriteVariant": "RED_BLUE",
+      "typeSpriteVariant": null
     },
     {
-      "game": 4,
-      "pokemon": 250
+      "versionId": 3,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-i/yellow/transparent/25.png",
+      "pokemonSpriteVariant": "YELLOW",
+      "typeSpriteVariant": null
     },
     {
-      "game": 5,
-      "pokemon": 249
+      "versionId": 4,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/gold/transparent/250.png",
+      "pokemonSpriteVariant": "GOLD",
+      "typeSpriteVariant": null
     },
     {
-      "game": 6,
-      "pokemon": 245
+      "versionId": 5,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/silver/transparent/249.png",
+      "pokemonSpriteVariant": "SILVER",
+      "typeSpriteVariant": null
     },
     {
-      "game": 7,
-      "pokemon": 383
+      "versionId": 6,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/245.png",
+      "pokemonSpriteVariant": "CRYSTAL",
+      "typeSpriteVariant": null
     },
     {
-      "game": 8,
-      "pokemon": 382
+      "versionId": 7,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/ruby-sapphire/383.png",
+      "pokemonSpriteVariant": "RUBY_SAPPHIRE",
+      "typeSpriteVariant": "RUBY_SAPPHIRE"
     },
     {
-      "game": 9,
-      "pokemon": 384
+      "versionId": 8,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/ruby-sapphire/382.png",
+      "pokemonSpriteVariant": "RUBY_SAPPHIRE",
+      "typeSpriteVariant": "RUBY_SAPPHIRE"
     },
     {
-      "game": 10,
-      "pokemon": 6
+      "versionId": 9,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/emerald/384.png",
+      "pokemonSpriteVariant": "EMERALD",
+      "typeSpriteVariant": "EMERALD"
     },
     {
-      "game": 11,
-      "pokemon": 3
+      "versionId": 10,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/6.png",
+      "pokemonSpriteVariant": "FIRERED_LEAFGREEN",
+      "typeSpriteVariant": "FIRERED_LEAFGREEN"
     },
     {
-      "game": 12,
-      "pokemon": 483
+      "versionId": 11,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/3.png",
+      "pokemonSpriteVariant": "FIRERED_LEAFGREEN",
+      "typeSpriteVariant": "FIRERED_LEAFGREEN"
     },
     {
-      "game": 13,
-      "pokemon": 484
+      "versionId": 12,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/483.png",
+      "pokemonSpriteVariant": "DIAMOND_PEARL",
+      "typeSpriteVariant": "DIAMOND_PEARL"
     },
     {
-      "game": 14,
-      "pokemon": 487
+      "versionId": 13,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/484.png",
+      "pokemonSpriteVariant": "DIAMOND_PEARL",
+      "typeSpriteVariant": "DIAMOND_PEARL"
     },
     {
-      "game": 15,
-      "pokemon": 250
+      "versionId": 14,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/platinum/487.png",
+      "pokemonSpriteVariant": "PLATINUM",
+      "typeSpriteVariant": "PLATINUM"
     },
     {
-      "game": 16,
-      "pokemon": 249
+      "versionId": 15,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/heartgold-soulsilver/250.png",
+      "pokemonSpriteVariant": "HEARTGOLD_SOULSILVER",
+      "typeSpriteVariant": "HEARTGOLD_SOULSILVER"
     },
     {
-      "game": 17,
-      "pokemon": 643
+      "versionId": 16,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/heartgold-soulsilver/249.png",
+      "pokemonSpriteVariant": "HEARTGOLD_SOULSILVER",
+      "typeSpriteVariant": "HEARTGOLD_SOULSILVER"
     },
     {
-      "game": 18,
-      "pokemon": 644
+      "versionId": 17,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/643.png",
+      "pokemonSpriteVariant": "BLACK_WHITE",
+      "typeSpriteVariant": "BLACK_WHITE"
     },
     {
-      "game": 21,
-      "pokemon": 10022
+      "versionId": 18,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/644.png",
+      "pokemonSpriteVariant": "BLACK_WHITE",
+      "typeSpriteVariant": "BLACK_WHITE"
     },
     {
-      "game": 22,
-      "pokemon": 10023
+      "versionId": 21,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/10022.png",
+      "pokemonSpriteVariant": "BLACK_WHITE",
+      "typeSpriteVariant": "BLACK2_WHITE2"
     },
     {
-      "game": 23,
-      "pokemon": 716
+      "versionId": 22,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/10023.png",
+      "pokemonSpriteVariant": "BLACK_WHITE",
+      "typeSpriteVariant": "BLACK2_WHITE2"
     },
     {
-      "game": 24,
-      "pokemon": 717
+      "versionId": 23,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vi/x-y/716.png",
+      "pokemonSpriteVariant": "XY",
+      "typeSpriteVariant": "XY"
     },
     {
-      "game": 25,
-      "pokemon": 10078
+      "versionId": 24,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vi/x-y/717.png",
+      "pokemonSpriteVariant": "XY",
+      "typeSpriteVariant": "XY"
     },
     {
-      "game": 26,
-      "pokemon": 10077
+      "versionId": 25,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vi/omegaruby-alphasapphire/383-primal.png",
+      "pokemonSpriteVariant": "OMEGARUBY_ALPHASAPPHIRE",
+      "typeSpriteVariant": "OMEGARUBY_ALPHASAPPHIRE"
     },
     {
-      "game": 27,
-      "pokemon": 791
+      "versionId": 26,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vi/omegaruby-alphasapphire/382-primal.png",
+      "pokemonSpriteVariant": "OMEGARUBY_ALPHASAPPHIRE",
+      "typeSpriteVariant": "OMEGARUBY_ALPHASAPPHIRE"
     },
     {
-      "game": 28,
-      "pokemon": 792
+      "versionId": 27,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/ultra-sun-ultra-moon/791.png",
+      "pokemonSpriteVariant": "SUN_MOON",
+      "typeSpriteVariant": "SUN_MOON"
     },
     {
-      "game": 29,
-      "pokemon": 10155
+      "versionId": 28,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/ultra-sun-ultra-moon/792.png",
+      "pokemonSpriteVariant": "SUN_MOON",
+      "typeSpriteVariant": "SUN_MOON"
     },
     {
-      "game": 30,
-      "pokemon": 10156
+      "versionId": 29,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/ultra-sun-ultra-moon/800-dusk.png",
+      "pokemonSpriteVariant": "SUN_MOON",
+      "typeSpriteVariant": "ULTRA_SUN_ULTRA_MOON"
     },
     {
-      "game": 31,
-      "pokemon": 25
+      "versionId": 30,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/ultra-sun-ultra-moon/800-dawn.png",
+      "pokemonSpriteVariant": "SUN_MOON",
+      "typeSpriteVariant": "ULTRA_SUN_ULTRA_MOON"
     },
     {
-      "game": 32,
-      "pokemon": 133
+      "versionId": 31,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
+      "pokemonSpriteVariant": null,
+      "typeSpriteVariant": "LETS_GO_PIKACHU_LETS_GO_EEVEE"
     },
     {
-      "game": 33,
-      "pokemon": 10188
+      "versionId": 32,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/133.png",
+      "pokemonSpriteVariant": null,
+      "typeSpriteVariant": "LETS_GO_PIKACHU_LETS_GO_EEVEE"
     },
     {
-      "game": 34,
-      "pokemon": 10189
+      "versionId": 33,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/10188.png",
+      "pokemonSpriteVariant": null,
+      "typeSpriteVariant": "SWORD_SHIELD"
     },
     {
-      "game": 37,
-      "pokemon": 483
+      "versionId": 34,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/10189.png",
+      "pokemonSpriteVariant": null,
+      "typeSpriteVariant": "SWORD_SHIELD"
     },
     {
-      "game": 38,
-      "pokemon": 484
+      "versionId": 37,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/483.png",
+      "pokemonSpriteVariant": null,
+      "typeSpriteVariant": "BRILLIANT_DIAMOND_SHINING_PEARL"
     },
     {
-      "game": 39,
-      "pokemon": 493
+      "versionId": 38,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/484.png",
+      "pokemonSpriteVariant": null,
+      "typeSpriteVariant": "BRILLIANT_DIAMOND_SHINING_PEARL"
     },
     {
-      "game": 40,
-      "pokemon": 1007
+      "versionId": 39,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/493.png",
+      "pokemonSpriteVariant": null,
+      "typeSpriteVariant": "LEGENDS_ARCEUS"
     },
     {
-      "game": 41,
-      "pokemon": 1008
+      "versionId": 40,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1007.png",
+      "pokemonSpriteVariant": null,
+      "typeSpriteVariant": "SCARLET_VIOLET"
     },
     {
-      "game": 44,
-      "pokemon": 6
+      "versionId": 41,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1008.png",
+      "pokemonSpriteVariant": null,
+      "typeSpriteVariant": "SCARLET_VIOLET"
     },
     {
-      "game": 45,
-      "pokemon": 3
-    },
-    {
-      "game": 46,
-      "pokemon": 9
+      "versionId": 47,
+      "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/10118.png",
+      "pokemonSpriteVariant": null,
+      "typeSpriteVariant": "SCARLET_VIOLET"
     }
   ]
 }

@@ -7,12 +7,14 @@
  * File:       Constants.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 23:26
+ * Modified:   07.11.25, 01:13
  */
 
 package dev.bittim.encountr.core.di
 
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import dev.bittim.encountr.core.domain.model.api.pokemon.PokemonSpriteVariant
 
 object Constants {
     // region:      -- URLs
@@ -22,16 +24,24 @@ object Constants {
     // endregion:   -- URLs
     // region:      -- Default Values
 
-    const val DEFAULT_DEFS_URL = "https://bittim.github.io/Encountr/definitions.json"
-    const val DEFAULT_LANG_NAME = "en"
+    const val DEFAULT_LANG_ID = 9
 
     // endregion:   -- Default Values
     // region:      -- DataStore Keys
 
     const val DS_NAME = "EncountrConfig"
-    val DS_KEY_DEFS_URL = stringPreferencesKey("definitionsUrl")
-    val DS_KEY_LANG_NAME = stringPreferencesKey("languageName")
+    val DS_KEY_LANG_ID = intPreferencesKey("languageId")
     val DS_KEY_CURR_SAVE_UUID = stringPreferencesKey("currentSaveUuid")
 
     // endregion:   -- DataStore Keys
+    // region:      -- Expiration Durations
+
+    const val API_EXPIRATION_DAYS: Long = 30
+
+    // endregion:   -- Expiration Durations
+    // region:      -- Sprites
+
+    val DEFAULT_POKEMON_SPRITE_VARIANT = PokemonSpriteVariant.DEFAULT
+
+    // endregion:   -- Sprites
 }

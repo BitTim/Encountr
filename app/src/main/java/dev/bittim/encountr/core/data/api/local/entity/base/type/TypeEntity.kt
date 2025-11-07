@@ -1,0 +1,72 @@
+/*
+ * Copyright (c) 2025 Tim Anhalt (BitTim)
+ *
+ * Project:    Encountr
+ * License:    GPLv3
+ *
+ * File:       TypeEntity.kt
+ * Module:     Encountr.app.main
+ * Author:     Tim Anhalt (BitTim)
+ * Modified:   07.11.25, 01:13
+ */
+
+package dev.bittim.encountr.core.data.api.local.entity.base.type
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import dev.bittim.encountr.core.data.api.local.entity.base.ExpirableEntity
+import dev.bittim.encountr.core.domain.model.api.language.LocalizedString
+import dev.bittim.encountr.core.domain.model.api.type.Type
+import dev.bittim.encountr.core.domain.model.api.type.TypeSprite
+
+@Entity(
+    tableName = "type",
+)
+data class TypeEntity(
+    @PrimaryKey val id: Int,
+    val name: String,
+    override val expiresAt: Long,
+
+    val doubleDamageFrom: List<Int>,
+    val halfDamageFrom: List<Int>,
+    val noDamageFrom: List<Int>,
+    val doubleDamageTo: List<Int>,
+    val halfDamageTo: List<Int>,
+    val noDamageTo: List<Int>,
+) : ExpirableEntity {
+    fun toModel(
+        localizedNames: List<LocalizedString>,
+        typeSprites: List<TypeSprite>
+    ): Type {
+        return Type(
+            id = id,
+            name = name,
+            localizedNames = localizedNames,
+            sprites = typeSprites,
+
+            doubleDamageFrom = doubleDamageFrom,
+            halfDamageFrom = halfDamageFrom,
+            noDamageFrom = noDamageFrom,
+            doubleDamageTo = doubleDamageTo,
+            halfDamageTo = halfDamageTo,
+            noDamageTo = noDamageTo,
+        )
+    }
+
+    companion object {
+        fun fromApi(type: co.pokeapi.pokekotlin.model.Type): TypeEntity {
+            return TypeEntity(
+                id = type.id,
+                name = type.name,
+                expiresAt = ExpirableEntity.calcExpiryTime(),
+
+                doubleDamageFrom = type.damageRelations.doubleDamageFrom.map { it.id },
+                halfDamageFrom = type.damageRelations.halfDamageFrom.map { it.id },
+                noDamageFrom = type.damageRelations.noDamageFrom.map { it.id },
+                doubleDamageTo = type.damageRelations.doubleDamageTo.map { it.id },
+                halfDamageTo = type.damageRelations.halfDamageTo.map { it.id },
+                noDamageTo = type.damageRelations.noDamageTo.map { it.id },
+            )
+        }
+    }
+}

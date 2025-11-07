@@ -7,17 +7,17 @@
  * File:       CreateSaveState.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.09.25, 18:03
+ * Modified:   07.11.25, 01:13
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
 
-import dev.bittim.encountr.core.domain.model.pokeapi.Version
+import dev.bittim.encountr.core.domain.model.api.version.Version
 
 data class CreateSaveState(
-    val languageName: String? = null,
+    val languageId: Int? = null,
     val generations: Int? = null,
-    val versions: List<Version>? = null,
+    val versions: List<Version?> = emptyList(),
     val isLoading: Boolean = false,
     val error: String? = null
 )

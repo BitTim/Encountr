@@ -7,7 +7,7 @@
  * File:       CreateSaveViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   20.09.25, 01:24
+ * Modified:   07.11.25, 01:13
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
@@ -16,12 +16,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.pokeapi.pokekotlin.PokeApi
 import dev.bittim.encountr.core.data.config.ConfigStateHolder
-import dev.bittim.encountr.core.data.pokeapi.repo.VersionRepository
 import dev.bittim.encountr.core.data.user.repo.SaveRepository
+import dev.bittim.encountr.core.domain.useCase.api.GetVersionsByGeneration
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
@@ -29,7 +32,7 @@ import kotlin.uuid.ExperimentalUuidApi
 class CreateSaveViewModel(
     private val pokeApi: PokeApi,
     private val configStateHolder: ConfigStateHolder,
-    private val versionRepository: VersionRepository,
+    private val getVersionsByGeneration: GetVersionsByGeneration,
     private val saveRepository: SaveRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(CreateSaveState())
@@ -41,7 +44,7 @@ class CreateSaveViewModel(
         viewModelScope.launch {
             configStateHolder.rawState.collect { config ->
                 _state.update {
-                    it.copy(languageName = config?.languageName)
+                    it.copy(languageId = config?.languageId)
                 }
             }
         }
@@ -57,11 +60,13 @@ class CreateSaveViewModel(
     fun onGenChanged(generationId: Int) {
         fetchGamesByGenJob?.cancel()
         fetchGamesByGenJob = viewModelScope.launch {
-            _state.update { it.copy(versions = null) }
+            _state.update { it.copy(versions = emptyList()) }
 
-            val versions = versionRepository.getByGeneration(generationId)
-
-            _state.update { it.copy(versions = versions) }
+            getVersionsByGeneration(generationId)
+                .stateIn(viewModelScope, WhileSubscribed(5000), emptyList())
+                .collectLatest { versions ->
+                    _state.update { it.copy(versions = versions) }
+                }
         }
     }
 

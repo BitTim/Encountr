@@ -7,27 +7,23 @@
  * File:       PokemonListViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   19.09.25, 20:02
+ * Modified:   07.11.25, 01:15
  */
 
 package dev.bittim.encountr.content.ui.screens.pokemon.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.bittim.encountr.core.data.api.repo.version.VersionRepository
 import dev.bittim.encountr.core.data.config.ConfigStateHolder
-import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
-import dev.bittim.encountr.core.data.pokeapi.repo.PokedexRepository
-import dev.bittim.encountr.core.data.pokeapi.repo.PokemonOverviewRepository
-import dev.bittim.encountr.core.data.pokeapi.repo.VersionRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -36,10 +32,7 @@ import kotlin.uuid.ExperimentalUuidApi
 @OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
 class PokemonListViewModel(
     private val configStateHolder: ConfigStateHolder,
-    private val definitionRepository: DefinitionRepository,
     private val versionRepository: VersionRepository,
-    private val pokedexRepository: PokedexRepository,
-    private val pokemonOverviewRepository: PokemonOverviewRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(PokemonListState())
     val state = _state.asStateFlow()
@@ -52,11 +45,16 @@ class PokemonListViewModel(
         configFetchJob?.cancel()
         configFetchJob = viewModelScope.launch {
             configStateHolder.state.collect { config ->
-                _state.update {
-                    val version =
-                        versionRepository.get(config?.currentSave?.version ?: return@collect)
-                    it.copy(languageName = config.languageName, version = version)
-                }
+                versionRepository.get(config?.currentSave?.version ?: return@collect)
+                    .stateIn(viewModelScope, WhileSubscribed(5000), null)
+                    .collectLatest { version ->
+                        _state.update {
+                            it.copy(
+                                languageId = config.languageId,
+                                version = version
+                            )
+                        }
+                    }
             }
         }
 
@@ -66,22 +64,9 @@ class PokemonListViewModel(
                 configStateHolder.state.collectLatest { config ->
                     if (config == null) return@collectLatest
 
-                    val version =
-                        versionRepository.get(config.currentSave.version) ?: return@collectLatest
-                    val linkedVersionGroup =
-                        definitionRepository.getLinkedVersionGroupByParent(version.versionGroupId)
+                    // TODO
+                    val pokedexes = null
 
-                    val versionGroupIds = mutableListOf(version.versionGroupId).union(
-                        linkedVersionGroup?.linked ?: emptyList()
-                    )
-
-                    val pokedexes = coroutineScope {
-                        versionGroupIds.map {
-                            async(Dispatchers.IO) { pokedexRepository.getByVersionGroupId(it) }
-                        }
-                    }.awaitAll().flatten()
-
-                    onPokedexChanged(pokedexes.first().id, "")
                     _state.update { it.copy(pokedexes = pokedexes) }
                 }
             }
@@ -94,7 +79,8 @@ class PokemonListViewModel(
             withContext(Dispatchers.IO) {
                 _state.update { it.copy(filteredPokemon = null, pokemon = null) }
 
-                val pokemon = pokemonOverviewRepository.getByPokedex(id)
+                // TODO
+                val pokemon = null
 
                 _state.update { it.copy(pokemon = pokemon) }
                 applyFilter(searchQuery)

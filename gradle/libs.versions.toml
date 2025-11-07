@@ -4,28 +4,30 @@ coilCompose = "3.3.0"
 coilGif = "3.3.0"
 coilNetworkKtor3 = "3.3.0"
 datastorePreferences = "1.1.7"
-kotlin = "2.2.20"
+koinAndroidxWorkmanager = "4.1.1"
+kotlin = "2.2.21"
 coreKtx = "1.17.0"
 junit = "4.13.2"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
-ktorClientCore = "3.3.0"
+ktorClientCore = "3.3.2"
 lifecycleRuntimeKtx = "2.9.4"
 activityCompose = "1.11.0"
-composeBom = "2025.09.00"
-material3 = "1.5.0-alpha04"
+composeBom = "2025.11.00"
+material3 = "1.5.0-alpha08"
 slf4j = "1.7.36"
 
 ksp = "2.2.0-2.0.2"
-kotlinSerialization = "2.2.20"
+kotlinSerialization = "2.2.21"
 kotlinxSerializationCore = "1.9.0"
 koin = "4.1.1"
-navigationCompose = "2.9.4"
+navigationCompose = "2.9.6"
 paletteKtx = "1.0.0"
 pokekotlin = "3.0.0-pre4"
-roomRuntime = "2.8.0"
-windowsizeclass = "1.3.2"
-material3Adaptive = "1.2.0-beta02"
+roomRuntime = "2.8.3"
+windowsizeclass = "1.4.0"
+material3Adaptive = "1.2.0"
+workRuntimeKtx = "2.11.0"
 
 [libraries]
 androidx-compose-material3-adaptive-navigation-suite = { module = "androidx.compose.material3:material3-adaptive-navigation-suite" }
@@ -36,6 +38,7 @@ androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-view
 androidx-lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "lifecycleRuntimeKtx" }
 coil-gif = { module = "io.coil-kt.coil3:coil-gif", version.ref = "coilGif" }
 coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coilNetworkKtor3" }
+koin-androidx-workmanager = { module = "io.insert-koin:koin-androidx-workmanager", version.ref = "koinAndroidxWorkmanager" }
 ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktorClientCore" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorClientCore" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktorClientCore" }
@@ -76,6 +79,7 @@ androidx-compose-material3-windowsizeclass = { module = "androidx.compose.materi
 androidx-material3-adaptive = { module = "androidx.compose.material3.adaptive:adaptive", version.ref = "material3Adaptive" }
 pokekotlin = { module = "co.pokeapi.pokekotlin:pokekotlin", version.ref = "pokekotlin" }
 slf4j-android = { module = "org.slf4j:slf4j-android", version.ref = "slf4j" }
+androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntimeKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

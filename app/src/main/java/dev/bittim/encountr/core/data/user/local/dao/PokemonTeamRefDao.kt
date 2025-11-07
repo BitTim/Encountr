@@ -7,40 +7,40 @@
  * File:       PokemonTeamRefDao.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.08.25, 14:23
+ * Modified:   07.11.25, 01:13
  */
 
 package dev.bittim.encountr.core.data.user.local.dao
 
 import androidx.room.Dao
-import androidx.room.Insert
 import androidx.room.Query
-import dev.bittim.encountr.core.data.user.local.entity.PokemonTeamCrossRef
+import androidx.room.Upsert
+import dev.bittim.encountr.core.data.user.local.entity.PokemonTeamJunction
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PokemonTeamRefDao {
     // region:      -- Create
 
-    @Insert
-    suspend fun insert(pokemonTeamCrossRef: PokemonTeamCrossRef)
+    @Upsert
+    suspend fun insert(pokemonTeamJunction: PokemonTeamJunction)
 
-    @Insert
-    suspend fun insert(pokemonTeamCrossRefs: List<PokemonTeamCrossRef>)
+    @Upsert
+    suspend fun insert(pokemonTeamJunctions: List<PokemonTeamJunction>)
 
     // endregion:   -- Create
     // region:      -- Read
 
-    @Query("SELECT * FROM pokemon_team_ref WHERE team = :team")
-    fun getByTeam(team: String): Flow<List<PokemonTeamCrossRef>>
+    @Query("SELECT * FROM pokemon_team_junction WHERE team = :team")
+    fun getByTeam(team: String): Flow<List<PokemonTeamJunction>>
 
     // endregion:   -- Read
     // region:      -- Delete
 
-    @Query("DELETE FROM pokemon_team_ref WHERE save = :save AND team = :team AND pokemon = :pokemon")
-    suspend fun delete(save: String, team: String, pokemon: Int)
+    @Query("DELETE FROM pokemon_team_junction WHERE team = :team AND pokemonId = :pokemonId")
+    suspend fun delete(team: String, pokemonId: Int)
 
-    @Query("DELETE FROM pokemon_team_ref WHERE team = :team")
+    @Query("DELETE FROM pokemon_team_junction WHERE team = :team")
     suspend fun deleteByTeam(team: String)
 
     // endregion:   -- Delete

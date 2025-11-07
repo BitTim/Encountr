@@ -7,16 +7,11 @@
  * File:       LandingState.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   06.09.25, 02:27
+ * Modified:   07.11.25, 01:13
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.landing
 
-import dev.bittim.encountr.core.ui.util.UiText
-
 data class LandingState(
     val imageUrl: String? = null,
-    val lastValidUrl: String? = null,
-    val fetching: Boolean = false,
-    val urlError: UiText? = null
 )

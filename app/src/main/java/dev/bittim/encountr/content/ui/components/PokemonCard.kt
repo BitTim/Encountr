@@ -7,7 +7,7 @@
  * File:       PokemonCard.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   20.09.25, 02:02
+ * Modified:   07.11.25, 01:13
  */
 
 package dev.bittim.encountr.content.ui.components
@@ -48,18 +48,12 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import dev.bittim.encountr.core.data.pokeapi.mapping.PokemonSpriteMapper
-import dev.bittim.encountr.core.data.pokeapi.mapping.TypeSpriteMapper
-import dev.bittim.encountr.core.domain.model.pokeapi.MappedPokemonSprites
-import dev.bittim.encountr.core.domain.model.pokeapi.PokemonOverview
-import dev.bittim.encountr.core.domain.model.pokeapi.Type
-import dev.bittim.encountr.core.domain.model.pokeapi.Version
+import dev.bittim.encountr.core.domain.model.api.pokemon.PokemonSprites
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.annotations.ComponentPreview
 import dev.bittim.encountr.core.ui.util.extenstions.modifier.pulseAnimation
 import dev.bittim.encountr.core.ui.util.font.getScaledLineHeightFromFontStyle
-import kotlinx.coroutines.runBlocking
 
 data object PokemonCardDefaults {
     val elevation = Spacing.xxs
@@ -72,42 +66,14 @@ data class PokemonCardState(
     val name: String,
     val height: String,
     val weight: String,
-    val sprites: MappedPokemonSprites,
+    val sprites: PokemonSprites,
     val types: List<PokemonCardTypeState>,
-) {
-    constructor(
-        pokemonOverview: PokemonOverview,
-        pokedexId: Int,
-        languageName: String,
-        version: Version
-    ) : this(
-        id = pokemonOverview.id,
-        entryNumber = pokemonOverview.entryNumbers.find { it.pokedexId == pokedexId }?.entryNumber
-            ?: -1,
-        name = pokemonOverview.localizedNames.find { it.languageName == languageName }?.value
-            ?: pokemonOverview.name,
-        height = pokemonOverview.height,
-        weight = pokemonOverview.weight,
-        sprites = runBlocking { PokemonSpriteMapper().map(pokemonOverview.sprites, version) },
-        types = pokemonOverview.types.map {
-            PokemonCardTypeState(it, languageName, version)
-        }
-    )
-}
+)
 
 data class PokemonCardTypeState(
     val name: String,
     val imageUrl: String?
-) {
-    constructor(
-        type: Type,
-        languageName: String,
-        version: Version
-    ) : this(
-        name = type.localizedNames.find { it.languageName == languageName }?.value ?: type.name,
-        imageUrl = runBlocking { TypeSpriteMapper().map(type.sprites, version) }
-    )
-}
+)
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -341,7 +307,7 @@ fun PokemonCardPreview() {
                         name = "Bulbasaur",
                         height = "0.7 m",
                         weight = "6.9 kg",
-                        sprites = MappedPokemonSprites(
+                        sprites = PokemonSprites(
                             frontDefault = null,
                             frontShiny = null,
                             backDefault = null,

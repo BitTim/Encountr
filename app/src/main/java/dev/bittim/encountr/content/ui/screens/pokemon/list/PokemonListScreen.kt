@@ -7,7 +7,7 @@
  * File:       PokemonListScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   19.09.25, 20:08
+ * Modified:   07.11.25, 01:13
  */
 
 package dev.bittim.encountr.content.ui.screens.pokemon.list
@@ -58,7 +58,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.bittim.encountr.R
 import dev.bittim.encountr.content.ui.components.PokemonCard
-import dev.bittim.encountr.content.ui.components.PokemonCardState
 import dev.bittim.encountr.content.ui.screens.pokemon.list.PokemonListScreenDefaults.PLACEHOLDER_COUNT
 import dev.bittim.encountr.core.di.Constants
 import dev.bittim.encountr.core.ui.components.VersionIcon
@@ -183,15 +182,15 @@ fun PokemonListScreen(
                             )
                             Log.d(
                                 "PokemonListScreen", "Selected lang: ${
-                                    (state.languageName
-                                        ?: Constants.DEFAULT_LANG_NAME)
+                                    (state.languageId
+                                        ?: Constants.DEFAULT_LANG_ID)
                                 }"
                             )
                             Text(
                                 text = pokedex.names.find {
-                                    it.language.name == state.languageName
+                                    it.language.id == state.languageId
                                 }?.name
-                                    ?: pokedex.names.find { it.language.name == Constants.DEFAULT_LANG_NAME }?.name
+                                    ?: pokedex.names.find { it.language.id == Constants.DEFAULT_LANG_ID }?.name
                                     ?: pokedex.name
                             )
                         }
@@ -209,17 +208,18 @@ fun PokemonListScreen(
                 val pokemonCardState = if (
                     state.filteredPokemon?.get(idx) == null ||
                     state.pokedexes?.get(selectedTab) == null ||
-                    state.languageName == null ||
+                    state.languageId == null ||
                     state.version == null
                 ) {
                     null
                 } else {
-                    PokemonCardState(
-                        pokemonOverview = state.filteredPokemon[idx],
-                        pokedexId = state.pokedexes[selectedTab].id,
-                        languageName = state.languageName,
-                        version = state.version
-                    )
+//                    PokemonCardState(
+//                        pokemon = state.filteredPokemon[idx],
+//                        pokedexId = state.pokedexes[selectedTab].id,
+//                        language = state.languageName,
+//                        version = state.version
+//                    )
+                    null
                 }
 
                 PokemonCard(

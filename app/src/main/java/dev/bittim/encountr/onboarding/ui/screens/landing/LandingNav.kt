@@ -7,7 +7,7 @@
  * File:       LandingNav.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   06.09.25, 02:27
+ * Modified:   07.11.25, 01:13
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.landing
@@ -31,8 +31,6 @@ fun NavGraphBuilder.landingScreen(
 
         LandingScreen(
             state = state,
-            checkUrl = viewModel::checkUrl,
-            resetError = viewModel::resetError,
             onContinue = viewModel::onContinue,
             navNext = navNext
         )

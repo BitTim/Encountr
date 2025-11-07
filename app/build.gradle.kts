@@ -7,7 +7,7 @@
  * File:       build.gradle.kts
  * Module:     Encountr.app
  * Author:     Tim Anhalt (BitTim)
- * Modified:   20.09.25, 02:45
+ * Modified:   07.11.25, 01:13
  */
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -68,6 +68,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.work.runtime.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -92,6 +93,7 @@ dependencies {
     implementation(libs.koin.core)
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.androidx.workmanager)
 
     // Ktor
     implementation(libs.slf4j.android)

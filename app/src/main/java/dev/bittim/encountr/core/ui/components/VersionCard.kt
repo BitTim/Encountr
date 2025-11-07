@@ -7,7 +7,7 @@
  * File:       VersionCard.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   19.09.25, 18:24
+ * Modified:   07.11.25, 01:13
  */
 
 package dev.bittim.encountr.core.ui.components
@@ -35,8 +35,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import dev.bittim.encountr.core.di.Constants
-import dev.bittim.encountr.core.domain.model.pokeapi.Version
+import dev.bittim.encountr.core.domain.model.api.Handle
+import dev.bittim.encountr.core.domain.model.api.language.Language
+import dev.bittim.encountr.core.domain.model.api.version.Version
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.annotations.ComponentPreview
@@ -54,13 +55,10 @@ data class VersionCardState(
     val generation: String,
     val imageUrl: String?
 ) {
-    constructor(version: Version, languageName: String) : this(
-        name = version.localizedNames.find { it.languageName == languageName }?.value
-            ?: version.localizedNames.find { it.languageName == Constants.DEFAULT_LANG_NAME }?.value
+    constructor(version: Version, language: Handle<Language>) : this(
+        name = version.localizedNames.find { it.language.id == language.id }?.value
             ?: version.name,
-        generation = version.localizedGenerationNames.find { it.languageName == languageName }?.value
-            ?: version.localizedGenerationNames.find { it.languageName == Constants.DEFAULT_LANG_NAME }?.value
-            ?: version.generationName,
+        generation = "Placeholder",
         imageUrl = version.imageUrl
     )
 }

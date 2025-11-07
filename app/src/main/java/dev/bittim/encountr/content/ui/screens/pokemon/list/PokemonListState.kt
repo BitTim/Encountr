@@ -7,20 +7,20 @@
  * File:       PokemonListState.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   19.09.25, 20:01
+ * Modified:   07.11.25, 01:13
  */
 
 package dev.bittim.encountr.content.ui.screens.pokemon.list
 
 import co.pokeapi.pokekotlin.model.Pokedex
-import dev.bittim.encountr.core.domain.model.pokeapi.PokemonOverview
-import dev.bittim.encountr.core.domain.model.pokeapi.Version
+import dev.bittim.encountr.core.domain.model.api.pokemon.Pokemon
+import dev.bittim.encountr.core.domain.model.api.version.Version
 
 data class PokemonListState(
-    val languageName: String? = null,
+    val languageId: Int? = null,
     val version: Version? = null,
 
     val pokedexes: List<Pokedex>? = null,
-    val pokemon: List<PokemonOverview>? = null,
-    val filteredPokemon: List<PokemonOverview>? = null,
+    val pokemon: List<Pokemon>? = null,
+    val filteredPokemon: List<Pokemon>? = null,
 )

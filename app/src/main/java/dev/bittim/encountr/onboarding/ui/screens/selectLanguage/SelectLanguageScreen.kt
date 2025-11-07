@@ -7,7 +7,7 @@
  * File:       SelectLanguageScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   12.09.25, 16:47
+ * Modified:   07.11.25, 01:13
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.selectLanguage
@@ -40,7 +40,7 @@ data object SelectLocaleScreenDefaults {
 @Composable
 fun SelectLanguageScreen(
     state: SelectLanguageState,
-    onContinue: (languageName: String, navNext: () -> Unit) -> Unit,
+    onContinue: (languageId: Int, navNext: () -> Unit) -> Unit,
     navNext: () -> Unit,
     navBack: () -> Unit
 ) {
@@ -56,9 +56,9 @@ fun SelectLanguageScreen(
                 verticalArrangement = Arrangement.spacedBy(Spacing.s)
             ) {
                 items(
-                    state.languages?.count() ?: SelectLocaleScreenDefaults.NUM_PLACEHOLDERS
+                    if (state.languages.isNotEmpty()) state.languages.count() else SelectLocaleScreenDefaults.NUM_PLACEHOLDERS,
                 ) { idx ->
-                    val language = state.languages?.getOrNull(idx)
+                    val language = state.languages.getOrNull(idx)
                     val languageCardState = if (language == null) null else {
                         LanguageCardState(
                             name = language.localizedName,
@@ -81,12 +81,12 @@ fun SelectLanguageScreen(
                 modifier = lowerModifier.fillMaxWidth(),
                 onContinue = {
                     onContinue(
-                        state.languages?.getOrNull(selectedLocale)?.name
-                            ?: Constants.DEFAULT_LANG_NAME, navNext
+                        state.languages.getOrNull(selectedLocale)?.id
+                            ?: Constants.DEFAULT_LANG_ID, navNext
                     )
                 },
                 onBack = navBack,
-                continueEnabled = state.languages != null
+                continueEnabled = state.languages.isNotEmpty()
             )
         }
     )

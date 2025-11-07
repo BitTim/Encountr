@@ -7,7 +7,7 @@
  * File:       ConfigStateHolderImpl.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   15.09.25, 20:25
+ * Modified:   07.11.25, 01:13
  */
 
 package dev.bittim.encountr.core.data.config
@@ -46,13 +46,12 @@ class ConfigStateHolderImpl(
 
     @OptIn(ExperimentalCoroutinesApi::class, ExperimentalUuidApi::class)
     override val state = _state.filter {
-        it.definitionsUrl != null && it.languageName != null && it.currentSaveUuid != null
+        it.languageId != null && it.currentSaveUuid != null
     }.flatMapLatest { rawState ->
         Log.d("ConfigStateHolderImpl", "rawState: rawState = $rawState")
         saveRepository.get(rawState.currentSaveUuid!!).filterNotNull().map { save ->
             val resolvedConfigState = ResolvedConfigState(
-                definitionsUrl = rawState.definitionsUrl!!,
-                languageName = rawState.languageName!!,
+                languageId = rawState.languageId!!,
                 currentSave = save
             )
 
@@ -74,8 +73,7 @@ class ConfigStateHolderImpl(
             Log.d("ConfigStateHolderImpl", "init: rawConfig = $rawConfig")
             ConfigState(
                 isInitialized = true,
-                definitionsUrl = rawConfig[Constants.DS_KEY_DEFS_URL],
-                languageName = rawConfig[Constants.DS_KEY_LANG_NAME],
+                languageId = rawConfig[Constants.DS_KEY_LANG_ID],
                 currentSaveUuid = rawConfig[Constants.DS_KEY_CURR_SAVE_UUID]?.let { Uuid.parse(it) }
             )
         }.first()
@@ -88,8 +86,7 @@ class ConfigStateHolderImpl(
     override suspend fun reset() {
         _state.update { DEFAULT_CONFIG_STATE }
         dataStore.edit { config ->
-            config[Constants.DS_KEY_DEFS_URL] = DEFAULT_CONFIG_STATE.definitionsUrl!!
-            config[Constants.DS_KEY_LANG_NAME] = DEFAULT_CONFIG_STATE.languageName!!
+            config[Constants.DS_KEY_LANG_ID] = DEFAULT_CONFIG_STATE.languageId!!
             config[Constants.DS_KEY_CURR_SAVE_UUID] =
                 DEFAULT_CONFIG_STATE.currentSaveUuid!!.toString()
             Log.d("ConfigStateHolderImpl", "reset: config = $config")
@@ -99,7 +96,7 @@ class ConfigStateHolderImpl(
     @OptIn(ExperimentalUuidApi::class)
     override suspend fun getOnboardingCompleted(): StateFlow<Boolean?> {
         return _state.map {
-            it.isInitialized && it.definitionsUrl != null && it.languageName != null && it.currentSaveUuid != null
+            it.isInitialized && it.languageId != null && it.currentSaveUuid != null
         }.stateIn(
             scope = CoroutineScope(Dispatchers.IO),
             started = WhileSubscribed(5000),
@@ -111,18 +108,10 @@ class ConfigStateHolderImpl(
     // region:      -- Setters
 
     @OptIn(ExperimentalUuidApi::class)
-    override suspend fun setDefinitionsUrl(url: String) {
-        _state.update { it.copy(definitionsUrl = url) }
+    override suspend fun setLanguageId(id: Int) {
+        _state.update { it.copy(languageId = id) }
         dataStore.edit { config ->
-            config[Constants.DS_KEY_DEFS_URL] = url
-        }
-    }
-
-    @OptIn(ExperimentalUuidApi::class)
-    override suspend fun setLanguageName(name: String) {
-        _state.update { it.copy(languageName = name) }
-        dataStore.edit { config ->
-            config[Constants.DS_KEY_LANG_NAME] = name
+            config[Constants.DS_KEY_LANG_ID] = id
         }
     }
 
@@ -140,8 +129,7 @@ class ConfigStateHolderImpl(
     companion object {
         val DEFAULT_CONFIG_STATE = ConfigState(
             isInitialized = true,
-            definitionsUrl = Constants.DEFAULT_DEFS_URL,
-            languageName = Constants.DEFAULT_LANG_NAME,
+            languageId = Constants.DEFAULT_LANG_ID,
             currentSaveUuid = Uuid.NIL
         )
     }
