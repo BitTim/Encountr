@@ -7,7 +7,7 @@
  * File:       CreateSaveScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   07.11.25, 01:19
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
@@ -124,6 +124,7 @@ fun CreateSaveScreen(
                     pageSize = PageSize.Fixed(pageSize),
                     pageSpacing = Spacing.s,
                     contentPadding = PaddingValues(horizontal = contentPadding),
+                    beyondViewportPageCount = 2,
                     flingBehavior = PagerDefaults.flingBehavior(
                         state = pagerState,
                         pagerSnapDistance = PagerSnapDistance.atMost(pagerState.pageCount)
