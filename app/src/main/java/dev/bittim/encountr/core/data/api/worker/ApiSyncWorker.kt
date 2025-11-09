@@ -7,7 +7,7 @@
  * File:       ApiSyncWorker.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   09.11.25, 01:05
  */
 
 package dev.bittim.encountr.core.data.api.worker
@@ -77,11 +77,11 @@ class ApiSyncWorker(
 
         if (id == -1) {
             apiDatabase.getOf(type).firstOrNull()?.let { entities ->
-                if (entities.isEmpty() || entities.any { it.expiresAt == null || it.expiresAt!! > currentTime }) repository.refresh()
+                if (entities.isEmpty() || entities.any { it.expiresAt == null || it.expiresAt!! < currentTime }) repository.refresh()
             }
         } else {
             apiDatabase.getOf(type, id).firstOrNull().let {
-                if (it == null || it.expiresAt == null || it.expiresAt!! > currentTime) repository.refresh(
+                if (it == null || it.expiresAt == null || it.expiresAt!! < currentTime) repository.refresh(
                     id
                 )
             }
