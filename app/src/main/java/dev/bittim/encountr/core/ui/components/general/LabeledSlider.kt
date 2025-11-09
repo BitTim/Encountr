@@ -7,10 +7,10 @@
  * File:       LabeledSlider.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   02.09.25, 16:12
+ * Modified:   09.11.25, 01:10
  */
 
-package dev.bittim.encountr.core.ui.components
+package dev.bittim.encountr.core.ui.components.general
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

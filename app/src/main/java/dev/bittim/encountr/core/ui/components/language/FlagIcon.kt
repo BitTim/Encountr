@@ -7,10 +7,10 @@
  * File:       FlagIcon.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   31.08.25, 16:43
+ * Modified:   09.11.25, 01:10
  */
 
-package dev.bittim.encountr.core.ui.components
+package dev.bittim.encountr.core.ui.components.language
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

@@ -7,10 +7,10 @@
  * File:       LanguageCard.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   12.09.25, 16:46
+ * Modified:   09.11.25, 01:10
  */
 
-package dev.bittim.encountr.core.ui.components
+package dev.bittim.encountr.core.ui.components.language.languageCard
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.Crossfade
@@ -42,6 +42,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.bittim.encountr.R
+import dev.bittim.encountr.core.ui.components.language.FlagIcon
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.UiText

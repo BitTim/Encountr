@@ -7,10 +7,10 @@
  * File:       VersionCard.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   09.11.25, 01:08
  */
 
-package dev.bittim.encountr.core.ui.components
+package dev.bittim.encountr.core.ui.components.version.versionCard
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -35,41 +34,20 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import dev.bittim.encountr.core.domain.model.api.Handle
-import dev.bittim.encountr.core.domain.model.api.language.Language
-import dev.bittim.encountr.core.domain.model.api.version.Version
+import dev.bittim.encountr.core.ui.components.version.VersionIcon
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.annotations.ComponentPreview
 import dev.bittim.encountr.core.ui.util.extenstions.modifier.pulseAnimation
 import dev.bittim.encountr.core.ui.util.font.getScaledLineHeightFromFontStyle
 
-data object GameCardDefaults {
-    val iconSize: Dp = 256.dp
-    val shape = RoundedCornerShape(Spacing.m)
-    val elevation = Spacing.xxs
-}
-
-data class VersionCardState(
-    val name: String,
-    val generation: String,
-    val imageUrl: String?
-) {
-    constructor(version: Version, language: Handle<Language>) : this(
-        name = version.localizedNames.find { it.language.id == language.id }?.value
-            ?: version.name,
-        generation = "Placeholder",
-        imageUrl = version.imageUrl
-    )
-}
-
 @Composable
 fun VersionCard(
     modifier: Modifier = Modifier,
     state: VersionCardState?,
-    iconSize: Dp = GameCardDefaults.iconSize,
-    shape: Shape = GameCardDefaults.shape,
-    elevation: Dp = GameCardDefaults.elevation
+    iconSize: Dp = VersionCardDefaults.iconSize,
+    shape: Shape = VersionCardDefaults.shape,
+    elevation: Dp = VersionCardDefaults.elevation
 ) {
     val density = LocalDensity.current
     val configuration = LocalConfiguration.current

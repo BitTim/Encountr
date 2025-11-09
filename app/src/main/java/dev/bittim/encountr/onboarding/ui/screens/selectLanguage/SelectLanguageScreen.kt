@@ -7,7 +7,7 @@
  * File:       SelectLanguageScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   09.11.25, 01:08
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.selectLanguage
@@ -25,8 +25,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import dev.bittim.encountr.core.di.Constants
-import dev.bittim.encountr.core.ui.components.LanguageCard
-import dev.bittim.encountr.core.ui.components.LanguageCardState
+import dev.bittim.encountr.core.ui.components.language.languageCard.LanguageCard
+import dev.bittim.encountr.core.ui.components.language.languageCard.LanguageCardState
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.annotations.ScreenPreview

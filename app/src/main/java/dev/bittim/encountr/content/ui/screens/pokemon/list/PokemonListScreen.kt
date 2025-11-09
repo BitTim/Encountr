@@ -7,7 +7,7 @@
  * File:       PokemonListScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   09.11.25, 01:08
  */
 
 package dev.bittim.encountr.content.ui.screens.pokemon.list
@@ -60,7 +60,7 @@ import dev.bittim.encountr.R
 import dev.bittim.encountr.content.ui.components.PokemonCard
 import dev.bittim.encountr.content.ui.screens.pokemon.list.PokemonListScreenDefaults.PLACEHOLDER_COUNT
 import dev.bittim.encountr.core.di.Constants
-import dev.bittim.encountr.core.ui.components.VersionIcon
+import dev.bittim.encountr.core.ui.components.version.VersionIcon
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.UiText

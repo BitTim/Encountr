@@ -7,10 +7,10 @@
  * File:       ShaderGradientBackdrop.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.08.25, 02:32
+ * Modified:   09.11.25, 01:10
  */
 
-package dev.bittim.encountr.core.ui.components
+package dev.bittim.encountr.core.ui.components.general
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

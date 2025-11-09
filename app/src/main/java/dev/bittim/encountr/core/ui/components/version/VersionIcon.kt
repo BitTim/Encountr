@@ -7,10 +7,10 @@
  * File:       VersionIcon.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   19.09.25, 18:23
+ * Modified:   09.11.25, 01:09
  */
 
-package dev.bittim.encountr.core.ui.components
+package dev.bittim.encountr.core.ui.components.version
 
 import android.graphics.Bitmap
 import androidx.compose.animation.Crossfade
@@ -44,6 +44,7 @@ import coil3.request.ImageRequest
 import coil3.request.SuccessResult
 import coil3.request.allowHardware
 import coil3.toBitmap
+import dev.bittim.encountr.core.ui.components.general.ShaderGradientBackdrop
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.annotations.ComponentPreview

@@ -7,7 +7,7 @@
  * File:       CreateSaveScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:19
+ * Modified:   09.11.25, 01:09
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
@@ -52,10 +52,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import dev.bittim.encountr.R
 import dev.bittim.encountr.core.domain.model.api.Handle
-import dev.bittim.encountr.core.ui.components.GameCardDefaults
-import dev.bittim.encountr.core.ui.components.LabeledSlider
-import dev.bittim.encountr.core.ui.components.VersionCard
-import dev.bittim.encountr.core.ui.components.VersionCardState
+import dev.bittim.encountr.core.ui.components.general.LabeledSlider
+import dev.bittim.encountr.core.ui.components.version.versionCard.VersionCard
+import dev.bittim.encountr.core.ui.components.version.versionCard.VersionCardDefaults
+import dev.bittim.encountr.core.ui.components.version.versionCard.VersionCardState
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.UiText
@@ -113,7 +113,7 @@ fun CreateSaveScreen(
                 modifier = upperModifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                val pageSize = GameCardDefaults.iconSize
+                val pageSize = VersionCardDefaults.iconSize
                 val contentPadding =
                     with(density) { (windowInfo.containerSize.width.toDp() - pageSize) / 2 }
 
