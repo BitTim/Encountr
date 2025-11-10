@@ -4,28 +4,36 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       TypeEntity.kt
+ * File:       TypeDetailEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.base.type
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import dev.bittim.encountr.core.data.api.local.entity.base.ExpirableEntity
 import dev.bittim.encountr.core.domain.model.api.language.LocalizedString
 import dev.bittim.encountr.core.domain.model.api.type.Type
 import dev.bittim.encountr.core.domain.model.api.type.TypeSprite
 
 @Entity(
-    tableName = "type",
+    tableName = "type_detail",
+    foreignKeys = [
+        ForeignKey(
+            entity = TypeStub::class,
+            parentColumns = ["id"],
+            childColumns = ["id"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE
+        )
+    ]
 )
-data class TypeEntity(
+data class TypeDetailEntity(
     @PrimaryKey val id: Int,
     val name: String,
-    override val expiresAt: Long,
 
     val doubleDamageFrom: List<Int>,
     val halfDamageFrom: List<Int>,
@@ -33,7 +41,7 @@ data class TypeEntity(
     val doubleDamageTo: List<Int>,
     val halfDamageTo: List<Int>,
     val noDamageTo: List<Int>,
-) : ExpirableEntity {
+) {
     fun toModel(
         localizedNames: List<LocalizedString>,
         typeSprites: List<TypeSprite>
@@ -54,11 +62,10 @@ data class TypeEntity(
     }
 
     companion object {
-        fun fromApi(type: co.pokeapi.pokekotlin.model.Type): TypeEntity {
-            return TypeEntity(
+        fun fromApi(type: co.pokeapi.pokekotlin.model.Type): TypeDetailEntity {
+            return TypeDetailEntity(
                 id = type.id,
                 name = type.name,
-                expiresAt = ExpirableEntity.calcExpiryTime(),
 
                 doubleDamageFrom = type.damageRelations.doubleDamageFrom.map { it.id },
                 halfDamageFrom = type.damageRelations.halfDamageFrom.map { it.id },

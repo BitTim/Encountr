@@ -7,20 +7,17 @@
  * File:       Pokedex.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.domain.model.api.pokedex
 
-import dev.bittim.encountr.core.domain.model.api.Handle
-import dev.bittim.encountr.core.domain.model.api.Handleable
 import dev.bittim.encountr.core.domain.model.api.language.LocalizedString
-import dev.bittim.encountr.core.domain.model.api.pokemon.Pokemon
 
 data class Pokedex(
     val id: Int,
     val name: String,
     val isMainSeries: Boolean,
     val localizedNames: List<LocalizedString>,
-    val pokemon: List<Handle<Pokemon>>,
-) : Handleable
+    val pokemonIds: List<Int>,
+)

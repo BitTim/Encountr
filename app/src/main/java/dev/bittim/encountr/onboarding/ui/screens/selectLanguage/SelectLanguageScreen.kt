@@ -7,7 +7,7 @@
  * File:       SelectLanguageScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   09.11.25, 01:08
+ * Modified:   10.11.25, 23:38
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.selectLanguage
@@ -26,7 +26,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import dev.bittim.encountr.core.di.Constants
 import dev.bittim.encountr.core.ui.components.language.languageCard.LanguageCard
-import dev.bittim.encountr.core.ui.components.language.languageCard.LanguageCardState
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.annotations.ScreenPreview
@@ -34,17 +33,18 @@ import dev.bittim.encountr.onboarding.ui.components.OnboardingActions
 import dev.bittim.encountr.onboarding.ui.components.OnboardingLayout
 
 data object SelectLocaleScreenDefaults {
-    const val NUM_PLACEHOLDERS = 6
+    const val NUM_PLACEHOLDERS = 15
 }
 
 @Composable
 fun SelectLanguageScreen(
     state: SelectLanguageState,
+    observeLanguage: (languageId: Int) -> Unit,
     onContinue: (languageId: Int, navNext: () -> Unit) -> Unit,
     navNext: () -> Unit,
     navBack: () -> Unit
 ) {
-    var selectedLocale by rememberSaveable { mutableIntStateOf(0) }
+    var selectedIdx by rememberSaveable { mutableIntStateOf(0) }
 
     OnboardingLayout(
         modifier = Modifier
@@ -55,22 +55,22 @@ fun SelectLanguageScreen(
                 modifier = upperModifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(Spacing.s)
             ) {
-                items(
-                    if (state.languages.isNotEmpty()) state.languages.count() else SelectLocaleScreenDefaults.NUM_PLACEHOLDERS,
-                ) { idx ->
-                    val language = state.languages.getOrNull(idx)
-                    val languageCardState = if (language == null) null else {
-                        LanguageCardState(
-                            name = language.localizedName,
-                            countryCode = language.countryCode
-                        )
+                val count =
+                    if (state.languageIds.isNotEmpty()) state.languageIds.count() else SelectLocaleScreenDefaults.NUM_PLACEHOLDERS
+                items(count) { idx ->
+                    val languageId = state.languageIds.getOrNull(idx)
+                    if (languageId != null && !state.languages.containsKey(languageId)) {
+                        observeLanguage(languageId)
                     }
 
+                    val languageCardState = state.languages.getOrDefault(languageId, null)
+
                     LanguageCard(
+                        modifier = Modifier.animateItem(),
                         state = languageCardState,
-                        isSelected = idx == selectedLocale,
+                        isSelected = idx == selectedIdx,
                         onClick = {
-                            selectedLocale = idx
+                            selectedIdx = idx
                         }
                     )
                 }
@@ -81,12 +81,12 @@ fun SelectLanguageScreen(
                 modifier = lowerModifier.fillMaxWidth(),
                 onContinue = {
                     onContinue(
-                        state.languages.getOrNull(selectedLocale)?.id
+                        state.languageIds.getOrNull(selectedIdx)
                             ?: Constants.DEFAULT_LANG_ID, navNext
                     )
                 },
                 onBack = navBack,
-                continueEnabled = state.languages.isNotEmpty()
+                continueEnabled = state.languageIds.isNotEmpty()
             )
         }
     )
@@ -99,6 +99,7 @@ fun SelectLocalScreenPreview() {
         Surface {
             SelectLanguageScreen(
                 state = SelectLanguageState(),
+                observeLanguage = {},
                 onContinue = { _, _ -> },
                 navNext = {},
                 navBack = {}

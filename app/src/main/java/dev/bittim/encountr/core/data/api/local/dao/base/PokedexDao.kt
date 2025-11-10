@@ -7,7 +7,7 @@
  * File:       PokedexDao.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.local.dao.base
@@ -16,9 +16,9 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import dev.bittim.encountr.core.data.api.local.entity.base.pokedex.PokedexEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.pokedex.PokedexDetailEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.pokedex.PokedexLocalizedNameEntity
-import dev.bittim.encountr.core.data.api.local.entity.junction.PokedexPokemonJunction
+import dev.bittim.encountr.core.data.api.local.entity.base.pokedex.PokedexStub
 import dev.bittim.encountr.core.data.api.local.entity.reltaion.pokedex.PokedexFull
 import kotlinx.coroutines.flow.Flow
 
@@ -26,38 +26,39 @@ import kotlinx.coroutines.flow.Flow
 interface PokedexDao {
     // region:      -- Create
 
-    @Transaction
     @Upsert
-    suspend fun upsert(
-        pokedexEntity: PokedexEntity,
-        pokedexLocalizedNameEntities: List<PokedexLocalizedNameEntity>,
-        pokedexPokemonJunctions: List<PokedexPokemonJunction>,
-    )
+    suspend fun upsertStub(pokedexStub: PokedexStub)
 
-    @Transaction
     @Upsert
-    suspend fun upsert(
-        pokedexEntities: List<PokedexEntity>,
-        pokedexLocalizedNameEntities: List<PokedexLocalizedNameEntity>,
-        pokedexPokemonJunctions: List<PokedexPokemonJunction>,
-    )
+    suspend fun upsertStub(pokedexStubs: List<PokedexStub>)
+
+    @Upsert
+    suspend fun upsertDetail(pokedexDetailEntity: PokedexDetailEntity)
+
+    @Upsert
+    suspend fun upsertDetail(pokedexDetailEntities: List<PokedexDetailEntity>)
+
+    @Upsert
+    suspend fun upsertLocalizedName(pokedexLocalizedNameEntity: PokedexLocalizedNameEntity)
+
+    @Upsert
+    suspend fun upsertLocalizedName(pokedexLocalizedNameEntities: List<PokedexLocalizedNameEntity>)
 
     // endregion:   -- Create
     // region:      -- Read
 
     @Transaction
-    @Query("SELECT * FROM pokedex WHERE id = :id")
+    @Query("SELECT * FROM pokedex_stub WHERE id = :id")
     fun get(id: Int): Flow<PokedexFull?>
 
-    @Transaction
-    @Query("SELECT * FROM pokedex")
-    fun get(): Flow<List<PokedexFull>>
+    @Query("SELECT id FROM pokedex_stub")
+    fun getIds(): Flow<List<Int>>
 
     // endregion:   -- Read
     // region:      -- Delete
 
     @Transaction
-    @Query("DELETE FROM pokedex")
+    @Query("DELETE FROM pokedex_stub")
     suspend fun delete()
 
     // endregion:   -- Delete

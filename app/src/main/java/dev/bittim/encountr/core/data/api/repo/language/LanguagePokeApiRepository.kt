@@ -7,21 +7,20 @@
  * File:       LanguagePokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.repo.language
 
+import androidx.room.withTransaction
 import androidx.work.WorkManager
 import co.pokeapi.pokekotlin.PokeApi
 import dev.bittim.encountr.core.data.api.local.ApiDatabase
-import dev.bittim.encountr.core.data.api.local.entity.base.language.LanguageEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.language.LanguageDetailEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.language.LanguageStub
 import dev.bittim.encountr.core.data.api.worker.ApiSyncWorker
 import dev.bittim.encountr.core.domain.model.api.language.Language
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
@@ -40,36 +39,32 @@ class LanguagePokeApiRepository(
             .flowOn(Dispatchers.IO)
     }
 
-    override fun get(): Flow<List<Language?>> {
+    override fun getIds(): Flow<List<Int>> {
         queueWorker()
-        return apiDatabase.languageDao().get().distinctUntilChanged().map { list ->
-            list.map { it.toModel() }
-        }.flowOn(Dispatchers.IO)
+        return apiDatabase.languageDao().getIds().distinctUntilChanged().flowOn(Dispatchers.IO)
     }
 
     // endregion:   -- Get
     // region:      -- Refresh
 
-    override suspend fun refresh(id: Int): Language? {
-        apiDatabase.languageDao().insert(LanguageEntity.empty(id))
+    override suspend fun refresh(id: Int) {
+        val raw = pokeApi.getLanguage(id)
+        val detail = LanguageDetailEntity.fromApi(raw)
+        val stub = LanguageStub(raw.id, detail.localizedName != null)
 
-        val rawLanguage = pokeApi.getLanguage(id)
-        val languageEntity = LanguageEntity.fromApi(rawLanguage)
-
-        apiDatabase.languageDao().upsert(languageEntity)
-        return languageEntity.toModel()
+        apiDatabase.withTransaction {
+            apiDatabase.languageDao().upsertStub(stub)
+            apiDatabase.languageDao().upsertDetail(detail)
+        }
     }
 
-    override suspend fun refresh(): List<Language> {
+    override suspend fun refresh() {
         val count = pokeApi.getLanguageList(0, 1).count
-        val rawLangList = pokeApi.getLanguageList(0, count).results
+        val raw = pokeApi.getLanguageList(0, count).results
+        val stubs = raw.map { LanguageStub(it.id, true) }
 
-        return coroutineScope {
-            rawLangList.map {
-                async(Dispatchers.IO) {
-                    refresh(it.id)
-                }
-            }.awaitAll().filterNotNull()
+        apiDatabase.withTransaction {
+            apiDatabase.languageDao().upsertStub(stubs)
         }
     }
 

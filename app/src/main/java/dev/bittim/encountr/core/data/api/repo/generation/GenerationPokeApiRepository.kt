@@ -7,24 +7,22 @@
  * File:       GenerationPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.repo.generation
 
+import androidx.room.withTransaction
 import androidx.work.WorkManager
 import co.pokeapi.pokekotlin.PokeApi
 import dev.bittim.encountr.core.data.api.local.ApiDatabase
-import dev.bittim.encountr.core.data.api.local.entity.base.generation.GenerationEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.generation.GenerationDetailEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.generation.GenerationLocalizedNameEntity
-import dev.bittim.encountr.core.data.api.local.entity.base.versionGroup.VersionGroupEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.generation.GenerationStub
+import dev.bittim.encountr.core.data.api.local.entity.base.versionGroup.VersionGroupStub
 import dev.bittim.encountr.core.data.api.worker.ApiSyncWorker
-import dev.bittim.encountr.core.domain.model.api.Handle
-import dev.bittim.encountr.core.domain.model.api.version.Generation
+import dev.bittim.encountr.core.domain.model.api.generation.Generation
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
@@ -45,46 +43,39 @@ class GenerationPokeApiRepository(
             }.flowOn(Dispatchers.IO)
     }
 
-    override fun get(): Flow<List<Generation?>> {
+    override fun getIds(): Flow<List<Int>> {
         queueWorker()
-        return apiDatabase.generationDao().get().distinctUntilChanged().map { list ->
-            list.map { it.toModel() }
-        }
+        return apiDatabase.generationDao().getIds().distinctUntilChanged().flowOn(Dispatchers.IO)
     }
 
     // endregion:   -- Get
     // region:      -- Upsert
 
-    override suspend fun refresh(id: Int): Generation? {
-        val rawGeneration = pokeApi.getGeneration(id)
-        val generationEntity = GenerationEntity.fromApi(rawGeneration)
-        val generationLocalizedNameEntities = rawGeneration.names.map { name ->
-            GenerationLocalizedNameEntity.fromApi(id, name)
+    override suspend fun refresh(id: Int) {
+        val raw = pokeApi.getGeneration(id)
+
+        val stub = GenerationStub(raw.id)
+        val detail = GenerationDetailEntity.fromApi(raw)
+        val localizedNames =
+            raw.names.map { name -> GenerationLocalizedNameEntity.fromApi(id, name) }
+
+        val versionGroupStubs = raw.versionGroups.map { VersionGroupStub(it.id, id) }
+
+        apiDatabase.withTransaction {
+            apiDatabase.generationDao().upsertStub(stub)
+            apiDatabase.generationDao().upsertDetail(detail)
+            apiDatabase.generationDao().upsertLocalizedName(localizedNames)
+            apiDatabase.versionGroupDao().upsertStub(versionGroupStubs)
         }
-
-        apiDatabase.generationDao().upsert(generationEntity, generationLocalizedNameEntities)
-
-        val versionGroups = rawGeneration.versionGroups.map { it.id }
-        versionGroups.forEach {
-            apiDatabase.versionGroupDao().insert(VersionGroupEntity.empty(it, id))
-        }
-
-        return generationEntity.toModel(
-            generationLocalizedNameEntities.map { it.toModel() },
-            versionGroups.map { Handle(it) }
-        )
     }
 
-    override suspend fun refresh(): List<Generation> {
+    override suspend fun refresh() {
         val count = pokeApi.getGenerationList(0, 1).count
-        val rawGenList = pokeApi.getGenerationList(0, count).results
+        val raw = pokeApi.getGenerationList(0, count).results
+        val stubs = raw.map { GenerationStub(it.id) }
 
-        return coroutineScope {
-            rawGenList.map {
-                async(Dispatchers.IO) {
-                    refresh(it.id)
-                }
-            }.awaitAll().filterNotNull()
+        apiDatabase.withTransaction {
+            apiDatabase.generationDao().upsertStub(stubs)
         }
     }
 

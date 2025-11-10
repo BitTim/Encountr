@@ -7,22 +7,22 @@
  * File:       PokemonPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.repo.pokemon
 
+import androidx.room.withTransaction
 import androidx.work.WorkManager
 import co.pokeapi.pokekotlin.PokeApi
 import dev.bittim.encountr.core.data.api.local.ApiDatabase
-import dev.bittim.encountr.core.data.api.local.entity.base.ExpirableEntity
-import dev.bittim.encountr.core.data.api.local.entity.base.pokemon.PokemonEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.pokemon.PokemonDetailEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.pokemon.PokemonLocalizedNameEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.pokemon.PokemonSpritesEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.pokemon.PokemonStub
+import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeStub
 import dev.bittim.encountr.core.data.api.local.entity.junction.PokemonTypeJunction
 import dev.bittim.encountr.core.data.api.worker.ApiSyncWorker
-import dev.bittim.encountr.core.domain.model.api.Handle
-import dev.bittim.encountr.core.domain.model.api.pokemon.PokedexEntry
 import dev.bittim.encountr.core.domain.model.api.pokemon.Pokemon
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -47,53 +47,43 @@ class PokemonPokeApiRepository(
         }.flowOn(Dispatchers.IO)
     }
 
-    override fun get(): Flow<List<Pokemon>> {
+    override fun getIds(): Flow<List<Int>> {
         queueWorker()
-        return apiDatabase.pokemonDao().get().distinctUntilChanged().map { list ->
-            list.map { it.toModel() }
-        }.flowOn(Dispatchers.IO)
+        return apiDatabase.pokemonDao().getIds().distinctUntilChanged().flowOn(Dispatchers.IO)
     }
 
     // endregion:   -- Get
     // region:      -- Refresh
 
-    override suspend fun refresh(id: Int): Pokemon {
-        val rawPokemonVariety = pokeApi.getPokemonVariety(id)
-        val rawPokemonSpecies = pokeApi.getPokemonSpecies(rawPokemonVariety.species.id)
+    override suspend fun refresh(id: Int) {
+        val rawVariety = pokeApi.getPokemonVariety(id)
+        val rawSpecies = pokeApi.getPokemonSpecies(rawVariety.species.id)
 
-        val pokemonEntity = PokemonEntity.fromApi(rawPokemonVariety)
-        val pokemonOverviewLocalizedNameEntities =
-            rawPokemonSpecies.names.map { PokemonLocalizedNameEntity.fromApi(id, it) }
-        val pokemonSpritesEntities = PokemonSpritesEntity.fromApi(id, rawPokemonVariety.sprites)
+        val stub = PokemonStub(rawVariety.species.id)
+        val detail = PokemonDetailEntity.fromApi(rawVariety)
+        val localizedNames = rawSpecies.names.map { PokemonLocalizedNameEntity.fromApi(id, it) }
+        val sprites = PokemonSpritesEntity.fromApi(id, rawVariety.sprites)
 
-        val junctions = rawPokemonVariety.types.map {
+        val typeStubs = rawVariety.types.map { TypeStub(it.type.id) }
+        val junctions = rawVariety.types.map {
             PokemonTypeJunction(
                 pokemonId = id,
-                typeId = it.type.id,
-                expiresAt = ExpirableEntity.calcExpiryTime()
+                typeId = it.type.id
             )
         }
 
-        apiDatabase.pokemonDao().upsert(
-            pokemonEntity,
-            pokemonOverviewLocalizedNameEntities,
-            pokemonSpritesEntities,
-            junctions
-        )
-        return pokemonEntity.toModel(
-            entryNumbers = rawPokemonSpecies.pokedexNumbers.map {
-                PokedexEntry(
-                    pokedex = Handle(it.pokedex.id),
-                    entryNumber = it.entryNumber
-                )
-            },
-            localizedNames = pokemonOverviewLocalizedNameEntities.map { it.toModel() },
-            pokemonSprites = pokemonSpritesEntities.map { it.toModel() },
-            types = rawPokemonVariety.types.map { Handle(it.type.id) }
-        )
+        apiDatabase.withTransaction {
+            apiDatabase.pokemonDao().upsertStub(stub)
+            apiDatabase.pokemonDao().upsertDetail(detail)
+            apiDatabase.pokemonDao().upsertLocalizedName(localizedNames)
+            apiDatabase.pokemonDao().upsertSprite(sprites)
+
+            apiDatabase.typeDao().upsertStub(typeStubs)
+            apiDatabase.pokemonTypeJunctionDao().upsert(junctions)
+        }
     }
 
-    override suspend fun refresh(): List<Pokemon> {
+    override suspend fun refresh() {
         val count = PokeApi.getPokemonVarietyList(0, 1).count
         val rawPokemonVarietyList = PokeApi.getPokemonVarietyList(0, count).results
 

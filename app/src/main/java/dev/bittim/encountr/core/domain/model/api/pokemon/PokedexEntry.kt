@@ -7,15 +7,12 @@
  * File:       PokedexEntry.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   17.10.25, 16:24
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.domain.model.api.pokemon
 
-import dev.bittim.encountr.core.domain.model.api.Handle
-import dev.bittim.encountr.core.domain.model.api.pokedex.Pokedex
-
 data class PokedexEntry(
-    val pokedex: Handle<Pokedex>,
+    val pokedexId: Int,
     val entryNumber: Int,
 )

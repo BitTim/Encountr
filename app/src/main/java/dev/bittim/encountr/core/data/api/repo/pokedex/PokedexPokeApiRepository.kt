@@ -7,25 +7,23 @@
  * File:       PokedexPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.repo.pokedex
 
+import androidx.room.withTransaction
 import androidx.work.WorkManager
 import co.pokeapi.pokekotlin.PokeApi
 import dev.bittim.encountr.core.data.api.local.ApiDatabase
-import dev.bittim.encountr.core.data.api.local.entity.base.ExpirableEntity
-import dev.bittim.encountr.core.data.api.local.entity.base.pokedex.PokedexEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.pokedex.PokedexDetailEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.pokedex.PokedexLocalizedNameEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.pokedex.PokedexStub
+import dev.bittim.encountr.core.data.api.local.entity.base.pokemon.PokemonStub
 import dev.bittim.encountr.core.data.api.local.entity.junction.PokedexPokemonJunction
 import dev.bittim.encountr.core.data.api.worker.ApiSyncWorker
-import dev.bittim.encountr.core.domain.model.api.Handle
 import dev.bittim.encountr.core.domain.model.api.pokedex.Pokedex
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
@@ -45,48 +43,46 @@ class PokedexPokeApiRepository(
         }.flowOn(Dispatchers.IO)
     }
 
-    override fun get(): Flow<List<Pokedex>> {
+    override fun getIds(): Flow<List<Int>> {
         queueWorker()
-        return apiDatabase.pokedexDao().get().distinctUntilChanged().map { list ->
-            list.map { it.toModel() }
-        }.flowOn(Dispatchers.IO)
+        return apiDatabase.pokedexDao().getIds().distinctUntilChanged().flowOn(Dispatchers.IO)
     }
 
     // endregion:   -- Get
     // region:      -- Refresh
 
-    override suspend fun refresh(id: Int): Pokedex {
-        val rawPokedex = pokeApi.getPokedex(id)
-        val pokedexEntity = PokedexEntity.fromApi(rawPokedex)
-        val pokedexLocalizedNameEntities = rawPokedex.names.map {
-            PokedexLocalizedNameEntity.fromApi(id, it)
-        }
-        val junctions = rawPokedex.pokemonEntries.map {
+    override suspend fun refresh(id: Int) {
+        val raw = pokeApi.getPokedex(id)
+        val stub = PokedexStub(raw.id)
+        val detail = PokedexDetailEntity.fromApi(raw)
+        val localizedNames = raw.names.map { PokedexLocalizedNameEntity.fromApi(id, it) }
+
+        val pokemonStubs = raw.pokemonEntries.map { PokemonStub(it.pokemonSpecies.id) }
+        val junctions = raw.pokemonEntries.map {
             PokedexPokemonJunction(
                 id,
                 it.pokemonSpecies.id,
-                it.entryNumber,
-                ExpirableEntity.calcExpiryTime()
+                it.entryNumber
             )
         }
 
-        apiDatabase.pokedexDao().upsert(pokedexEntity, pokedexLocalizedNameEntities, junctions)
-        return pokedexEntity.toModel(
-            pokedexLocalizedNameEntities.map { it.toModel() },
-            rawPokedex.pokemonEntries.map { Handle(it.pokemonSpecies.id) }
-        )
+        apiDatabase.withTransaction {
+            apiDatabase.pokedexDao().upsertStub(stub)
+            apiDatabase.pokedexDao().upsertDetail(detail)
+            apiDatabase.pokedexDao().upsertLocalizedName(localizedNames)
+
+            apiDatabase.pokemonDao().upsertStub(pokemonStubs)
+            apiDatabase.pokedexPokemonJunctionDao().upsert(junctions)
+        }
     }
 
-    override suspend fun refresh(): List<Pokedex> {
+    override suspend fun refresh() {
         val count = pokeApi.getPokedexList(0, 1).count
-        val rawPokedexList = pokeApi.getPokedexList(0, count).results
+        val raw = pokeApi.getPokedexList(0, count).results
+        val stubs = raw.map { PokedexStub(it.id) }
 
-        return coroutineScope {
-            rawPokedexList.map {
-                async(Dispatchers.IO) {
-                    refresh(it.id)
-                }
-            }.awaitAll()
+        apiDatabase.withTransaction {
+            apiDatabase.pokedexDao().upsertStub(stubs)
         }
     }
 

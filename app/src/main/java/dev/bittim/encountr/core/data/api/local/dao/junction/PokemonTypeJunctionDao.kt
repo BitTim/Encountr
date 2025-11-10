@@ -7,7 +7,7 @@
  * File:       PokemonTypeJunctionDao.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.local.dao.junction
@@ -40,7 +40,7 @@ interface PokemonTypeJunctionDao {
     // endregion:   -- Read
     // region:      -- Delete
 
-    @Query("DELETE FROM generation")
+    @Query("DELETE FROM pokemon_type_junction")
     suspend fun delete()
 
     // endregion:   -- Delete

@@ -7,7 +7,7 @@
  * File:       AppModule.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.di
@@ -49,7 +49,10 @@ import dev.bittim.encountr.core.data.user.repo.SaveRepository
 import dev.bittim.encountr.core.data.user.repo.SaveRepositoryImpl
 import dev.bittim.encountr.core.data.user.repo.TeamRepository
 import dev.bittim.encountr.core.data.user.repo.TeamRepositoryImpl
+import dev.bittim.encountr.core.domain.useCase.FindLocalizedName
 import dev.bittim.encountr.core.domain.useCase.api.GetVersionsByGeneration
+import dev.bittim.encountr.core.domain.useCase.ui.ObserveLanguageCardState
+import dev.bittim.encountr.core.domain.useCase.ui.ObserveVersionCardState
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.android.Android
@@ -155,6 +158,11 @@ val appModule = module {
     // region:      -- UseCases
 
     single<GetVersionsByGeneration> { GetVersionsByGeneration(get(), get(), get()) }
+
+    single<FindLocalizedName> { FindLocalizedName() }
+
+    single<ObserveLanguageCardState> { ObserveLanguageCardState(get()) }
+    single<ObserveVersionCardState> { ObserveVersionCardState(get(), get(), get(), get()) }
 
     // endregion:   -- UseCases
     // region:      -- Workers

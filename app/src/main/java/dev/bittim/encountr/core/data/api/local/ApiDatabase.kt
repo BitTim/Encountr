@@ -7,7 +7,7 @@
  * File:       ApiDatabase.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.local
@@ -25,32 +25,39 @@ import dev.bittim.encountr.core.data.api.local.dao.base.VersionGroupDao
 import dev.bittim.encountr.core.data.api.local.dao.junction.PokedexPokemonJunctionDao
 import dev.bittim.encountr.core.data.api.local.dao.junction.PokemonTypeJunctionDao
 import dev.bittim.encountr.core.data.api.local.dao.junction.VersionGroupPokedexJunctionDao
-import dev.bittim.encountr.core.data.api.local.entity.base.ExpirableEntity
-import dev.bittim.encountr.core.data.api.local.entity.base.generation.GenerationEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.TimestampedEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.generation.GenerationDetailEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.generation.GenerationLocalizedNameEntity
-import dev.bittim.encountr.core.data.api.local.entity.base.language.LanguageEntity
-import dev.bittim.encountr.core.data.api.local.entity.base.pokedex.PokedexEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.generation.GenerationStub
+import dev.bittim.encountr.core.data.api.local.entity.base.language.LanguageDetailEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.language.LanguageStub
+import dev.bittim.encountr.core.data.api.local.entity.base.pokedex.PokedexDetailEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.pokedex.PokedexLocalizedNameEntity
-import dev.bittim.encountr.core.data.api.local.entity.base.pokemon.PokemonEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.pokedex.PokedexStub
+import dev.bittim.encountr.core.data.api.local.entity.base.pokemon.PokemonDetailEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.pokemon.PokemonLocalizedNameEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.pokemon.PokemonSpritesEntity
-import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.pokemon.PokemonStub
+import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeDetailEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeLocalizedNameEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeSpriteEntity
-import dev.bittim.encountr.core.data.api.local.entity.base.version.VersionEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeStub
+import dev.bittim.encountr.core.data.api.local.entity.base.version.VersionDetailEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.version.VersionLocalizedNameEntity
-import dev.bittim.encountr.core.data.api.local.entity.base.versionGroup.VersionGroupEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.version.VersionStub
+import dev.bittim.encountr.core.data.api.local.entity.base.versionGroup.VersionGroupDetailEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.versionGroup.VersionGroupStub
 import dev.bittim.encountr.core.data.api.local.entity.junction.PokedexPokemonJunction
 import dev.bittim.encountr.core.data.api.local.entity.junction.PokemonTypeJunction
 import dev.bittim.encountr.core.data.api.local.entity.junction.VersionGroupPokedexJunction
 import dev.bittim.encountr.core.data.common.converter.IntListConverter
+import dev.bittim.encountr.core.domain.model.api.generation.Generation
 import dev.bittim.encountr.core.domain.model.api.language.Language
 import dev.bittim.encountr.core.domain.model.api.pokedex.Pokedex
 import dev.bittim.encountr.core.domain.model.api.pokemon.Pokemon
 import dev.bittim.encountr.core.domain.model.api.type.Type
-import dev.bittim.encountr.core.domain.model.api.version.Generation
 import dev.bittim.encountr.core.domain.model.api.version.Version
-import dev.bittim.encountr.core.domain.model.api.version.VersionGroup
+import dev.bittim.encountr.core.domain.model.api.versionGroup.VersionGroup
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
@@ -58,13 +65,13 @@ import kotlinx.coroutines.flow.flowOf
 @Database(
     version = 1,
     entities = [
-        GenerationEntity::class, GenerationLocalizedNameEntity::class,
-        LanguageEntity::class,
-        PokedexEntity::class, PokedexLocalizedNameEntity::class,
-        PokemonEntity::class, PokemonLocalizedNameEntity::class, PokemonSpritesEntity::class,
-        TypeEntity::class, TypeLocalizedNameEntity::class, TypeSpriteEntity::class,
-        VersionEntity::class, VersionLocalizedNameEntity::class,
-        VersionGroupEntity::class,
+        GenerationStub::class, GenerationDetailEntity::class, GenerationLocalizedNameEntity::class,
+        LanguageStub::class, LanguageDetailEntity::class,
+        PokedexStub::class, PokedexDetailEntity::class, PokedexLocalizedNameEntity::class,
+        PokemonStub::class, PokemonDetailEntity::class, PokemonLocalizedNameEntity::class, PokemonSpritesEntity::class,
+        TypeStub::class, TypeDetailEntity::class, TypeLocalizedNameEntity::class, TypeSpriteEntity::class,
+        VersionStub::class, VersionDetailEntity::class, VersionLocalizedNameEntity::class,
+        VersionGroupStub::class, VersionGroupDetailEntity::class,
 
         PokedexPokemonJunction::class, PokemonTypeJunction::class, VersionGroupPokedexJunction::class,
     ]
@@ -83,14 +90,14 @@ abstract class ApiDatabase : RoomDatabase() {
     // endregion:   -- Base Dao
     // region:      -- Junction Dao
 
-    abstract fun pokedexVersionGroupJunctionDao(): VersionGroupPokedexJunctionDao
+    abstract fun versionGroupPokedexJunctionDao(): VersionGroupPokedexJunctionDao
     abstract fun pokedexPokemonJunctionDao(): PokedexPokemonJunctionDao
     abstract fun pokemonTypeJunctionDao(): PokemonTypeJunctionDao
 
     // endregion:   -- Junction Dao
     // region:      -- Worker Helper Functions
 
-    fun getOf(type: String?, id: Int): Flow<ExpirableEntity?> {
+    fun getOf(type: String?, id: Int): Flow<TimestampedEntity?> {
         return when (type) {
             Generation::class.simpleName -> generationDao().get(id)
             Language::class.simpleName -> languageDao().get(id)
@@ -104,15 +111,15 @@ abstract class ApiDatabase : RoomDatabase() {
         }
     }
 
-    fun getOf(type: String?): Flow<List<ExpirableEntity>> {
+    fun getIdsOf(type: String?): Flow<List<Int>> {
         return when (type) {
-            Generation::class.simpleName -> generationDao().get()
-            Language::class.simpleName -> languageDao().get()
-            Pokedex::class.simpleName -> pokedexDao().get()
-            Pokemon::class.simpleName -> pokemonDao().get()
-            Type::class.simpleName -> typeDao().get()
-            Version::class.simpleName -> versionDao().get()
-            VersionGroup::class.simpleName -> versionGroupDao().get()
+            Generation::class.simpleName -> generationDao().getIds()
+            Language::class.simpleName -> languageDao().getIds()
+            Pokedex::class.simpleName -> pokedexDao().getIds()
+            Pokemon::class.simpleName -> pokemonDao().getIds()
+            Type::class.simpleName -> typeDao().getIds()
+            Version::class.simpleName -> versionDao().getIds()
+            VersionGroup::class.simpleName -> versionGroupDao().getIds()
 
             else -> return flowOf(emptyList())
         }

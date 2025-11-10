@@ -7,19 +7,18 @@
  * File:       GenerationDao.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.local.dao.base
 
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy.Companion.IGNORE
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import dev.bittim.encountr.core.data.api.local.entity.base.generation.GenerationEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.generation.GenerationDetailEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.generation.GenerationLocalizedNameEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.generation.GenerationStub
 import dev.bittim.encountr.core.data.api.local.entity.reltaion.generation.GenerationFull
 import kotlinx.coroutines.flow.Flow
 
@@ -27,49 +26,38 @@ import kotlinx.coroutines.flow.Flow
 interface GenerationDao {
     // region:      -- Create / Update
 
-    @Insert(onConflict = IGNORE)
-    suspend fun insert(generationEntity: GenerationEntity)
-
-    @Transaction
     @Upsert
-    suspend fun upsert(
-        generationEntity: GenerationEntity,
-        generationLocalizedNameEntities: List<GenerationLocalizedNameEntity>,
-    )
+    suspend fun upsertStub(generationStub: GenerationStub)
 
-    @Transaction
     @Upsert
-    suspend fun upsert(
-        generationEntities: List<GenerationEntity>,
-        generationLocalizedNameEntities: List<GenerationLocalizedNameEntity>,
-    )
+    suspend fun upsertStub(generationStubs: List<GenerationStub>)
+
+    @Upsert
+    suspend fun upsertDetail(generationDetailEntity: GenerationDetailEntity)
+
+    @Upsert
+    suspend fun upsertDetail(generationDetailEntities: List<GenerationDetailEntity>)
+
+    @Upsert
+    suspend fun upsertLocalizedName(generationLocalizedNameEntity: GenerationLocalizedNameEntity)
+
+    @Upsert
+    suspend fun upsertLocalizedName(generationLocalizedNameEntities: List<GenerationLocalizedNameEntity>)
 
     // endregion:   -- Create / Update
     // region:      -- Read
 
     @Transaction
-    @Query(
-        """
-        SELECT generation.*, version_group.id FROM generation
-        LEFT JOIN version_group ON version_group.generationId = generation.id
-        WHERE generation.id = :id
-        """
-    )
+    @Query("SELECT * FROM generation_stub WHERE id = :id")
     fun get(id: Int): Flow<GenerationFull?>
 
-    @Transaction
-    @Query(
-        """
-        SELECT generation.*, version_group.id FROM generation
-        LEFT JOIN version_group ON version_group.generationId = generation.id
-        """
-    )
-    fun get(): Flow<List<GenerationFull>>
+    @Query("SELECT id FROM generation_stub")
+    fun getIds(): Flow<List<Int>>
 
     // endregion:   -- Read
     // region:      -- Delete
 
-    @Query("DELETE FROM generation")
+    @Query("DELETE FROM generation_stub")
     suspend fun delete()
 
     // endregion:   -- Delete

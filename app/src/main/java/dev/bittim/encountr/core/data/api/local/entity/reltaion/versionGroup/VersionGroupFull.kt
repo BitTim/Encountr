@@ -7,18 +7,16 @@
  * File:       VersionGroupFull.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.reltaion.versionGroup
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import dev.bittim.encountr.core.data.api.local.entity.base.ExpirableEntity
-import dev.bittim.encountr.core.data.api.local.entity.base.version.VersionEntity
-import dev.bittim.encountr.core.data.api.local.entity.base.versionGroup.VersionGroupEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.TimestampedEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.version.VersionStub
 import dev.bittim.encountr.core.data.api.local.entity.junction.VersionGroupPokedexJunction
-import dev.bittim.encountr.core.domain.model.api.Handle
 
 data class VersionGroupFull(
     @Embedded val versionGroup: VersionGroupEntity,
@@ -29,14 +27,14 @@ data class VersionGroupFull(
         projection = ["pokedexId"]
     ) val pokedexIds: List<Int>,
     @Relation(
-        entity = VersionEntity::class,
+        entity = VersionStub::class,
         parentColumn = "id",
         entityColumn = "versionGroupId",
         projection = ["id"]
     ) val versionIds: List<Int>
-) : ExpirableEntity by versionGroup {
+) : TimestampedEntity by versionGroup {
     fun toModel() = versionGroup.toModel(
-        versions = versionIds.map { Handle(it) },
-        pokedexes = pokedexIds.map { Handle(it) }
+        versionIds = versionIds,
+        pokedexIds = pokedexIds
     )
 }

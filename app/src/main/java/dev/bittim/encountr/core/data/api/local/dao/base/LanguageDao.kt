@@ -7,45 +7,50 @@
  * File:       LanguageDao.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.local.dao.base
 
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy.Companion.IGNORE
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
-import dev.bittim.encountr.core.data.api.local.entity.base.language.LanguageEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.language.LanguageDetailEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.language.LanguageStub
+import dev.bittim.encountr.core.data.api.local.entity.reltaion.language.LanguageFull
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LanguageDao {
     // region:      -- Create / Update
 
-    @Insert(onConflict = IGNORE)
-    suspend fun insert(languageEntity: LanguageEntity)
+    @Upsert
+    suspend fun upsertStub(languageStub: LanguageStub)
 
     @Upsert
-    suspend fun upsert(languageEntity: LanguageEntity)
+    suspend fun upsertStub(languageStubs: List<LanguageStub>)
 
     @Upsert
-    suspend fun upsert(languageEntities: List<LanguageEntity>)
+    suspend fun upsertDetail(languageDetailEntity: LanguageDetailEntity)
+
+    @Upsert
+    suspend fun upsertDetail(languageDetailEntities: List<LanguageDetailEntity>)
 
     // endregion:   -- Create / Update
     // region:      -- Read
 
-    @Query("SELECT * FROM language WHERE id = :id AND localizedName NOT NULL")
-    fun get(id: Int): Flow<LanguageEntity?>
+    @Transaction
+    @Query("SELECT * FROM language_stub WHERE id = :id")
+    fun get(id: Int): Flow<LanguageFull?>
 
-    @Query("SELECT * FROM language WHERE localizedName NOT NULL")
-    fun get(): Flow<List<LanguageEntity>>
+    @Query("SELECT id FROM language_stub WHERE isLocalized IS TRUE")
+    fun getIds(): Flow<List<Int>>
 
     // endregion:   -- Region
     // region:      -- Delete
 
-    @Query("DELETE FROM language")
+    @Query("DELETE FROM language_stub")
     suspend fun delete()
 
     // endregion:   -- Delete

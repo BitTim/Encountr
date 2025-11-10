@@ -7,7 +7,7 @@
  * File:       TeamRepositoryImpl.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.user.repo
@@ -15,8 +15,6 @@ package dev.bittim.encountr.core.data.user.repo
 import dev.bittim.encountr.core.data.user.local.UserDatabase
 import dev.bittim.encountr.core.data.user.local.entity.PokemonTeamJunction
 import dev.bittim.encountr.core.data.user.local.entity.TeamEntity
-import dev.bittim.encountr.core.domain.model.api.Handle
-import dev.bittim.encountr.core.domain.model.api.pokemon.Pokemon
 import dev.bittim.encountr.core.domain.model.user.Team
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -64,21 +62,21 @@ class TeamRepositoryImpl(
 
     override suspend fun addPokemon(
         id: Uuid,
-        pokemon: Handle<Pokemon>
+        pokemonId: Int
     ) {
         userDatabase.pokemonTeamRefDao.insert(
             PokemonTeamJunction(
                 id.toString(),
-                pokemon.id
+                pokemonId
             )
         )
     }
 
     override suspend fun removePokemon(
         id: Uuid,
-        pokemon: Handle<Pokemon>
+        pokemonId: Int
     ) {
-        userDatabase.pokemonTeamRefDao.delete(id.toString(), pokemon.id)
+        userDatabase.pokemonTeamRefDao.delete(id.toString(), pokemonId)
     }
 
     // endregion:   -- Update

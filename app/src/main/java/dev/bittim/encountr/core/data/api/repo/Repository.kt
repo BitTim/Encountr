@@ -7,7 +7,7 @@
  * File:       Repository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.repo
@@ -16,10 +16,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface Repository<T> {
     fun get(id: Int): Flow<T?>
-    fun get(): Flow<List<T?>>
+    fun getIds(): Flow<List<Int>>
 
-    suspend fun refresh(id: Int): T?
-    suspend fun refresh(): List<T>
+    suspend fun refresh(id: Int)
+    suspend fun refresh()
 
     fun queueWorker(id: Int? = null)
 }

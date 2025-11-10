@@ -7,7 +7,7 @@
  * File:       GetVersionsByGeneration.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.domain.useCase.api
@@ -35,13 +35,17 @@ class GetVersionsByGeneration(
         val generationFlow = generationRepository.get(generationId)
 
         val versionGroupListFlow =
-            generationFlow.filterNotNull().map { it.versionGroups }.distinctUntilChanged()
+            generationFlow.filterNotNull().map { it.versionGroupIds }.distinctUntilChanged()
                 .flatMapLatest { versionGroupIds ->
                     if (versionGroupIds.isEmpty()) {
                         flowOf(emptyList())
                     } else {
                         val versionGroupFlows =
-                            versionGroupIds.map { handle -> versionGroupRepository.get(handle.id) }
+                            versionGroupIds.map { versionGroupId ->
+                                versionGroupRepository.get(
+                                    versionGroupId
+                                )
+                            }
                         combine(versionGroupFlows) { it.toList() }
                     }
                 }
@@ -51,13 +55,13 @@ class GetVersionsByGeneration(
                 flowOf(emptyList())
             } else {
                 val versionGroupFlows = versionGroupList.filterNotNull().map { versionGroup ->
-                    flowOf(versionGroup.versions).distinctUntilChanged()
+                    flowOf(versionGroup.versionIds).distinctUntilChanged()
                         .flatMapLatest { versionIds ->
                             if (versionIds.isEmpty()) {
                                 flowOf(emptyList())
                             } else {
-                                val versionFlows = versionIds.map { handle ->
-                                    versionRepository.get(handle.id)
+                                val versionFlows = versionIds.map { versionId ->
+                                    versionRepository.get(versionId)
                                 }
                                 combine(versionFlows) { it.toList() }
                             }

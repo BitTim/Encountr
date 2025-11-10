@@ -7,13 +7,12 @@
  * File:       GameSpritesExtensions.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.extension
 
 import co.pokeapi.pokekotlin.model.GameSprites
-import dev.bittim.encountr.core.data.api.local.entity.base.ExpirableEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.pokemon.PokemonSpritesEntity
 import dev.bittim.encountr.core.domain.model.api.pokemon.PokemonSpriteVariant
 
@@ -23,7 +22,6 @@ fun GameSprites.toEntity(
 ): PokemonSpritesEntity {
     return PokemonSpritesEntity(
         pokemonId = pokemonId,
-        expiresAt = ExpirableEntity.calcExpiryTime(),
         pokemonSpriteVariant = pokemonSpriteVariant,
 
         frontDefault = this.frontTransparent ?: this.frontDefault,

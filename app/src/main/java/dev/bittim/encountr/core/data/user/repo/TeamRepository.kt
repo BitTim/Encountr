@@ -7,13 +7,11 @@
  * File:       TeamRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.user.repo
 
-import dev.bittim.encountr.core.domain.model.api.Handle
-import dev.bittim.encountr.core.domain.model.api.pokemon.Pokemon
 import dev.bittim.encountr.core.domain.model.user.Team
 import kotlinx.coroutines.flow.Flow
 import kotlin.uuid.ExperimentalUuidApi
@@ -35,8 +33,8 @@ interface TeamRepository {
     // region:      -- Update
 
     suspend fun update(save: Uuid, id: Uuid, name: String)
-    suspend fun addPokemon(id: Uuid, pokemon: Handle<Pokemon>)
-    suspend fun removePokemon(id: Uuid, pokemon: Handle<Pokemon>)
+    suspend fun addPokemon(id: Uuid, pokemonId: Int)
+    suspend fun removePokemon(id: Uuid, pokemonId: Int)
 
     // endregion:   -- Update
     // region:      -- Delete

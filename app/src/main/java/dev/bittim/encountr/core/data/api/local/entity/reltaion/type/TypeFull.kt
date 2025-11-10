@@ -7,15 +7,14 @@
  * File:       TypeFull.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.reltaion.type
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import dev.bittim.encountr.core.data.api.local.entity.base.ExpirableEntity
-import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.TimestampedEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeLocalizedNameEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeSpriteEntity
 
@@ -31,7 +30,7 @@ data class TypeFull(
         parentColumn = "id",
         entityColumn = "typeId"
     ) val typeSprites: List<TypeSpriteEntity>
-) : ExpirableEntity by type {
+) : TimestampedEntity by type {
     fun toModel() = type.toModel(
         localizedNames = typeLocalizedNames.map { it.toModel() },
         typeSprites = typeSprites.map { it.toModel() }

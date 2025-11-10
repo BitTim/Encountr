@@ -7,7 +7,7 @@
  * File:       ApiSyncWorker.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   09.11.25, 01:05
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.worker
@@ -29,15 +29,20 @@ import dev.bittim.encountr.core.data.api.repo.pokemon.PokemonRepository
 import dev.bittim.encountr.core.data.api.repo.type.TypeRepository
 import dev.bittim.encountr.core.data.api.repo.version.VersionRepository
 import dev.bittim.encountr.core.data.api.repo.versionGroup.VersionGroupRepository
+import dev.bittim.encountr.core.di.Constants
+import dev.bittim.encountr.core.domain.model.api.generation.Generation
 import dev.bittim.encountr.core.domain.model.api.language.Language
 import dev.bittim.encountr.core.domain.model.api.pokedex.Pokedex
 import dev.bittim.encountr.core.domain.model.api.pokemon.Pokemon
 import dev.bittim.encountr.core.domain.model.api.type.Type
-import dev.bittim.encountr.core.domain.model.api.version.Generation
 import dev.bittim.encountr.core.domain.model.api.version.Version
-import dev.bittim.encountr.core.domain.model.api.version.VersionGroup
+import dev.bittim.encountr.core.domain.model.api.versionGroup.VersionGroup
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
-import java.time.OffsetDateTime
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.days
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 class ApiSyncWorker(
     context: Context,
@@ -54,10 +59,12 @@ class ApiSyncWorker(
     appContext = context,
     params = params
 ) {
+    @OptIn(ExperimentalTime::class)
     override suspend fun doWork(): Result {
         // Get input data from params
         val type = inputData.getString(KEY_TYPE)
         val id = inputData.getInt(KEY_ID, -1)
+        val force = inputData.getBoolean(KEY_FORCE, false)
 
         // Get repository that shall be used
         val repository = when (type) {
@@ -73,17 +80,17 @@ class ApiSyncWorker(
         }
 
         // Check expiry and fetch from API if expired
-        val currentTime = OffsetDateTime.now().toEpochSecond()
-
         if (id == -1) {
-            apiDatabase.getOf(type).firstOrNull()?.let { entities ->
-                if (entities.isEmpty() || entities.any { it.expiresAt == null || it.expiresAt!! < currentTime }) repository.refresh()
+            apiDatabase.getIdsOf(type).firstOrNull()?.let { entities ->
+                if (entities.isEmpty() || force) repository.refresh()
             }
         } else {
-            apiDatabase.getOf(type, id).firstOrNull().let {
-                if (it == null || it.expiresAt == null || it.expiresAt!! < currentTime) repository.refresh(
-                    id
-                )
+            apiDatabase.getOf(type, id).catch { emit(null) }.firstOrNull().let {
+                val expirationDuration = Constants.API_EXPIRATION_DAYS.days
+                val expirationTime =
+                    Instant.fromEpochSeconds(it?.updatedAt ?: 0) + expirationDuration
+
+                if (expirationTime < Clock.System.now()) repository.refresh(id)
             }
         }
 
@@ -93,13 +100,15 @@ class ApiSyncWorker(
     companion object {
         const val KEY_TYPE = "KEY_TYPE"
         const val KEY_ID = "KEY_ID"
+        const val KEY_FORCE = "KEY_FORCE"
         const val WORK_BASE_NAME = "ApiSyncWorker"
 
-        fun enqueue(workManager: WorkManager, type: String?, id: Int?) {
+        fun enqueue(workManager: WorkManager, type: String?, id: Int?, force: Boolean = false) {
             val workRequest = OneTimeWorkRequestBuilder<ApiSyncWorker>().setInputData(
                 workDataOf(
                     KEY_TYPE to type,
                     KEY_ID to id,
+                    KEY_FORCE to force,
                 )
             ).setConstraints(Constraints(NetworkType.CONNECTED)).build()
             workManager.enqueueUniqueWork(

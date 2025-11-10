@@ -4,23 +4,22 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       PartialPokedexEntry.kt
+ * File:       PartialPokedexEntryEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.reltaion.pokemon
 
-import dev.bittim.encountr.core.domain.model.api.Handle
 import dev.bittim.encountr.core.domain.model.api.pokemon.PokedexEntry
 
-data class PartialPokedexEntry(
+data class PartialPokedexEntryEntity(
     val pokedexId: Int,
     val entryNumber: Int,
 ) {
     fun toModel(): PokedexEntry = PokedexEntry(
-        pokedex = Handle(pokedexId),
+        pokedexId = pokedexId,
         entryNumber = entryNumber
     )
 }

@@ -7,19 +7,18 @@
  * File:       VersionDao.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.local.dao.base
 
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy.Companion.IGNORE
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import dev.bittim.encountr.core.data.api.local.entity.base.version.VersionEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.version.VersionDetailEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.version.VersionLocalizedNameEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.version.VersionStub
 import dev.bittim.encountr.core.data.api.local.entity.reltaion.version.VersionFull
 import kotlinx.coroutines.flow.Flow
 
@@ -27,38 +26,38 @@ import kotlinx.coroutines.flow.Flow
 interface VersionDao {
     // region:      -- Create / Update
 
-    @Insert(onConflict = IGNORE)
-    suspend fun insert(versionEntity: VersionEntity)
-
-    @Transaction
     @Upsert
-    suspend fun upsert(
-        versionEntity: VersionEntity,
-        versionLocalizedNameEntities: List<VersionLocalizedNameEntity>,
-    )
+    suspend fun upsertStub(versionStub: VersionStub)
 
-    @Transaction
     @Upsert
-    suspend fun upsert(
-        versionEntities: List<VersionEntity>,
-        versionLocalizedNameEntities: List<VersionLocalizedNameEntity>,
-    )
+    suspend fun upsertStub(versionStubs: List<VersionStub>)
+
+    @Upsert
+    suspend fun upsertDetail(versionDetailEntity: VersionDetailEntity)
+
+    @Upsert
+    suspend fun upsertDetail(versionDetailEntities: List<VersionDetailEntity>)
+
+    @Upsert
+    suspend fun upsertLocalizedName(versionLocalizedNameEntity: VersionLocalizedNameEntity)
+
+    @Upsert
+    suspend fun upsertLocalizedName(versionLocalizedNameEntities: List<VersionLocalizedNameEntity>)
 
     // endregion:   -- Create / Update
     // region:      -- Read
 
     @Transaction
-    @Query("SELECT * FROM version WHERE id = :id")
+    @Query("SELECT * FROM version_stub WHERE id = :id")
     fun get(id: Int): Flow<VersionFull?>
 
-    @Transaction
-    @Query("SELECT * FROM version")
-    fun get(): Flow<List<VersionFull>>
+    @Query("SELECT id FROM version_stub")
+    fun getIds(): Flow<List<Int>>
 
     // endregion:   -- Read
     // region:      -- Delete
 
-    @Query("DELETE FROM version")
+    @Query("DELETE FROM version_stub")
     suspend fun delete()
 
     // endregion:   -- Delete

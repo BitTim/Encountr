@@ -7,27 +7,25 @@
  * File:       VersionGroupPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.repo.versionGroup
 
 import android.util.Log
+import androidx.room.withTransaction
 import androidx.work.WorkManager
 import co.pokeapi.pokekotlin.PokeApi
 import dev.bittim.encountr.core.data.api.local.ApiDatabase
-import dev.bittim.encountr.core.data.api.local.entity.base.ExpirableEntity
-import dev.bittim.encountr.core.data.api.local.entity.base.version.VersionEntity
-import dev.bittim.encountr.core.data.api.local.entity.base.versionGroup.VersionGroupEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.pokedex.PokedexStub
+import dev.bittim.encountr.core.data.api.local.entity.base.version.VersionStub
+import dev.bittim.encountr.core.data.api.local.entity.base.versionGroup.VersionGroupDetailEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.versionGroup.VersionGroupStub
 import dev.bittim.encountr.core.data.api.local.entity.junction.VersionGroupPokedexJunction
 import dev.bittim.encountr.core.data.api.worker.ApiSyncWorker
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
-import dev.bittim.encountr.core.domain.model.api.Handle
-import dev.bittim.encountr.core.domain.model.api.version.VersionGroup
+import dev.bittim.encountr.core.domain.model.api.versionGroup.VersionGroup
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
@@ -54,55 +52,50 @@ class VersionGroupPokeApiRepository(
         return flow
     }
 
-    override fun get(): Flow<List<VersionGroup?>> {
+    override fun getIds(): Flow<List<Int>> {
         queueWorker()
-        return apiDatabase.versionGroupDao().get().distinctUntilChanged().map { list ->
-            list.map { it.toModel() }
-        }.flowOn(Dispatchers.IO)
+        return apiDatabase.versionGroupDao().getIds().distinctUntilChanged().flowOn(Dispatchers.IO)
     }
 
     // endregion:   -- Get
     // region:      -- Refresh
 
-    override suspend fun refresh(id: Int): VersionGroup? {
+    override suspend fun refresh(id: Int) {
         val linkedPokedexes = definitionRepository.getPokedexAdditions(id) ?: emptyList()
 
-        val rawVersionGroup = pokeApi.getVersionGroup(id)
-        val versionGroupEntity = VersionGroupEntity.fromApi(rawVersionGroup)
+        val raw = pokeApi.getVersionGroup(id)
+        val stub = VersionGroupStub(raw.id, raw.generation.id)
+        val detail = VersionGroupDetailEntity.fromApi(raw)
 
-        val pokedexes = rawVersionGroup.pokedexes.map { it.id } + linkedPokedexes
+        val pokedexes = raw.pokedexes.map { it.id } + linkedPokedexes
+        val pokedexStubs = pokedexes.map { PokedexStub(it) }
         val versionGroupPokedexJunctions = pokedexes.map {
             VersionGroupPokedexJunction(
                 versionGroupId = id,
-                pokedexId = it,
-                expiresAt = ExpirableEntity.calcExpiryTime()
+                pokedexId = it
             )
         }
 
-        apiDatabase.versionGroupDao().upsert(versionGroupEntity, versionGroupPokedexJunctions)
+        val versionStubs = raw.versions.map { VersionStub(it.id, id) }
 
-        val versions = rawVersionGroup.versions.map { it.id }
-            .filter { !definitionRepository.isVersionIgnored(it) }
-        versions.forEach {
-            apiDatabase.versionDao().insert(VersionEntity.empty(it, id))
+        apiDatabase.withTransaction {
+            apiDatabase.versionGroupDao().upsertStub(stub)
+            apiDatabase.versionGroupDao().upsertDetail(detail)
+
+            apiDatabase.pokedexDao().upsertStub(pokedexStubs)
+            apiDatabase.versionGroupPokedexJunctionDao().upsert(versionGroupPokedexJunctions)
+
+            apiDatabase.versionDao().upsertStub(versionStubs)
         }
-
-        return versionGroupEntity.toModel(
-            versions = versions.map { Handle(it) },
-            pokedexes = rawVersionGroup.pokedexes.map { Handle(it.id) }
-        )
     }
 
-    override suspend fun refresh(): List<VersionGroup> {
+    override suspend fun refresh() {
         val count = pokeApi.getVersionGroupList(0, 1).count
-        val rawVersionGroupList = pokeApi.getVersionGroupList(0, count).results
+        val raw = pokeApi.getVersionGroupList(0, count).results
+        val stubs = raw.map { VersionGroupStub(it.id, null) }
 
-        return coroutineScope {
-            rawVersionGroupList.map {
-                async {
-                    refresh(it.id)
-                }
-            }.awaitAll().filterNotNull()
+        apiDatabase.withTransaction {
+            apiDatabase.versionGroupDao().upsertStub(stubs)
         }
     }
 

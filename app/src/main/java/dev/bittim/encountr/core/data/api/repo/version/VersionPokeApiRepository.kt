@@ -7,25 +7,26 @@
  * File:       VersionPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.repo.version
 
+import androidx.room.withTransaction
 import androidx.work.WorkManager
 import co.pokeapi.pokekotlin.PokeApi
 import dev.bittim.encountr.core.data.api.local.ApiDatabase
-import dev.bittim.encountr.core.data.api.local.entity.base.version.VersionEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.version.VersionDetailEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.version.VersionLocalizedNameEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.version.VersionStub
+import dev.bittim.encountr.core.data.api.local.entity.base.versionGroup.VersionGroupStub
 import dev.bittim.encountr.core.data.api.worker.ApiSyncWorker
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
 import dev.bittim.encountr.core.domain.model.api.version.Version
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
@@ -44,41 +45,46 @@ class VersionPokeApiRepository(
         }.flowOn(Dispatchers.IO)
     }
 
-    override fun get(): Flow<List<Version?>> {
+    override fun getIds(): Flow<List<Int>> {
         queueWorker()
-        return apiDatabase.versionDao().get().distinctUntilChanged().map { list ->
-            list.map { it.toModel() }
-        }.flowOn(Dispatchers.IO)
+        return apiDatabase.versionDao().getIds().distinctUntilChanged().flowOn(Dispatchers.IO)
     }
 
     // endregion:   -- Get
     // region:      -- Refresh
 
-    override suspend fun refresh(id: Int): Version? {
-        if (definitionRepository.isVersionIgnored(id)) return null
-        val rawVersion = pokeApi.getVersion(id)
+    override suspend fun refresh(id: Int) {
+        if (definitionRepository.isVersionIgnored(id)) return
+
+        val raw = pokeApi.getVersion(id)
         val imageUrl = definitionRepository.getVersionIcon(id)
 
-        val versionEntity = VersionEntity.fromApi(rawVersion, imageUrl)
-        val versionLocalizedNameEntities =
-            rawVersion.names.map { VersionLocalizedNameEntity.fromApi(id, it) }
+        val stub = VersionStub(raw.id, raw.versionGroup.id)
+        val detail = VersionDetailEntity.fromApi(raw, imageUrl)
+        val localizedNames =
+            raw.names.map { VersionLocalizedNameEntity.fromApi(id, it) }
 
-        apiDatabase.versionDao().upsert(versionEntity, versionLocalizedNameEntities)
-        return versionEntity.toModel(
-            versionLocalizedNameEntities.map { it.toModel() }
-        )
+        apiDatabase.withTransaction {
+            val versionGroup = apiDatabase.versionGroupDao().get(raw.versionGroup.id).firstOrNull()
+            if (versionGroup == null) {
+                apiDatabase.versionGroupDao().upsertStub(
+                    VersionGroupStub(raw.versionGroup.id, null)
+                )
+            }
+
+            apiDatabase.versionDao().upsertStub(stub)
+            apiDatabase.versionDao().upsertDetail(detail)
+            apiDatabase.versionDao().upsertLocalizedName(localizedNames)
+        }
     }
 
-    override suspend fun refresh(): List<Version> {
+    override suspend fun refresh() {
         val count = pokeApi.getVersionList(0, 1).count
-        val rawVersionList = pokeApi.getVersionList(0, count).results
+        val raw = pokeApi.getVersionList(0, count).results
+        val stubs = raw.map { VersionStub(it.id, null) }
 
-        return coroutineScope {
-            rawVersionList.map {
-                async(Dispatchers.IO) {
-                    refresh(it.id)
-                }
-            }.awaitAll().filterNotNull()
+        apiDatabase.withTransaction {
+            apiDatabase.versionDao().upsertStub(stubs)
         }
     }
 

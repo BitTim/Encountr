@@ -7,24 +7,31 @@
  * File:       PokemonTypeJunction.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.junction
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import dev.bittim.encountr.core.data.api.local.entity.base.ExpirableEntity
-import dev.bittim.encountr.core.data.api.local.entity.base.pokemon.PokemonEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.pokemon.PokemonStub
+import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeStub
 
 @Entity(
     tableName = "pokemon_type_junction",
     primaryKeys = ["pokemonId", "typeId"],
     foreignKeys = [
         ForeignKey(
-            entity = PokemonEntity::class,
+            entity = PokemonStub::class,
             parentColumns = ["id"],
             childColumns = ["pokemonId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = TypeStub::class,
+            parentColumns = ["id"],
+            childColumns = ["typeId"],
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE
         ),
@@ -33,5 +40,4 @@ import dev.bittim.encountr.core.data.api.local.entity.base.pokemon.PokemonEntity
 data class PokemonTypeJunction(
     val pokemonId: Int,
     val typeId: Int,
-    override val expiresAt: Long,
-) : ExpirableEntity
+)

@@ -4,51 +4,56 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       PokedexEntity.kt
+ * File:       PokedexDetailEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.base.pokedex
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import dev.bittim.encountr.core.data.api.local.entity.base.ExpirableEntity
-import dev.bittim.encountr.core.domain.model.api.Handle
 import dev.bittim.encountr.core.domain.model.api.language.LocalizedString
 import dev.bittim.encountr.core.domain.model.api.pokedex.Pokedex
-import dev.bittim.encountr.core.domain.model.api.pokemon.Pokemon
 
 @Entity(
-    tableName = "pokedex",
+    tableName = "pokedex_detail",
+    foreignKeys = [
+        ForeignKey(
+            entity = PokedexStub::class,
+            parentColumns = ["id"],
+            childColumns = ["id"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE
+        )
+    ]
 )
-data class PokedexEntity(
+data class PokedexDetailEntity(
     @PrimaryKey val id: Int,
     val name: String,
-    override val expiresAt: Long,
     val isMainSeries: Boolean,
-) : ExpirableEntity {
+) {
     fun toModel(
         localizedNames: List<LocalizedString>,
-        pokemon: List<Handle<Pokemon>>,
+        pokemonIds: List<Int>,
     ): Pokedex {
         return Pokedex(
             id = id,
             name = name,
             isMainSeries = isMainSeries,
             localizedNames = localizedNames,
-            pokemon = pokemon,
+            pokemonIds = pokemonIds,
         )
     }
 
     companion object {
-        fun fromApi(pokedex: co.pokeapi.pokekotlin.model.Pokedex): PokedexEntity {
-            return PokedexEntity(
+        fun fromApi(pokedex: co.pokeapi.pokekotlin.model.Pokedex): PokedexDetailEntity {
+            return PokedexDetailEntity(
                 id = pokedex.id,
                 name = pokedex.name,
-                isMainSeries = pokedex.isMainSeries,
-                expiresAt = ExpirableEntity.calcExpiryTime(),
+                isMainSeries = pokedex.isMainSeries
             )
         }
     }

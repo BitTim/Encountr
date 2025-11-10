@@ -7,15 +7,12 @@
  * File:       Pokemon.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.domain.model.api.pokemon
 
-import dev.bittim.encountr.core.domain.model.api.Handle
-import dev.bittim.encountr.core.domain.model.api.Handleable
 import dev.bittim.encountr.core.domain.model.api.language.LocalizedString
-import dev.bittim.encountr.core.domain.model.api.type.Type
 
 data class Pokemon(
     val id: Int,
@@ -25,5 +22,5 @@ data class Pokemon(
     val height: String,
     val weight: String,
     val sprites: List<PokemonSprites>,
-    val types: List<Handle<Type>>,
-) : Handleable
+    val typeIds: List<Int>,
+)

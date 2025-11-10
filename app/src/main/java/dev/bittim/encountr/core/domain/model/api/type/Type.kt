@@ -7,12 +7,11 @@
  * File:       Type.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.domain.model.api.type
 
-import dev.bittim.encountr.core.domain.model.api.Handleable
 import dev.bittim.encountr.core.domain.model.api.language.LocalizedString
 
 data class Type(
@@ -28,4 +27,4 @@ data class Type(
     val doubleDamageTo: List<Int>,
     val halfDamageTo: List<Int>,
     val noDamageTo: List<Int>
-) : Handleable
+)

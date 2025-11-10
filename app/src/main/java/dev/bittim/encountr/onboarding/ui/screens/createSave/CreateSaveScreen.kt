@@ -7,7 +7,7 @@
  * File:       CreateSaveScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   09.11.25, 01:09
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
@@ -51,7 +51,6 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import dev.bittim.encountr.R
-import dev.bittim.encountr.core.domain.model.api.Handle
 import dev.bittim.encountr.core.ui.components.general.LabeledSlider
 import dev.bittim.encountr.core.ui.components.version.versionCard.VersionCard
 import dev.bittim.encountr.core.ui.components.version.versionCard.VersionCardDefaults
@@ -143,9 +142,10 @@ fun CreateSaveScreen(
                         fraction = 1f - pageOffset.coerceIn(0f, 1f)
                     )
 
+                    // TODO
                     val versionCardState = state.versions[index]?.let { version ->
                         state.languageId?.let { langName ->
-                            VersionCardState(version, Handle(0))
+                            VersionCardState(version.name, "Generation", version.imageUrl)
                         }
                     }
 

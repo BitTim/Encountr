@@ -7,23 +7,22 @@
  * File:       TypePokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.repo.type
 
+import androidx.room.withTransaction
 import androidx.work.WorkManager
 import co.pokeapi.pokekotlin.PokeApi
 import dev.bittim.encountr.core.data.api.local.ApiDatabase
-import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeDetailEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeLocalizedNameEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeSpriteEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeStub
 import dev.bittim.encountr.core.data.api.worker.ApiSyncWorker
 import dev.bittim.encountr.core.domain.model.api.type.Type
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
@@ -43,40 +42,37 @@ class TypePokeApiRepository(
         }.flowOn(Dispatchers.IO)
     }
 
-    override fun get(): Flow<List<Type>> {
+    override fun getIds(): Flow<List<Int>> {
         queueWorker()
-        return apiDatabase.typeDao().get().distinctUntilChanged().map { list ->
-            list.map { it.toModel() }
-        }.flowOn(Dispatchers.IO)
+        return apiDatabase.typeDao().getIds().distinctUntilChanged().flowOn(Dispatchers.IO)
     }
 
     // endregion:   -- Get
     // region:      -- Refresh
 
-    override suspend fun refresh(id: Int): Type {
-        val rawType = pokeApi.getType(id)
-        val typeEntity = TypeEntity.fromApi(rawType)
-        val typeLocalizedNameEntities =
-            rawType.names.map { TypeLocalizedNameEntity.fromApi(id, it) }
-        val typeSpriteEntities = TypeSpriteEntity.fromApi(id, rawType.sprites)
+    override suspend fun refresh(id: Int) {
+        val raw = pokeApi.getType(id)
 
-        apiDatabase.typeDao().upsert(typeEntity, typeLocalizedNameEntities, typeSpriteEntities)
-        return typeEntity.toModel(
-            localizedNames = typeLocalizedNameEntities.map { it.toModel() },
-            typeSprites = typeSpriteEntities.map { it.toModel() }
-        )
+        val stub = TypeStub(raw.id)
+        val detail = TypeDetailEntity.fromApi(raw)
+        val localizedNames = raw.names.map { TypeLocalizedNameEntity.fromApi(id, it) }
+        val sprites = TypeSpriteEntity.fromApi(id, raw.sprites)
+
+        apiDatabase.withTransaction {
+            apiDatabase.typeDao().upsertStub(stub)
+            apiDatabase.typeDao().upsertDetail(detail)
+            apiDatabase.typeDao().upsertLocalizedName(localizedNames)
+            apiDatabase.typeDao().upsertSprite(sprites)
+        }
     }
 
-    override suspend fun refresh(): List<Type> {
+    override suspend fun refresh() {
         val count = pokeApi.getTypeList(0, 1).count
-        val rawTypeList = pokeApi.getTypeList(0, count).results
+        val raw = pokeApi.getTypeList(0, count).results
+        val stubs = raw.map { TypeStub(it.id) }
 
-        return coroutineScope {
-            rawTypeList.map {
-                async(Dispatchers.IO) {
-                    refresh(it.id)
-                }
-            }.awaitAll()
+        apiDatabase.withTransaction {
+            apiDatabase.typeDao().upsertStub(stubs)
         }
     }
 

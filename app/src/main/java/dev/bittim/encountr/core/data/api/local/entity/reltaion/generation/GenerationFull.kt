@@ -7,18 +7,16 @@
  * File:       GenerationFull.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.reltaion.generation
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import dev.bittim.encountr.core.data.api.local.entity.base.ExpirableEntity
-import dev.bittim.encountr.core.data.api.local.entity.base.generation.GenerationEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.TimestampedEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.generation.GenerationLocalizedNameEntity
-import dev.bittim.encountr.core.data.api.local.entity.base.versionGroup.VersionGroupEntity
-import dev.bittim.encountr.core.domain.model.api.Handle
+import dev.bittim.encountr.core.data.api.local.entity.base.versionGroup.VersionGroupStub
 
 data class GenerationFull(
     @Embedded val generation: GenerationEntity,
@@ -28,14 +26,14 @@ data class GenerationFull(
         entityColumn = "generationId"
     ) val localizedNames: List<GenerationLocalizedNameEntity>,
     @Relation(
-        entity = VersionGroupEntity::class,
+        entity = VersionGroupStub::class,
         parentColumn = "id",
         entityColumn = "generationId",
         projection = ["id"]
     ) val versionGroupIds: List<Int>
-) : ExpirableEntity by generation {
+) : TimestampedEntity by generation {
     fun toModel() = generation.toModel(
         localizedNames = localizedNames.map { it.toModel() },
-        versionGroups = versionGroupIds.map { Handle(it) }
+        versionGroups = versionGroupIds
     )
 }

@@ -7,16 +7,14 @@
  * File:       TypeLocalizedNameEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.base.type
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import dev.bittim.encountr.core.data.api.local.entity.base.ExpirableEntity
-import dev.bittim.encountr.core.data.api.local.entity.base.language.LanguageEntity
-import dev.bittim.encountr.core.domain.model.api.Handle
+import dev.bittim.encountr.core.data.api.local.entity.base.language.LanguageStub
 import dev.bittim.encountr.core.domain.model.api.language.LocalizedString
 
 @Entity(
@@ -24,14 +22,14 @@ import dev.bittim.encountr.core.domain.model.api.language.LocalizedString
     primaryKeys = ["typeId", "languageId"],
     foreignKeys = [
         ForeignKey(
-            entity = TypeEntity::class,
+            entity = TypeStub::class,
             parentColumns = ["id"],
             childColumns = ["typeId"],
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE
         ),
         ForeignKey(
-            entity = LanguageEntity::class,
+            entity = LanguageStub::class,
             parentColumns = ["id"],
             childColumns = ["languageId"],
             onDelete = ForeignKey.CASCADE,
@@ -42,12 +40,11 @@ import dev.bittim.encountr.core.domain.model.api.language.LocalizedString
 data class TypeLocalizedNameEntity(
     val typeId: Int,
     val languageId: Int,
-    override val expiresAt: Long,
     val value: String,
-) : ExpirableEntity {
+) {
     fun toModel(): LocalizedString {
         return LocalizedString(
-            Handle(languageId),
+            languageId = languageId,
             value = value,
         )
     }
@@ -57,8 +54,7 @@ data class TypeLocalizedNameEntity(
             return TypeLocalizedNameEntity(
                 typeId = typeId,
                 languageId = name.language.id,
-                value = name.name,
-                expiresAt = ExpirableEntity.calcExpiryTime()
+                value = name.name
             )
         }
     }

@@ -7,7 +7,7 @@
  * File:       SelectLanguageNav.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 23:26
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.selectLanguage
@@ -33,6 +33,7 @@ fun NavGraphBuilder.selectLanguageScreen(
 
         SelectLanguageScreen(
             state = state,
+            observeLanguage = viewModel::observeLanguage,
             onContinue = viewModel::onContinue,
             navNext = navNext,
             navBack = navBack

@@ -7,7 +7,7 @@
  * File:       TypeSpriteEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.base.type
@@ -16,7 +16,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import co.pokeapi.pokekotlin.model.VersionTypeSprites
 import dev.bittim.encountr.core.data.api.extension.toEntity
-import dev.bittim.encountr.core.data.api.local.entity.base.ExpirableEntity
 import dev.bittim.encountr.core.domain.model.api.type.TypeSprite
 import dev.bittim.encountr.core.domain.model.api.type.TypeSpriteVariant
 
@@ -25,7 +24,7 @@ import dev.bittim.encountr.core.domain.model.api.type.TypeSpriteVariant
     primaryKeys = ["typeId", "typeSpriteVariant"],
     foreignKeys = [
         ForeignKey(
-            entity = TypeEntity::class,
+            entity = TypeStub::class,
             parentColumns = ["id"],
             childColumns = ["typeId"],
             onDelete = ForeignKey.CASCADE,
@@ -36,9 +35,8 @@ import dev.bittim.encountr.core.domain.model.api.type.TypeSpriteVariant
 data class TypeSpriteEntity(
     val typeId: Int,
     val typeSpriteVariant: TypeSpriteVariant,
-    override val expiresAt: Long,
     val imageUrl: String?,
-) : ExpirableEntity {
+) {
     fun toModel(): TypeSprite {
         return TypeSprite(
             typeSpriteVariant = typeSpriteVariant,

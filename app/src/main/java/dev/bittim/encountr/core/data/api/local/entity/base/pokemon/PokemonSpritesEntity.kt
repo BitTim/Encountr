@@ -7,7 +7,7 @@
  * File:       PokemonSpritesEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   10.11.25, 23:36
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.base.pokemon
@@ -15,7 +15,6 @@ package dev.bittim.encountr.core.data.api.local.entity.base.pokemon
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import dev.bittim.encountr.core.data.api.extension.toEntity
-import dev.bittim.encountr.core.data.api.local.entity.base.ExpirableEntity
 import dev.bittim.encountr.core.domain.model.api.pokemon.PokemonSpriteVariant
 import dev.bittim.encountr.core.domain.model.api.pokemon.PokemonSprites
 
@@ -24,7 +23,7 @@ import dev.bittim.encountr.core.domain.model.api.pokemon.PokemonSprites
     primaryKeys = ["pokemonId", "pokemonSpriteVariant"],
     foreignKeys = [
         ForeignKey(
-            entity = PokemonEntity::class,
+            entity = PokemonStub::class,
             parentColumns = ["id"],
             childColumns = ["pokemonId"],
             onDelete = ForeignKey.CASCADE,
@@ -34,7 +33,6 @@ import dev.bittim.encountr.core.domain.model.api.pokemon.PokemonSprites
 )
 data class PokemonSpritesEntity(
     val pokemonId: Int,
-    override val expiresAt: Long,
     val pokemonSpriteVariant: PokemonSpriteVariant,
     val frontDefault: String?,
     val frontShiny: String?,
@@ -44,7 +42,7 @@ data class PokemonSpritesEntity(
     val frontShinyFemale: String?,
     val backFemale: String?,
     val backShinyFemale: String?
-) : ExpirableEntity {
+) {
     fun toModel(): PokemonSprites {
         return PokemonSprites(
             frontDefault = frontDefault,
