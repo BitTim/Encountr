@@ -7,7 +7,7 @@
  * File:       GenerationPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   11.11.25, 15:50
  */
 
 package dev.bittim.encountr.core.data.api.repo.generation
@@ -46,6 +46,12 @@ class GenerationPokeApiRepository(
     override fun getIds(): Flow<List<Int>> {
         queueWorker()
         return apiDatabase.generationDao().getIds().distinctUntilChanged().flowOn(Dispatchers.IO)
+    }
+
+    override fun getVersionGroupIds(id: Int): Flow<List<Int>> {
+        queueWorker(id)
+        return apiDatabase.generationDao().getVersionGroupIds(id).distinctUntilChanged()
+            .flowOn(Dispatchers.IO)
     }
 
     // endregion:   -- Get

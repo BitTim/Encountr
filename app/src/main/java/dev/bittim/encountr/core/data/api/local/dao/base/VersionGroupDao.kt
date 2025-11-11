@@ -7,7 +7,7 @@
  * File:       VersionGroupDao.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   11.11.25, 15:50
  */
 
 package dev.bittim.encountr.core.data.api.local.dao.base
@@ -46,6 +46,16 @@ interface VersionGroupDao {
 
     @Query("SELECT id FROM version_group_stub")
     fun getIds(): Flow<List<Int>>
+
+    @Transaction
+    @Query(
+        """
+        SELECT version_stub.id FROM version_group_stub
+        LEFT JOIN version_stub ON version_group_stub.id = version_stub.versionGroupId
+        WHERE version_group_stub.id = :id AND version_stub.isIgnored IS FALSE
+    """
+    )
+    fun getVersionIds(id: Int): Flow<List<Int>>
 
     // endregion:   -- Read
     // region:      -- Delete

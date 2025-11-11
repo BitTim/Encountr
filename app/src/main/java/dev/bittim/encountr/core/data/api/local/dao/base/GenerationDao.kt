@@ -7,7 +7,7 @@
  * File:       GenerationDao.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   11.11.25, 15:50
  */
 
 package dev.bittim.encountr.core.data.api.local.dao.base
@@ -53,6 +53,16 @@ interface GenerationDao {
 
     @Query("SELECT id FROM generation_stub")
     fun getIds(): Flow<List<Int>>
+
+    @Transaction
+    @Query(
+        """
+        SELECT version_group_stub.id FROM generation_stub
+        LEFT JOIN version_group_stub ON generation_stub.id = version_group_stub.generationId
+        WHERE generation_stub.id = :id
+    """
+    )
+    fun getVersionGroupIds(id: Int): Flow<List<Int>>
 
     // endregion:   -- Read
     // region:      -- Delete

@@ -7,7 +7,7 @@
  * File:       CreateSaveViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.11.25, 02:34
+ * Modified:   11.11.25, 15:50
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
@@ -17,7 +17,7 @@ import androidx.lifecycle.viewModelScope
 import co.pokeapi.pokekotlin.PokeApi
 import dev.bittim.encountr.core.data.config.ConfigStateHolder
 import dev.bittim.encountr.core.data.user.repo.SaveRepository
-import dev.bittim.encountr.core.domain.useCase.api.GetVersionsByGeneration
+import dev.bittim.encountr.core.domain.useCase.api.ObserveVersionIdsByGeneration
 import dev.bittim.encountr.core.domain.useCase.ui.ObserveVersionCardState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -32,7 +32,7 @@ import kotlin.uuid.ExperimentalUuidApi
 class CreateSaveViewModel(
     private val pokeApi: PokeApi,
     private val configStateHolder: ConfigStateHolder,
-    private val getVersionsByGeneration: GetVersionsByGeneration,
+    private val observeVersionIdsByGeneration: ObserveVersionIdsByGeneration,
     private val observeVersionCardState: ObserveVersionCardState,
     private val saveRepository: SaveRepository
 ) : ViewModel() {
@@ -58,9 +58,9 @@ class CreateSaveViewModel(
             versionIdsJob[generationId] = this.coroutineContext[Job]!!
 
             try {
-                getVersionsByGeneration(generationId)
+                observeVersionIdsByGeneration(generationId)
                     .collectLatest { versionIds ->
-                        if (versionIds.isEmpty()) return@collectLatest
+                        if (versionIds.isEmpty()) throw Exception()
                         _state.update { it.copy(versionIds = it.versionIds + (generationId to versionIds)) }
                     }
             } catch (_: Exception) {
@@ -82,7 +82,7 @@ class CreateSaveViewModel(
             try {
                 observeVersionCardState(versionId)
                     .collectLatest { versionCardState ->
-                        if (versionCardState == null) return@collectLatest
+                        if (versionCardState == null) throw Exception()
                         _state.update { it.copy(versionStates = it.versionStates + (versionId to versionCardState)) }
                     }
             } catch (_: Exception) {

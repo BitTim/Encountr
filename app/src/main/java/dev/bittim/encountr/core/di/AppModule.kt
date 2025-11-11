@@ -7,7 +7,7 @@
  * File:       AppModule.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.11.25, 02:49
+ * Modified:   11.11.25, 15:50
  */
 
 package dev.bittim.encountr.core.di
@@ -49,7 +49,7 @@ import dev.bittim.encountr.core.data.user.repo.SaveRepository
 import dev.bittim.encountr.core.data.user.repo.SaveRepositoryImpl
 import dev.bittim.encountr.core.data.user.repo.TeamRepository
 import dev.bittim.encountr.core.data.user.repo.TeamRepositoryImpl
-import dev.bittim.encountr.core.domain.useCase.api.GetVersionsByGeneration
+import dev.bittim.encountr.core.domain.useCase.api.ObserveVersionIdsByGeneration
 import dev.bittim.encountr.core.domain.useCase.config.ObserveCurrentLanguageId
 import dev.bittim.encountr.core.domain.useCase.ui.ObserveLanguageCardState
 import dev.bittim.encountr.core.domain.useCase.ui.ObserveVersionCardState
@@ -165,7 +165,7 @@ val appModule = module {
     single<ObserveCurrentLanguageId> { ObserveCurrentLanguageId(get()) }
 
     // API
-    single<GetVersionsByGeneration> { GetVersionsByGeneration(get(), get(), get()) }
+    single<ObserveVersionIdsByGeneration> { ObserveVersionIdsByGeneration(get(), get()) }
 
     // UI
     single<ObserveLanguageCardState> { ObserveLanguageCardState(get()) }

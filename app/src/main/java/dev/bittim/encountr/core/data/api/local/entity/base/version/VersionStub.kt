@@ -7,7 +7,7 @@
  * File:       VersionStub.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.11.25, 02:37
+ * Modified:   11.11.25, 15:50
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.base.version
@@ -32,5 +32,6 @@ import dev.bittim.encountr.core.data.api.local.entity.base.versionGroup.VersionG
 data class VersionStub(
     @PrimaryKey val id: Int,
     val versionGroupId: Int?,
+    val isIgnored: Boolean,
     override val updatedAt: Long = TimestampedEntity.generateTimestamp()
 ) : TimestampedEntity

@@ -7,7 +7,7 @@
  * File:       VersionGroupPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.11.25, 02:37
+ * Modified:   11.11.25, 15:50
  */
 
 package dev.bittim.encountr.core.data.api.repo.versionGroup
@@ -51,6 +51,12 @@ class VersionGroupPokeApiRepository(
         return apiDatabase.versionGroupDao().getIds().distinctUntilChanged().flowOn(Dispatchers.IO)
     }
 
+    override fun getVersionIds(id: Int): Flow<List<Int>> {
+        queueWorker(id)
+        return apiDatabase.versionGroupDao().getVersionIds(id).distinctUntilChanged()
+            .flowOn(Dispatchers.IO)
+    }
+
     // endregion:   -- Get
     // region:      -- Refresh
 
@@ -70,7 +76,13 @@ class VersionGroupPokeApiRepository(
             )
         }
 
-        val versionStubs = raw.versions.map { VersionStub(it.id, id) }
+        val versionStubs = raw.versions.map {
+            VersionStub(
+                it.id,
+                id,
+                definitionRepository.isVersionIgnored(it.id)
+            )
+        }
 
         apiDatabase.withTransaction {
             apiDatabase.versionGroupDao().upsertStub(stub)

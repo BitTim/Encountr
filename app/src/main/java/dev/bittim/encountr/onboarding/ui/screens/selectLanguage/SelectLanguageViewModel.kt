@@ -7,7 +7,7 @@
  * File:       SelectLanguageViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.11.25, 02:34
+ * Modified:   11.11.25, 15:50
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.selectLanguage
@@ -62,7 +62,7 @@ class SelectLanguageViewModel(
             try {
                 observeLanguageCardState(languageId)
                     .collectLatest { languageCardState ->
-                        if (languageCardState == null) return@collectLatest
+                        if (languageCardState == null) throw Exception()
                         _state.update { it.copy(languageStates = it.languageStates + (languageId to languageCardState)) }
                     }
             } catch (_: Exception) {

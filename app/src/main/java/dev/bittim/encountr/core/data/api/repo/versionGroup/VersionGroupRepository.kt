@@ -7,12 +7,15 @@
  * File:       VersionGroupRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   11.11.25, 15:50
  */
 
 package dev.bittim.encountr.core.data.api.repo.versionGroup
 
 import dev.bittim.encountr.core.data.api.repo.Repository
 import dev.bittim.encountr.core.domain.model.api.versionGroup.VersionGroup
+import kotlinx.coroutines.flow.Flow
 
-interface VersionGroupRepository : Repository<VersionGroup>
+interface VersionGroupRepository : Repository<VersionGroup> {
+    fun getVersionIds(id: Int): Flow<List<Int>>
+}

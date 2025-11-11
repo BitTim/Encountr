@@ -7,7 +7,7 @@
  * File:       VersionPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.11.25, 02:49
+ * Modified:   11.11.25, 15:50
  */
 
 package dev.bittim.encountr.core.data.api.repo.version
@@ -47,9 +47,7 @@ class VersionPokeApiRepository(
 
     override fun getIds(): Flow<List<Int>> {
         queueWorker()
-        return apiDatabase.versionDao().getIds().map { versionIds ->
-            versionIds.mapNotNull { id -> id.takeIf { !definitionRepository.isVersionIgnored(it) } }
-        }.distinctUntilChanged().flowOn(Dispatchers.IO)
+        return apiDatabase.versionDao().getIds().distinctUntilChanged().flowOn(Dispatchers.IO)
     }
 
     // endregion:   -- Get
@@ -58,8 +56,9 @@ class VersionPokeApiRepository(
     override suspend fun refresh(id: Int) {
         val raw = pokeApi.getVersion(id)
         val imageUrl = definitionRepository.getVersionIcon(id)
+        val isIgnored = definitionRepository.isVersionIgnored(id)
 
-        val stub = VersionStub(raw.id, raw.versionGroup.id)
+        val stub = VersionStub(raw.id, raw.versionGroup.id, isIgnored)
         val detail = VersionDetailEntity.fromApi(raw, imageUrl)
         val localizedNames =
             raw.names.map { VersionLocalizedNameEntity.fromApi(id, it) }
@@ -81,7 +80,8 @@ class VersionPokeApiRepository(
     override suspend fun refresh() {
         val count = pokeApi.getVersionList(0, 1).count
         val raw = pokeApi.getVersionList(0, count).results
-        val stubs = raw.map { VersionStub(it.id, null) }
+        val stubs =
+            raw.map { VersionStub(it.id, null, definitionRepository.isVersionIgnored(it.id)) }
 
         apiDatabase.withTransaction {
             apiDatabase.versionDao().upsertStub(stubs)
