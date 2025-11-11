@@ -7,7 +7,7 @@
  * File:       SelectLanguageState.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   11.11.25, 02:34
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.selectLanguage
@@ -18,5 +18,5 @@ data class SelectLanguageState(
     val isLoading: Boolean = false,
     val error: String? = null,
     val languageIds: List<Int> = emptyList(),
-    val languages: Map<Int, LanguageCardState> = emptyMap()
+    val languageStates: Map<Int, LanguageCardState> = emptyMap()
 )

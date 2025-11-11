@@ -7,7 +7,7 @@
  * File:       SelectLanguageScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:38
+ * Modified:   11.11.25, 02:34
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.selectLanguage
@@ -59,15 +59,13 @@ fun SelectLanguageScreen(
                     if (state.languageIds.isNotEmpty()) state.languageIds.count() else SelectLocaleScreenDefaults.NUM_PLACEHOLDERS
                 items(count) { idx ->
                     val languageId = state.languageIds.getOrNull(idx)
-                    if (languageId != null && !state.languages.containsKey(languageId)) {
+                    if (languageId != null && !state.languageStates.containsKey(languageId)) {
                         observeLanguage(languageId)
                     }
 
-                    val languageCardState = state.languages.getOrDefault(languageId, null)
-
                     LanguageCard(
                         modifier = Modifier.animateItem(),
-                        state = languageCardState,
+                        state = state.languageStates[languageId],
                         isSelected = idx == selectedIdx,
                         onClick = {
                             selectedIdx = idx

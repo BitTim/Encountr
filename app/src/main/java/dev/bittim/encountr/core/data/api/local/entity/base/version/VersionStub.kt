@@ -7,7 +7,7 @@
  * File:       VersionStub.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   11.11.25, 02:37
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.base.version

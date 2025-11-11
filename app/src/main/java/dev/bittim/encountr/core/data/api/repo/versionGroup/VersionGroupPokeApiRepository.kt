@@ -7,12 +7,11 @@
  * File:       VersionGroupPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   11.11.25, 02:37
  */
 
 package dev.bittim.encountr.core.data.api.repo.versionGroup
 
-import android.util.Log
 import androidx.room.withTransaction
 import androidx.work.WorkManager
 import co.pokeapi.pokekotlin.PokeApi
@@ -40,16 +39,11 @@ class VersionGroupPokeApiRepository(
     // region:      -- Get
 
     override fun get(id: Int): Flow<VersionGroup?> {
-        Log.d("VersionGroupRepo", "Getting version group $id")
         queueWorker(id)
-        Log.d("VersionGroupRepo", "Version group $id queued")
-        val flow = apiDatabase.versionGroupDao().get(id).distinctUntilChanged().map {
-            val model = it?.toModel()
-            Log.d("VersionGroupRepo", "Mapped $id to $model")
-            model
-        }.flowOn(Dispatchers.IO)
-        Log.d("VersionGroupRepo", "Version group $id mapped")
-        return flow
+        return apiDatabase.versionGroupDao().get(id).distinctUntilChanged()
+            .map {
+                it?.toModel()
+            }.flowOn(Dispatchers.IO)
     }
 
     override fun getIds(): Flow<List<Int>> {

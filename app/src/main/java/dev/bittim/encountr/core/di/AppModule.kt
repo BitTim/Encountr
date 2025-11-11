@@ -7,7 +7,7 @@
  * File:       AppModule.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   11.11.25, 02:49
  */
 
 package dev.bittim.encountr.core.di
@@ -49,10 +49,11 @@ import dev.bittim.encountr.core.data.user.repo.SaveRepository
 import dev.bittim.encountr.core.data.user.repo.SaveRepositoryImpl
 import dev.bittim.encountr.core.data.user.repo.TeamRepository
 import dev.bittim.encountr.core.data.user.repo.TeamRepositoryImpl
-import dev.bittim.encountr.core.domain.useCase.FindLocalizedName
 import dev.bittim.encountr.core.domain.useCase.api.GetVersionsByGeneration
+import dev.bittim.encountr.core.domain.useCase.config.ObserveCurrentLanguageId
 import dev.bittim.encountr.core.domain.useCase.ui.ObserveLanguageCardState
 import dev.bittim.encountr.core.domain.useCase.ui.ObserveVersionCardState
+import dev.bittim.encountr.core.domain.useCase.util.FindLocalizedName
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.android.Android
@@ -157,12 +158,18 @@ val appModule = module {
     // endregion:   -- Repositories
     // region:      -- UseCases
 
-    single<GetVersionsByGeneration> { GetVersionsByGeneration(get(), get(), get()) }
-
+    // Util
     single<FindLocalizedName> { FindLocalizedName() }
 
+    // Config
+    single<ObserveCurrentLanguageId> { ObserveCurrentLanguageId(get()) }
+
+    // API
+    single<GetVersionsByGeneration> { GetVersionsByGeneration(get(), get(), get()) }
+
+    // UI
     single<ObserveLanguageCardState> { ObserveLanguageCardState(get()) }
-    single<ObserveVersionCardState> { ObserveVersionCardState(get(), get(), get(), get()) }
+    single<ObserveVersionCardState> { ObserveVersionCardState(get(), get(), get(), get(), get()) }
 
     // endregion:   -- UseCases
     // region:      -- Workers

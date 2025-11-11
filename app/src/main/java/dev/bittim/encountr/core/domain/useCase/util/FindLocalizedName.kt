@@ -7,10 +7,10 @@
  * File:       FindLocalizedName.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   11.11.25, 01:44
  */
 
-package dev.bittim.encountr.core.domain.useCase
+package dev.bittim.encountr.core.domain.useCase.util
 
 import dev.bittim.encountr.core.di.Constants
 import dev.bittim.encountr.core.domain.model.api.language.LocalizedString

@@ -7,11 +7,12 @@
  * File:       CreateSaveScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   11.11.25, 02:34
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,6 +29,7 @@ import androidx.compose.foundation.pager.PagerSnapDistance
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
@@ -54,7 +56,6 @@ import dev.bittim.encountr.R
 import dev.bittim.encountr.core.ui.components.general.LabeledSlider
 import dev.bittim.encountr.core.ui.components.version.versionCard.VersionCard
 import dev.bittim.encountr.core.ui.components.version.versionCard.VersionCardDefaults
-import dev.bittim.encountr.core.ui.components.version.versionCard.VersionCardState
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.UiText
@@ -70,18 +71,23 @@ import kotlin.math.absoluteValue
 fun CreateSaveScreen(
     state: CreateSaveState,
     onGenChanged: (generationId: Int) -> Unit,
-    onContinue: (gameId: Int, name: String, navNext: () -> Unit) -> Unit,
+    observeVersion: (versionId: Int) -> Unit,
+    onContinue: (versionId: Int, name: String, navNext: () -> Unit) -> Unit,
     navBack: () -> Unit,
     navNext: () -> Unit,
 ) {
     val density = LocalDensity.current
     val windowInfo = LocalWindowInfo.current
 
-    val pagerState by remember(state.versions) {
+    var generationId by remember { mutableIntStateOf(1) }
+    val versionIds = state.versionIds[generationId]
+    var versionId by remember { mutableIntStateOf(1) }
+
+    val pagerState by remember(versionIds) {
         mutableStateOf(
             PagerState(
                 currentPage = 0,
-                pageCount = { if (state.versions.isNotEmpty()) state.versions.count() else 3 },
+                pageCount = { if (!versionIds.isNullOrEmpty()) versionIds.count() else 3 },
             )
         )
     }
@@ -98,7 +104,8 @@ fun CreateSaveScreen(
     var clickedPage by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(sliderState.value) {
-        onGenChanged(sliderState.value.toInt() + 1)
+        generationId = sliderState.value.toInt() + 1
+        onGenChanged(generationId)
     }
 
     LaunchedEffect(clickedPage) {
@@ -116,64 +123,69 @@ fun CreateSaveScreen(
                 val contentPadding =
                     with(density) { (windowInfo.containerSize.width.toDp() - pageSize) / 2 }
 
-                HorizontalPager(
+                Crossfade(
                     modifier = upperModifier,
-                    userScrollEnabled = state.versions.isNotEmpty(),
-                    state = pagerState,
-                    pageSize = PageSize.Fixed(pageSize),
-                    pageSpacing = Spacing.s,
-                    contentPadding = PaddingValues(horizontal = contentPadding),
-                    beyondViewportPageCount = 2,
-                    flingBehavior = PagerDefaults.flingBehavior(
-                        state = pagerState,
-                        pagerSnapDistance = PagerSnapDistance.atMost(pagerState.pageCount)
-                    ),
-                ) { index ->
-                    if (index >= state.versions.size) return@HorizontalPager
-
-                    val pageOffset = pagerState.getOffsetDistanceInPages(index).absoluteValue
-                    val topPadding = (32f * minOf(pageOffset, 1f)).dp
-                    val bottomPadding = 32.dp - topPadding
-                    val blur =
-                        lerp(start = 0f, stop = 4f, fraction = pageOffset.coerceIn(0f, 1f)).dp
-                    val saturation = lerp(
-                        start = SATURATION_DESATURATED,
-                        stop = 1f,
-                        fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                    )
-
-                    // TODO
-                    val versionCardState = state.versions[index]?.let { version ->
-                        state.languageId?.let { langName ->
-                            VersionCardState(version.name, "Generation", version.imageUrl)
-                        }
+                    targetState = versionIds
+                ) { versionIds ->
+                    if (versionIds == null) {
+                        CircularProgressIndicator()
+                        return@Crossfade
                     }
 
-                    VersionCard(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .blur(blur)
-                            .padding(
-                                start = Spacing.xs,
-                                end = Spacing.xs,
-                                top = Spacing.xs + topPadding,
-                                bottom = Spacing.xs + bottomPadding
-                            )
-                            .saturation(saturation)
-                            .graphicsLayer {
-                                alpha = lerp(
-                                    start = 0f,
-                                    stop = 1f,
-                                    fraction = 2f - pageOffset.coerceIn(0f, 2f)
+                    HorizontalPager(
+                        userScrollEnabled = versionIds.isNotEmpty(),
+                        state = pagerState,
+                        pageSize = PageSize.Fixed(pageSize),
+                        pageSpacing = Spacing.s,
+                        contentPadding = PaddingValues(horizontal = contentPadding),
+                        beyondViewportPageCount = 2,
+                        flingBehavior = PagerDefaults.flingBehavior(
+                            state = pagerState,
+                            pagerSnapDistance = PagerSnapDistance.atMost(pagerState.pageCount)
+                        ),
+                    ) { index ->
+                        if (index >= versionIds.size) return@HorizontalPager
+
+                        val pageOffset = pagerState.getOffsetDistanceInPages(index).absoluteValue
+                        val topPadding = (32f * minOf(pageOffset, 1f)).dp
+                        val bottomPadding = 32.dp - topPadding
+                        val blur =
+                            lerp(start = 0f, stop = 4f, fraction = pageOffset.coerceIn(0f, 1f)).dp
+                        val saturation = lerp(
+                            start = SATURATION_DESATURATED,
+                            stop = 1f,
+                            fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                        )
+
+                        versionId = versionIds[index]
+                        observeVersion(versionId)
+
+                        VersionCard(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .blur(blur)
+                                .padding(
+                                    start = Spacing.xs,
+                                    end = Spacing.xs,
+                                    top = Spacing.xs + topPadding,
+                                    bottom = Spacing.xs + bottomPadding
                                 )
-                            }
-                            .clickable(
-                                enabled = state.versions.isNotEmpty(),
-                            ) {
-                                clickedPage = index
-                            },
-                        state = versionCardState
-                    )
+                                .saturation(saturation)
+                                .graphicsLayer {
+                                    alpha = lerp(
+                                        start = 0f,
+                                        stop = 1f,
+                                        fraction = 2f - pageOffset.coerceIn(0f, 2f)
+                                    )
+                                }
+                                .clickable(
+                                    enabled = versionIds.isNotEmpty(),
+                                ) {
+                                    clickedPage = index
+                                },
+                            state = state.versionStates[versionId]
+                        )
+                    }
                 }
             }
         },
@@ -211,13 +223,13 @@ fun CreateSaveScreen(
                     modifier = Modifier.fillMaxWidth(),
                     onContinue = {
                         onContinue(
-                            state.versions[pagerState.currentPage]?.id ?: 0,
+                            versionId,
                             textFieldState.text.toString(),
                             navNext
                         )
                     },
                     onBack = navBack,
-                    continueEnabled = state.versions.isNotEmpty() && textFieldState.text.isNotEmpty()
+                    continueEnabled = state.versionIds.isNotEmpty() && textFieldState.text.isNotEmpty()
                 )
             }
         },
@@ -232,6 +244,7 @@ fun CreateSaveScreenPreview() {
             CreateSaveScreen(
                 state = CreateSaveState(),
                 onGenChanged = {},
+                observeVersion = {},
                 onContinue = { _, _, _ -> },
                 navBack = {},
                 navNext = {}

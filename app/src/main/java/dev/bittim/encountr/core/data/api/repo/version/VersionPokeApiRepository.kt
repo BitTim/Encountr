@@ -7,7 +7,7 @@
  * File:       VersionPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   11.11.25, 02:49
  */
 
 package dev.bittim.encountr.core.data.api.repo.version
@@ -47,15 +47,15 @@ class VersionPokeApiRepository(
 
     override fun getIds(): Flow<List<Int>> {
         queueWorker()
-        return apiDatabase.versionDao().getIds().distinctUntilChanged().flowOn(Dispatchers.IO)
+        return apiDatabase.versionDao().getIds().map { versionIds ->
+            versionIds.mapNotNull { id -> id.takeIf { !definitionRepository.isVersionIgnored(it) } }
+        }.distinctUntilChanged().flowOn(Dispatchers.IO)
     }
 
     // endregion:   -- Get
     // region:      -- Refresh
 
     override suspend fun refresh(id: Int) {
-        if (definitionRepository.isVersionIgnored(id)) return
-
         val raw = pokeApi.getVersion(id)
         val imageUrl = definitionRepository.getVersionIcon(id)
 

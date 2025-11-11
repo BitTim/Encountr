@@ -7,7 +7,7 @@
  * File:       LanguagePokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   11.11.25, 02:34
  */
 
 package dev.bittim.encountr.core.data.api.repo.language
@@ -35,7 +35,8 @@ class LanguagePokeApiRepository(
 
     override fun get(id: Int): Flow<Language?> {
         queueWorker(id)
-        return apiDatabase.languageDao().get(id).distinctUntilChanged().map { it?.toModel() }
+        return apiDatabase.languageDao().get(id).distinctUntilChanged()
+            .map { it?.toModel() }
             .flowOn(Dispatchers.IO)
     }
 

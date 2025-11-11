@@ -7,7 +7,7 @@
  * File:       CreateSaveViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   11.11.25, 02:34
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
@@ -18,37 +18,31 @@ import co.pokeapi.pokekotlin.PokeApi
 import dev.bittim.encountr.core.data.config.ConfigStateHolder
 import dev.bittim.encountr.core.data.user.repo.SaveRepository
 import dev.bittim.encountr.core.domain.useCase.api.GetVersionsByGeneration
+import dev.bittim.encountr.core.domain.useCase.ui.ObserveVersionCardState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.uuid.ExperimentalUuidApi
 
 class CreateSaveViewModel(
     private val pokeApi: PokeApi,
     private val configStateHolder: ConfigStateHolder,
     private val getVersionsByGeneration: GetVersionsByGeneration,
+    private val observeVersionCardState: ObserveVersionCardState,
     private val saveRepository: SaveRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(CreateSaveState())
     val state = _state.asStateFlow()
 
-    var fetchGamesByGenJob: Job? = null
+    private val versionIdsJob = ConcurrentHashMap<Int, Job>()
+    private val versionStateJobs = ConcurrentHashMap<Int, Job>()
 
     init {
-        viewModelScope.launch {
-            configStateHolder.rawState.collect { config ->
-                _state.update {
-                    it.copy(languageId = config?.languageId)
-                }
-            }
-        }
-
         viewModelScope.launch {
             val generationCount = pokeApi.getGenerationList(0, 1).count
             _state.update { it.copy(generations = generationCount) }
@@ -58,16 +52,47 @@ class CreateSaveViewModel(
     }
 
     fun onGenChanged(generationId: Int) {
-        fetchGamesByGenJob?.cancel()
-        fetchGamesByGenJob = viewModelScope.launch {
-            _state.update { it.copy(versions = emptyList()) }
+        if (versionIdsJob[generationId] != null) return
 
-            getVersionsByGeneration(generationId)
-                .stateIn(viewModelScope, WhileSubscribed(5000), emptyList())
-                .collectLatest { versions ->
-                    _state.update { it.copy(versions = versions) }
-                }
+        val job = viewModelScope.launch(Dispatchers.IO) {
+            versionIdsJob[generationId] = this.coroutineContext[Job]!!
+
+            try {
+                getVersionsByGeneration(generationId)
+                    .collectLatest { versionIds ->
+                        if (versionIds.isEmpty()) return@collectLatest
+                        _state.update { it.copy(versionIds = it.versionIds + (generationId to versionIds)) }
+                    }
+            } catch (_: Exception) {
+                _state.update { it.copy(versionIds = it.versionIds - generationId) }
+            } finally {
+                versionIdsJob.remove(generationId)
+            }
         }
+
+        versionIdsJob[generationId] = job
+    }
+
+    fun observeVersion(versionId: Int) {
+        if (versionStateJobs[versionId] != null) return
+
+        val job = viewModelScope.launch(Dispatchers.IO) {
+            versionStateJobs[versionId] = this.coroutineContext[Job]!!
+
+            try {
+                observeVersionCardState(versionId)
+                    .collectLatest { versionCardState ->
+                        if (versionCardState == null) return@collectLatest
+                        _state.update { it.copy(versionStates = it.versionStates + (versionId to versionCardState)) }
+                    }
+            } catch (_: Exception) {
+                _state.update { it.copy(versionStates = it.versionStates - versionId) }
+            } finally {
+                versionStateJobs.remove(versionId)
+            }
+        }
+
+        versionStateJobs[versionId] = job
     }
 
     @OptIn(ExperimentalUuidApi::class)

@@ -7,7 +7,7 @@
  * File:       SelectLanguageViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:37
+ * Modified:   11.11.25, 02:34
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.selectLanguage
@@ -60,12 +60,13 @@ class SelectLanguageViewModel(
             languageJobs[languageId] = this.coroutineContext[Job]!!
 
             try {
-                observeLanguageCardState(languageId).collectLatest { languageCardState ->
-                    if (languageCardState == null) return@collectLatest
-                    _state.update { it.copy(languages = it.languages + (languageId to languageCardState)) }
-                }
+                observeLanguageCardState(languageId)
+                    .collectLatest { languageCardState ->
+                        if (languageCardState == null) return@collectLatest
+                        _state.update { it.copy(languageStates = it.languageStates + (languageId to languageCardState)) }
+                    }
             } catch (_: Exception) {
-                _state.update { it.copy(languages = it.languages - languageId) }
+                _state.update { it.copy(languageStates = it.languageStates - languageId) }
             } finally {
                 languageJobs.remove(languageId)
             }
