@@ -7,7 +7,7 @@
  * File:       GenerationPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.11.25, 15:50
+ * Modified:   13.11.25, 16:21
  */
 
 package dev.bittim.encountr.core.data.api.repo.generation
@@ -24,6 +24,7 @@ import dev.bittim.encountr.core.data.api.worker.ApiSyncWorker
 import dev.bittim.encountr.core.domain.model.api.generation.Generation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -37,7 +38,7 @@ class GenerationPokeApiRepository(
 
     override fun get(id: Int): Flow<Generation?> {
         queueWorker(id)
-        return apiDatabase.generationDao().get(id).distinctUntilChanged()
+        return apiDatabase.generationDao().get(id).catch { emit(null) }.distinctUntilChanged()
             .map { generationEntity ->
                 generationEntity?.toModel()
             }.flowOn(Dispatchers.IO)

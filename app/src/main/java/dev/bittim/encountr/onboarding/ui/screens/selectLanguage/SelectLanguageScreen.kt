@@ -7,7 +7,7 @@
  * File:       SelectLanguageScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.11.25, 02:34
+ * Modified:   13.11.25, 17:03
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.selectLanguage
@@ -21,16 +21,21 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.bittim.encountr.core.di.Constants
 import dev.bittim.encountr.core.ui.components.language.languageCard.LanguageCard
+import dev.bittim.encountr.core.ui.components.language.languageCard.LanguageCardState
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.annotations.ScreenPreview
 import dev.bittim.encountr.onboarding.ui.components.OnboardingActions
 import dev.bittim.encountr.onboarding.ui.components.OnboardingLayout
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
 data object SelectLocaleScreenDefaults {
     const val NUM_PLACEHOLDERS = 15
@@ -39,7 +44,7 @@ data object SelectLocaleScreenDefaults {
 @Composable
 fun SelectLanguageScreen(
     state: SelectLanguageState,
-    observeLanguage: (languageId: Int) -> Unit,
+    observeLanguage: (languageId: Int?) -> Flow<LanguageCardState?>,
     onContinue: (languageId: Int, navNext: () -> Unit) -> Unit,
     navNext: () -> Unit,
     navBack: () -> Unit
@@ -59,13 +64,13 @@ fun SelectLanguageScreen(
                     if (state.languageIds.isNotEmpty()) state.languageIds.count() else SelectLocaleScreenDefaults.NUM_PLACEHOLDERS
                 items(count) { idx ->
                     val languageId = state.languageIds.getOrNull(idx)
-                    if (languageId != null && !state.languageStates.containsKey(languageId)) {
-                        observeLanguage(languageId)
-                    }
+                    val languageCardState by remember(languageId) { observeLanguage(languageId) }.collectAsStateWithLifecycle(
+                        null
+                    )
 
                     LanguageCard(
                         modifier = Modifier.animateItem(),
-                        state = state.languageStates[languageId],
+                        state = languageCardState,
                         isSelected = idx == selectedIdx,
                         onClick = {
                             selectedIdx = idx
@@ -97,7 +102,7 @@ fun SelectLocalScreenPreview() {
         Surface {
             SelectLanguageScreen(
                 state = SelectLanguageState(),
-                observeLanguage = {},
+                observeLanguage = { flowOf(null) },
                 onContinue = { _, _ -> },
                 navNext = {},
                 navBack = {}

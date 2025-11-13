@@ -7,7 +7,7 @@
  * File:       CreateSaveViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.11.25, 15:50
+ * Modified:   13.11.25, 16:54
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
@@ -19,14 +19,16 @@ import dev.bittim.encountr.core.data.config.ConfigStateHolder
 import dev.bittim.encountr.core.data.user.repo.SaveRepository
 import dev.bittim.encountr.core.domain.useCase.api.ObserveVersionIdsByGeneration
 import dev.bittim.encountr.core.domain.useCase.ui.ObserveVersionCardState
+import dev.bittim.encountr.core.ui.components.version.versionCard.VersionCardState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.concurrent.ConcurrentHashMap
 import kotlin.uuid.ExperimentalUuidApi
 
 class CreateSaveViewModel(
@@ -39,8 +41,7 @@ class CreateSaveViewModel(
     private val _state = MutableStateFlow(CreateSaveState())
     val state = _state.asStateFlow()
 
-    private val versionIdsJob = ConcurrentHashMap<Int, Job>()
-    private val versionStateJobs = ConcurrentHashMap<Int, Job>()
+    var versionIdsJob: Job? = null
 
     init {
         viewModelScope.launch {
@@ -52,47 +53,19 @@ class CreateSaveViewModel(
     }
 
     fun onGenChanged(generationId: Int) {
-        if (versionIdsJob[generationId] != null) return
+        _state.update { it.copy(versionIds = emptyList()) }
 
-        val job = viewModelScope.launch(Dispatchers.IO) {
-            versionIdsJob[generationId] = this.coroutineContext[Job]!!
-
-            try {
-                observeVersionIdsByGeneration(generationId)
-                    .collectLatest { versionIds ->
-                        if (versionIds.isEmpty()) throw Exception()
-                        _state.update { it.copy(versionIds = it.versionIds + (generationId to versionIds)) }
-                    }
-            } catch (_: Exception) {
-                _state.update { it.copy(versionIds = it.versionIds - generationId) }
-            } finally {
-                versionIdsJob.remove(generationId)
-            }
+        versionIdsJob?.cancel()
+        versionIdsJob = viewModelScope.launch {
+            observeVersionIdsByGeneration(generationId)
+                .collectLatest { versionIds ->
+                    _state.update { it.copy(versionIds = versionIds) }
+                }
         }
-
-        versionIdsJob[generationId] = job
     }
 
-    fun observeVersion(versionId: Int) {
-        if (versionStateJobs[versionId] != null) return
-
-        val job = viewModelScope.launch(Dispatchers.IO) {
-            versionStateJobs[versionId] = this.coroutineContext[Job]!!
-
-            try {
-                observeVersionCardState(versionId)
-                    .collectLatest { versionCardState ->
-                        if (versionCardState == null) throw Exception()
-                        _state.update { it.copy(versionStates = it.versionStates + (versionId to versionCardState)) }
-                    }
-            } catch (_: Exception) {
-                _state.update { it.copy(versionStates = it.versionStates - versionId) }
-            } finally {
-                versionStateJobs.remove(versionId)
-            }
-        }
-
-        versionStateJobs[versionId] = job
+    fun observeVersion(versionId: Int?): Flow<VersionCardState?> {
+        return versionId?.let { observeVersionCardState(versionId) } ?: flowOf(null)
     }
 
     @OptIn(ExperimentalUuidApi::class)

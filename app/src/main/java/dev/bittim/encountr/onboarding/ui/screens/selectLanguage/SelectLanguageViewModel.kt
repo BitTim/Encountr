@@ -7,7 +7,7 @@
  * File:       SelectLanguageViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.11.25, 15:50
+ * Modified:   13.11.25, 16:55
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.selectLanguage
@@ -17,17 +17,19 @@ import androidx.lifecycle.viewModelScope
 import dev.bittim.encountr.core.data.api.repo.language.LanguageRepository
 import dev.bittim.encountr.core.data.config.ConfigStateHolder
 import dev.bittim.encountr.core.domain.useCase.ui.ObserveLanguageCardState
+import dev.bittim.encountr.core.ui.components.language.languageCard.LanguageCardState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.concurrent.ConcurrentHashMap
 
 class SelectLanguageViewModel(
     private val configStateHolder: ConfigStateHolder,
@@ -38,7 +40,6 @@ class SelectLanguageViewModel(
     val state = _state.asStateFlow()
 
     private var fetchJob: Job? = null
-    private val languageJobs = ConcurrentHashMap<Int, Job>()
 
     init {
         fetchJob?.cancel()
@@ -53,26 +54,8 @@ class SelectLanguageViewModel(
         }
     }
 
-    fun observeLanguage(languageId: Int) {
-        if (languageJobs[languageId] != null) return
-
-        val job = viewModelScope.launch(Dispatchers.IO) {
-            languageJobs[languageId] = this.coroutineContext[Job]!!
-
-            try {
-                observeLanguageCardState(languageId)
-                    .collectLatest { languageCardState ->
-                        if (languageCardState == null) throw Exception()
-                        _state.update { it.copy(languageStates = it.languageStates + (languageId to languageCardState)) }
-                    }
-            } catch (_: Exception) {
-                _state.update { it.copy(languageStates = it.languageStates - languageId) }
-            } finally {
-                languageJobs.remove(languageId)
-            }
-        }
-
-        languageJobs[languageId] = job
+    fun observeLanguage(languageId: Int?): Flow<LanguageCardState?> {
+        return languageId?.let { observeLanguageCardState(languageId) } ?: flowOf(null)
     }
 
     fun onContinue(languageId: Int, navNext: () -> Unit) {

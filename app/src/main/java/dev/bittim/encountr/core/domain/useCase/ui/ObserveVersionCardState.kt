@@ -7,7 +7,7 @@
  * File:       ObserveVersionCardState.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.11.25, 02:34
+ * Modified:   13.11.25, 17:09
  */
 
 package dev.bittim.encountr.core.domain.useCase.ui
@@ -35,10 +35,14 @@ class ObserveVersionCardState(
     operator fun invoke(versionId: Int): Flow<VersionCardState?> {
         return observeCurrentLanguageId().flatMapLatest { languageId ->
             versionRepository.get(versionId).flatMapLatest { version ->
-                versionGroupRepository.get(version?.versionGroupId ?: return@flatMapLatest flowOf())
+                versionGroupRepository.get(
+                    version?.versionGroupId ?: return@flatMapLatest flowOf(
+                        null
+                    )
+                )
                     .flatMapLatest { versionGroup ->
                         generationRepository.get(
-                            versionGroup?.generationId ?: return@flatMapLatest flowOf()
+                            versionGroup?.generationId ?: return@flatMapLatest flowOf(null)
                         ).map { generation ->
                             if (generation == null) return@map null
 

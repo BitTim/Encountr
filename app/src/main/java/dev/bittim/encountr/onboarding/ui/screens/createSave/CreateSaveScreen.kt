@@ -7,7 +7,7 @@
  * File:       CreateSaveScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.11.25, 15:50
+ * Modified:   13.11.25, 17:09
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
@@ -40,6 +40,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,10 +53,12 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.bittim.encountr.R
 import dev.bittim.encountr.core.ui.components.general.LabeledSlider
 import dev.bittim.encountr.core.ui.components.version.versionCard.VersionCard
 import dev.bittim.encountr.core.ui.components.version.versionCard.VersionCardDefaults
+import dev.bittim.encountr.core.ui.components.version.versionCard.VersionCardState
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
 import dev.bittim.encountr.core.ui.util.UiText
@@ -64,14 +67,16 @@ import dev.bittim.encountr.core.ui.util.extenstions.modifier.SATURATION_DESATURA
 import dev.bittim.encountr.core.ui.util.extenstions.modifier.saturation
 import dev.bittim.encountr.onboarding.ui.components.OnboardingActions
 import dev.bittim.encountr.onboarding.ui.components.OnboardingLayout
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun CreateSaveScreen(
     state: CreateSaveState,
-    observeVersionIdsByGeneration: (generationId: Int) -> Unit,
-    observeVersion: (versionId: Int) -> Unit,
+    onGenChanged: (generationId: Int) -> Unit,
+    observeVersion: (versionId: Int?) -> Flow<VersionCardState?>,
     onContinue: (versionId: Int, name: String, navNext: () -> Unit) -> Unit,
     navBack: () -> Unit,
     navNext: () -> Unit,
@@ -89,21 +94,18 @@ fun CreateSaveScreen(
     }
 
     val generationId by remember(sliderState) { derivedStateOf { sliderState.value.toInt() + 1 } }
-    val versionIds by remember(generationId, state.versionIds) {
-        derivedStateOf { state.versionIds[generationId] }
-    }
+    val versionIds = state.versionIds
 
     val pagerState by remember(versionIds) {
         mutableStateOf(
             PagerState(
                 currentPage = 0,
-                pageCount = { versionIds?.count() ?: 3 },
+                pageCount = { if (versionIds.isNotEmpty()) versionIds.count() else 3 },
             )
         )
     }
 
     val textFieldState = rememberTextFieldState()
-
     var clickedPage by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(clickedPage) {
@@ -111,11 +113,11 @@ fun CreateSaveScreen(
     }
 
     LaunchedEffect(generationId) {
-        observeVersionIdsByGeneration(generationId)
+        onGenChanged(generationId)
     }
 
-    LaunchedEffect(versionIds) {
-        Log.d("CreateSaveScreen", "Version IDs changed: $versionIds")
+    LaunchedEffect(state.versionIds) {
+        Log.d("CreateSaveScreen", "Version IDs changed: ${state.versionIds}")
     }
 
     OnboardingLayout(
@@ -130,7 +132,7 @@ fun CreateSaveScreen(
                     with(density) { (windowInfo.containerSize.width.toDp() - pageSize) / 2 }
 
                 HorizontalPager(
-                    userScrollEnabled = !versionIds.isNullOrEmpty(),
+                    userScrollEnabled = versionIds.isNotEmpty(),
                     state = pagerState,
                     pageSize = PageSize.Fixed(pageSize),
                     pageSpacing = Spacing.s,
@@ -152,34 +154,39 @@ fun CreateSaveScreen(
                         fraction = 1f - pageOffset.coerceIn(0f, 1f)
                     )
 
-                    val versionId = versionIds?.get(index)
-                    versionId?.let { observeVersion(versionId) }
+                    val versionId = if (index < versionIds.count()) versionIds[index] else null
 
-                    VersionCard(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .blur(blur)
-                            .padding(
-                                start = Spacing.xs,
-                                end = Spacing.xs,
-                                top = Spacing.xs + topPadding,
-                                bottom = Spacing.xs + bottomPadding
-                            )
-                            .saturation(saturation)
-                            .graphicsLayer {
-                                alpha = lerp(
-                                    start = 0f,
-                                    stop = 1f,
-                                    fraction = 2f - pageOffset.coerceIn(0f, 2f)
+                    key(versionId) {
+                        val versionCardState by remember(versionId) { observeVersion(versionId) }.collectAsStateWithLifecycle(
+                            null
+                        )
+
+                        VersionCard(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .blur(blur)
+                                .padding(
+                                    start = Spacing.xs,
+                                    end = Spacing.xs,
+                                    top = Spacing.xs + topPadding,
+                                    bottom = Spacing.xs + bottomPadding
                                 )
-                            }
-                            .clickable(
-                                enabled = !versionIds.isNullOrEmpty(),
-                            ) {
-                                clickedPage = index
-                            },
-                        state = state.versionStates[versionId]
-                    )
+                                .saturation(saturation)
+                                .graphicsLayer {
+                                    alpha = lerp(
+                                        start = 0f,
+                                        stop = 1f,
+                                        fraction = 2f - pageOffset.coerceIn(0f, 2f)
+                                    )
+                                }
+                                .clickable(
+                                    enabled = versionIds.isNotEmpty(),
+                                ) {
+                                    clickedPage = index
+                                },
+                            state = versionCardState,
+                        )
+                    }
                 }
             }
         },
@@ -217,7 +224,7 @@ fun CreateSaveScreen(
                     modifier = Modifier.fillMaxWidth(),
                     onContinue = {
                         onContinue(
-                            versionIds?.get(pagerState.currentPage) ?: 0,
+                            if (pagerState.currentPage < versionIds.count()) versionIds[pagerState.currentPage] else 0,
                             textFieldState.text.toString(),
                             navNext
                         )
@@ -237,8 +244,8 @@ fun CreateSaveScreenPreview() {
         Surface {
             CreateSaveScreen(
                 state = CreateSaveState(),
-                observeVersionIdsByGeneration = {},
-                observeVersion = {},
+                onGenChanged = {},
+                observeVersion = { flowOf(null) },
                 onContinue = { _, _, _ -> },
                 navBack = {},
                 navNext = {}

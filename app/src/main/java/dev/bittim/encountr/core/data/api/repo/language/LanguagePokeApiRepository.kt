@@ -7,7 +7,7 @@
  * File:       LanguagePokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.11.25, 02:34
+ * Modified:   13.11.25, 16:21
  */
 
 package dev.bittim.encountr.core.data.api.repo.language
@@ -22,6 +22,7 @@ import dev.bittim.encountr.core.data.api.worker.ApiSyncWorker
 import dev.bittim.encountr.core.domain.model.api.language.Language
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -35,7 +36,7 @@ class LanguagePokeApiRepository(
 
     override fun get(id: Int): Flow<Language?> {
         queueWorker(id)
-        return apiDatabase.languageDao().get(id).distinctUntilChanged()
+        return apiDatabase.languageDao().get(id).catch { emit(null) }.distinctUntilChanged()
             .map { it?.toModel() }
             .flowOn(Dispatchers.IO)
     }

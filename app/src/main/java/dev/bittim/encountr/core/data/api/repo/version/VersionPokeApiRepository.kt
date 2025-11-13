@@ -7,7 +7,7 @@
  * File:       VersionPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.11.25, 15:50
+ * Modified:   13.11.25, 16:21
  */
 
 package dev.bittim.encountr.core.data.api.repo.version
@@ -25,6 +25,7 @@ import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
 import dev.bittim.encountr.core.domain.model.api.version.Version
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOn
@@ -40,7 +41,7 @@ class VersionPokeApiRepository(
 
     override fun get(id: Int): Flow<Version?> {
         queueWorker(id)
-        return apiDatabase.versionDao().get(id).distinctUntilChanged().map {
+        return apiDatabase.versionDao().get(id).catch { emit(null) }.distinctUntilChanged().map {
             it?.toModel()
         }.flowOn(Dispatchers.IO)
     }
