@@ -7,7 +7,7 @@
  * File:       PokemonDetailEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   16.11.25, 03:04
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.base.pokemon
@@ -16,6 +16,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import co.pokeapi.pokekotlin.model.PokemonVariety
+import dev.bittim.encountr.core.data.api.local.entity.base.DetailEntity
 import dev.bittim.encountr.core.domain.model.api.language.LocalizedString
 import dev.bittim.encountr.core.domain.model.api.pokemon.PokedexEntry
 import dev.bittim.encountr.core.domain.model.api.pokemon.Pokemon
@@ -38,7 +39,7 @@ data class PokemonDetailEntity(
     val name: String,
     val height: Int,
     val weight: Int,
-) {
+) : DetailEntity {
     private fun formatHeight(height: Int): String {
         return "${height / 10} m"
     }

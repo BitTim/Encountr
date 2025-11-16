@@ -7,7 +7,7 @@
  * File:       VersionGroupDetailEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   16.11.25, 03:05
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.base.versionGroup
@@ -15,6 +15,7 @@ package dev.bittim.encountr.core.data.api.local.entity.base.versionGroup
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import dev.bittim.encountr.core.data.api.local.entity.base.DetailEntity
 import dev.bittim.encountr.core.domain.model.api.versionGroup.VersionGroup
 
 @Entity(
@@ -32,7 +33,7 @@ import dev.bittim.encountr.core.domain.model.api.versionGroup.VersionGroup
 data class VersionGroupDetailEntity(
     @PrimaryKey val id: Int,
     val name: String,
-) {
+) : DetailEntity {
     fun toModel(
         generationId: Int?,
         versionIds: List<Int>,

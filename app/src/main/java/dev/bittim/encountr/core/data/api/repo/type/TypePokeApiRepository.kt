@@ -7,7 +7,7 @@
  * File:       TypePokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   13.11.25, 16:21
+ * Modified:   16.11.25, 02:32
  */
 
 package dev.bittim.encountr.core.data.api.repo.type
@@ -24,7 +24,6 @@ import dev.bittim.encountr.core.data.api.worker.ApiSyncWorker
 import dev.bittim.encountr.core.domain.model.api.type.Type
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -38,7 +37,7 @@ class TypePokeApiRepository(
 
     override fun get(id: Int): Flow<Type?> {
         queueWorker(id)
-        return apiDatabase.typeDao().get(id).catch { emit(null) }.distinctUntilChanged().map {
+        return apiDatabase.typeDao().get(id).distinctUntilChanged().map {
             it?.toModel()
         }.flowOn(Dispatchers.IO)
     }

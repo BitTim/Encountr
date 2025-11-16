@@ -7,14 +7,14 @@
  * File:       PokedexFull.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   16.11.25, 03:00
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.reltaion.pokedex
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import dev.bittim.encountr.core.data.api.local.entity.base.TimestampedEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.CombinedEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.pokedex.PokedexLocalizedNameEntity
 import dev.bittim.encountr.core.data.api.local.entity.junction.PokedexPokemonJunction
 
@@ -31,6 +31,6 @@ data class PokedexFull(
         entityColumn = "pokedexId",
         projection = ["pokemonId"]
     ) val pokemonIds: List<Int>
-) : TimestampedEntity by pokedex {
+) : CombinedEntity by pokedex {
     fun toModel() = pokedex.toModel(localizedNames.map { it.toModel() }, pokemonIds)
 }

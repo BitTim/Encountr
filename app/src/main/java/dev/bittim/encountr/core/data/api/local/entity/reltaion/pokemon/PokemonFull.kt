@@ -7,14 +7,14 @@
  * File:       PokemonFull.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   16.11.25, 03:00
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.reltaion.pokemon
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import dev.bittim.encountr.core.data.api.local.entity.base.TimestampedEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.CombinedEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.pokemon.PokemonLocalizedNameEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.pokemon.PokemonSpritesEntity
 import dev.bittim.encountr.core.data.api.local.entity.junction.PokedexPokemonJunction
@@ -44,7 +44,7 @@ data class PokemonFull(
         entityColumn = "pokemonId",
         projection = ["typeId"]
     ) val typeIds: List<Int>
-) : TimestampedEntity by pokemon {
+) : CombinedEntity by pokemon {
     fun toModel() = pokemon.toModel(
         entryNumbers = entryNumbers.map { it.toModel() },
         localizedNames = pokemonLocalizedNames.map { it.toModel() },

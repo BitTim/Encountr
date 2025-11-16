@@ -7,7 +7,7 @@
  * File:       CreateSaveScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   13.11.25, 17:09
+ * Modified:   16.11.25, 01:42
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.createSave
@@ -157,9 +157,15 @@ fun CreateSaveScreen(
                     val versionId = if (index < versionIds.count()) versionIds[index] else null
 
                     key(versionId) {
-                        val versionCardState by remember(versionId) { observeVersion(versionId) }.collectAsStateWithLifecycle(
-                            null
-                        )
+                        val versionCardState by
+                        observeVersion(versionId).collectAsStateWithLifecycle(null)
+
+                        LaunchedEffect(versionCardState) {
+                            Log.d(
+                                "PageUpdate",
+                                "Page ${index}: versionId $versionId updated to ${versionCardState?.name}"
+                            )
+                        }
 
                         VersionCard(
                             modifier = Modifier

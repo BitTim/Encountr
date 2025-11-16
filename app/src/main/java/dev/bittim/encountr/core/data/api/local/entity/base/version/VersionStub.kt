@@ -7,7 +7,7 @@
  * File:       VersionStub.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.11.25, 15:50
+ * Modified:   16.11.25, 03:05
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.base.version
@@ -15,7 +15,7 @@ package dev.bittim.encountr.core.data.api.local.entity.base.version
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import dev.bittim.encountr.core.data.api.local.entity.base.TimestampedEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.StubEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.versionGroup.VersionGroupStub
 
 @Entity(
@@ -30,8 +30,8 @@ import dev.bittim.encountr.core.data.api.local.entity.base.versionGroup.VersionG
     ]
 )
 data class VersionStub(
-    @PrimaryKey val id: Int,
+    @PrimaryKey override val id: Int,
     val versionGroupId: Int?,
     val isIgnored: Boolean,
-    override val updatedAt: Long = TimestampedEntity.generateTimestamp()
-) : TimestampedEntity
+    override val updatedAt: Long = StubEntity.generateTimestamp()
+) : StubEntity

@@ -7,7 +7,7 @@
  * File:       VersionDetailEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   16.11.25, 03:05
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.base.version
@@ -15,6 +15,7 @@ package dev.bittim.encountr.core.data.api.local.entity.base.version
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import dev.bittim.encountr.core.data.api.local.entity.base.DetailEntity
 import dev.bittim.encountr.core.domain.model.api.language.LocalizedString
 import dev.bittim.encountr.core.domain.model.api.version.Version
 
@@ -34,7 +35,7 @@ data class VersionDetailEntity(
     @PrimaryKey val id: Int,
     val name: String,
     val imageUrl: String?,
-) {
+) : DetailEntity {
     fun toModel(
         versionGroupId: Int?,
         localizedNames: List<LocalizedString>,

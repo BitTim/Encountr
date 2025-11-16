@@ -7,7 +7,7 @@
  * File:       LanguageDetailEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   16.11.25, 03:03
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.base.language
@@ -15,6 +15,7 @@ package dev.bittim.encountr.core.data.api.local.entity.base.language
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import dev.bittim.encountr.core.data.api.local.entity.base.DetailEntity
 import dev.bittim.encountr.core.domain.model.api.language.Language
 
 @Entity(
@@ -35,7 +36,7 @@ data class LanguageDetailEntity(
     val name: String,
     val localizedName: String?,
     val countryCode: String,
-) {
+) : DetailEntity {
     fun toModel(): Language? {
         return Language(
             id = id,

@@ -7,7 +7,7 @@
  * File:       SelectLanguageScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   13.11.25, 17:03
+ * Modified:   16.11.25, 01:10
  */
 
 package dev.bittim.encountr.onboarding.ui.screens.selectLanguage
@@ -38,7 +38,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 data object SelectLocaleScreenDefaults {
-    const val NUM_PLACEHOLDERS = 15
+    const val NUM_PLACEHOLDERS = 6
 }
 
 @Composable

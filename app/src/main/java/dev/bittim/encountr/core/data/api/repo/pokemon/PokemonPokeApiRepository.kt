@@ -7,7 +7,7 @@
  * File:       PokemonPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   13.11.25, 16:21
+ * Modified:   16.11.25, 02:32
  */
 
 package dev.bittim.encountr.core.data.api.repo.pokemon
@@ -29,7 +29,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -43,7 +42,7 @@ class PokemonPokeApiRepository(
 
     override fun get(id: Int): Flow<Pokemon?> {
         queueWorker(id)
-        return apiDatabase.pokemonDao().get(id).catch { emit(null) }.distinctUntilChanged().map {
+        return apiDatabase.pokemonDao().get(id).distinctUntilChanged().map {
             it?.toModel()
         }.flowOn(Dispatchers.IO)
     }

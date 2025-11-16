@@ -7,14 +7,14 @@
  * File:       VersionFull.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   16.11.25, 03:00
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.reltaion.version
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import dev.bittim.encountr.core.data.api.local.entity.base.TimestampedEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.CombinedEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.version.VersionLocalizedNameEntity
 
 data class VersionFull(
@@ -24,6 +24,6 @@ data class VersionFull(
         parentColumn = "id",
         entityColumn = "versionId"
     ) val localizedNames: List<VersionLocalizedNameEntity>
-) : TimestampedEntity by version {
+) : CombinedEntity by version {
     fun toModel() = version.toModel(localizedNames.map { it.toModel() })
 }

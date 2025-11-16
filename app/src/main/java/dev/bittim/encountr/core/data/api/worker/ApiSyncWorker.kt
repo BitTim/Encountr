@@ -7,7 +7,7 @@
  * File:       ApiSyncWorker.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   16.11.25, 03:09
  */
 
 package dev.bittim.encountr.core.data.api.worker
@@ -37,7 +37,6 @@ import dev.bittim.encountr.core.domain.model.api.pokemon.Pokemon
 import dev.bittim.encountr.core.domain.model.api.type.Type
 import dev.bittim.encountr.core.domain.model.api.version.Version
 import dev.bittim.encountr.core.domain.model.api.versionGroup.VersionGroup
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
@@ -85,10 +84,11 @@ class ApiSyncWorker(
                 if (entities.isEmpty() || force) repository.refresh()
             }
         } else {
-            apiDatabase.getOf(type, id).catch { emit(null) }.firstOrNull().let {
+            apiDatabase.getOf(type, id).firstOrNull().let {
                 val expirationDuration = Constants.API_EXPIRATION_DAYS.days
+                val updatedAt = if (it?.detail == null) 0 else it.stub.updatedAt
                 val expirationTime =
-                    Instant.fromEpochSeconds(it?.updatedAt ?: 0) + expirationDuration
+                    Instant.fromEpochSeconds(updatedAt) + expirationDuration
 
                 if (expirationTime < Clock.System.now()) repository.refresh(id)
             }

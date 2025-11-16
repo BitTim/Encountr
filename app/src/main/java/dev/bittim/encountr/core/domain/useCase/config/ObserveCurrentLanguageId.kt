@@ -7,14 +7,16 @@
  * File:       ObserveCurrentLanguageId.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.11.25, 01:44
+ * Modified:   16.11.25, 01:50
  */
 
 package dev.bittim.encountr.core.domain.useCase.config
 
 import dev.bittim.encountr.core.data.config.ConfigStateHolder
 import dev.bittim.encountr.core.di.Constants
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
 class ObserveCurrentLanguageId(
@@ -23,6 +25,6 @@ class ObserveCurrentLanguageId(
     operator fun invoke(): Flow<Int> {
         return configStateHolder.rawState.map { configState ->
             configState?.languageId ?: Constants.DEFAULT_LANG_ID
-        }
+        }.flowOn(Dispatchers.IO)
     }
 }

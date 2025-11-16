@@ -7,7 +7,7 @@
  * File:       TypeDetailEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   16.11.25, 03:04
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.base.type
@@ -15,6 +15,7 @@ package dev.bittim.encountr.core.data.api.local.entity.base.type
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import dev.bittim.encountr.core.data.api.local.entity.base.DetailEntity
 import dev.bittim.encountr.core.domain.model.api.language.LocalizedString
 import dev.bittim.encountr.core.domain.model.api.type.Type
 import dev.bittim.encountr.core.domain.model.api.type.TypeSprite
@@ -41,7 +42,7 @@ data class TypeDetailEntity(
     val doubleDamageTo: List<Int>,
     val halfDamageTo: List<Int>,
     val noDamageTo: List<Int>,
-) {
+) : DetailEntity {
     fun toModel(
         localizedNames: List<LocalizedString>,
         typeSprites: List<TypeSprite>

@@ -7,7 +7,7 @@
  * File:       ApiDatabase.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   16.11.25, 03:00
  */
 
 package dev.bittim.encountr.core.data.api.local
@@ -25,7 +25,7 @@ import dev.bittim.encountr.core.data.api.local.dao.base.VersionGroupDao
 import dev.bittim.encountr.core.data.api.local.dao.junction.PokedexPokemonJunctionDao
 import dev.bittim.encountr.core.data.api.local.dao.junction.PokemonTypeJunctionDao
 import dev.bittim.encountr.core.data.api.local.dao.junction.VersionGroupPokedexJunctionDao
-import dev.bittim.encountr.core.data.api.local.entity.base.TimestampedEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.CombinedEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.generation.GenerationDetailEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.generation.GenerationLocalizedNameEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.generation.GenerationStub
@@ -97,7 +97,7 @@ abstract class ApiDatabase : RoomDatabase() {
     // endregion:   -- Junction Dao
     // region:      -- Worker Helper Functions
 
-    fun getOf(type: String?, id: Int): Flow<TimestampedEntity?> {
+    fun getOf(type: String?, id: Int): Flow<CombinedEntity?> {
         return when (type) {
             Generation::class.simpleName -> generationDao().get(id)
             Language::class.simpleName -> languageDao().get(id)

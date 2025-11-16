@@ -4,10 +4,10 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       TimestampedEntity.kt
+ * File:       StubEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   16.11.25, 03:03
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.base
@@ -15,7 +15,8 @@ package dev.bittim.encountr.core.data.api.local.entity.base
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
-interface TimestampedEntity {
+interface StubEntity {
+    val id: Int
     val updatedAt: Long
 
     companion object {

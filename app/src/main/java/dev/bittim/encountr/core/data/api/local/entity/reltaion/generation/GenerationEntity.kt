@@ -7,26 +7,26 @@
  * File:       GenerationEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   16.11.25, 03:06
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.reltaion.generation
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import dev.bittim.encountr.core.data.api.local.entity.base.TimestampedEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.CombinedEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.generation.GenerationDetailEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.generation.GenerationStub
 import dev.bittim.encountr.core.domain.model.api.language.LocalizedString
 
 data class GenerationEntity(
-    @Embedded val stub: GenerationStub,
+    @Embedded override val stub: GenerationStub,
     @Relation(
         parentColumn = "id",
         entityColumn = "id"
-    ) val detail: GenerationDetailEntity
-) : TimestampedEntity by stub {
-    fun toModel(localizedNames: List<LocalizedString>, versionGroups: List<Int>) = detail.toModel(
+    ) override val detail: GenerationDetailEntity?
+) : CombinedEntity {
+    fun toModel(localizedNames: List<LocalizedString>, versionGroups: List<Int>) = detail?.toModel(
         localizedNames = localizedNames,
         versionGroups = versionGroups
     )

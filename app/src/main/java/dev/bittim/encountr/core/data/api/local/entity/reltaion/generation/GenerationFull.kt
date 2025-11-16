@@ -7,14 +7,14 @@
  * File:       GenerationFull.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   16.11.25, 03:00
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.reltaion.generation
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import dev.bittim.encountr.core.data.api.local.entity.base.TimestampedEntity
+import dev.bittim.encountr.core.data.api.local.entity.base.CombinedEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.generation.GenerationLocalizedNameEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.versionGroup.VersionGroupStub
 
@@ -31,7 +31,7 @@ data class GenerationFull(
         entityColumn = "generationId",
         projection = ["id"]
     ) val versionGroupIds: List<Int>
-) : TimestampedEntity by generation {
+) : CombinedEntity by generation {
     fun toModel() = generation.toModel(
         localizedNames = localizedNames.map { it.toModel() },
         versionGroups = versionGroupIds
