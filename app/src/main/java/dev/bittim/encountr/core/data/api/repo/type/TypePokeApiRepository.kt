@@ -7,7 +7,7 @@
  * File:       TypePokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   16.11.25, 02:32
+ * Modified:   17.11.25, 22:52
  */
 
 package dev.bittim.encountr.core.data.api.repo.type
@@ -22,6 +22,9 @@ import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeSpriteEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeStub
 import dev.bittim.encountr.core.data.api.worker.ApiSyncWorker
 import dev.bittim.encountr.core.domain.model.api.type.Type
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -31,7 +34,8 @@ import kotlinx.coroutines.flow.map
 class TypePokeApiRepository(
     private val apiDatabase: ApiDatabase,
     private val pokeApi: PokeApi,
-    private val workManager: WorkManager
+    private val workManager: WorkManager,
+    private val httpClient: HttpClient // TODO: Remove when pokekotlin PR is merged
 ) : TypeRepository {
     // region:      -- Get
 
@@ -51,7 +55,9 @@ class TypePokeApiRepository(
     // region:      -- Refresh
 
     override suspend fun refresh(id: Int) {
-        val raw = pokeApi.getType(id)
+        //val raw = pokeApi.getType(id)
+        val raw = httpClient.get("https://pokeapi.co/api/v2/type/$id")
+            .body<TypeDto>() // TODO: Remove when pokekotlin PR is merged
 
         val stub = TypeStub(raw.id)
         val detail = TypeDetailEntity.fromApi(raw)

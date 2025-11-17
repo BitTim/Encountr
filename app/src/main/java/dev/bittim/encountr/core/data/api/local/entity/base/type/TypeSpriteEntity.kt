@@ -7,15 +7,15 @@
  * File:       TypeSpriteEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   17.11.25, 19:33
+ * Modified:   17.11.25, 22:51
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.base.type
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import co.pokeapi.pokekotlin.model.VersionTypeSprites
 import dev.bittim.encountr.core.data.api.extension.toEntity
+import dev.bittim.encountr.core.data.api.repo.type.VersionTypeSprites
 import dev.bittim.encountr.core.domain.model.api.type.TypeSprite
 import dev.bittim.encountr.core.domain.model.api.type.TypeSpriteVariant
 
@@ -45,10 +45,13 @@ data class TypeSpriteEntity(
     }
 
     companion object {
-        fun fromApi(typeId: Int, typeSprites: VersionTypeSprites): List<TypeSpriteEntity> {
+        fun fromApi(
+            typeId: Int,
+            typeSprites: VersionTypeSprites
+        ): List<TypeSpriteEntity> { // TODO: Change to PokeApi.VersionTypeSprites when PR is merged
             return TypeSpriteVariant.entries.map { variant ->
                 when (variant) {
-                    TypeSpriteVariant.RUBY_SAPPHIRE -> typeSprites.generationIii.rubySaphire.toEntity(
+                    TypeSpriteVariant.RUBY_SAPPHIRE -> typeSprites.generationIii.rubySapphire.toEntity(
                         typeId,
                         variant
                     )

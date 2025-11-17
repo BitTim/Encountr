@@ -7,7 +7,7 @@
  * File:       AppModule.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   17.11.25, 20:20
+ * Modified:   17.11.25, 23:05
  */
 
 package dev.bittim.encountr.core.di
@@ -68,6 +68,9 @@ import io.ktor.client.plugins.cache.storage.FileStorage
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonNamingStrategy.Builtins.SnakeCase
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.workmanager.dsl.workerOf
@@ -76,6 +79,7 @@ import java.io.File
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = Constants.DS_NAME)
 
+@OptIn(ExperimentalSerializationApi::class)
 val appModule = module {
     // region:      -- Other
 
@@ -102,7 +106,9 @@ val appModule = module {
     single {
         HttpClient(engine = get()) {
             install(ContentNegotiation) {
-                json()
+                json(Json {
+                    namingStrategy = SnakeCase // TODO: Remove when pokekotlin PR is merged
+                })
             }
         }
     }
@@ -154,7 +160,7 @@ val appModule = module {
     single<LanguageRepository> { LanguagePokeApiRepository(get(), get(), get()) }
     single<PokedexRepository> { PokedexPokeApiRepository(get(), get(), get()) }
     single<PokemonRepository> { PokemonPokeApiRepository(get(), get(), get()) }
-    single<TypeRepository> { TypePokeApiRepository(get(), get(), get()) }
+    single<TypeRepository> { TypePokeApiRepository(get(), get(), get(), get()) }
     single<VersionRepository> { VersionPokeApiRepository(get(), get(), get(), get()) }
     single<VersionGroupRepository> { VersionGroupPokeApiRepository(get(), get(), get(), get()) }
 

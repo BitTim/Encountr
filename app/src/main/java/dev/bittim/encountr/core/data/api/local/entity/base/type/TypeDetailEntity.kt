@@ -7,7 +7,7 @@
  * File:       TypeDetailEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   16.11.25, 03:04
+ * Modified:   17.11.25, 22:49
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.base.type
@@ -16,6 +16,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import dev.bittim.encountr.core.data.api.local.entity.base.DetailEntity
+import dev.bittim.encountr.core.data.api.repo.type.TypeDto
 import dev.bittim.encountr.core.domain.model.api.language.LocalizedString
 import dev.bittim.encountr.core.domain.model.api.type.Type
 import dev.bittim.encountr.core.domain.model.api.type.TypeSprite
@@ -63,7 +64,7 @@ data class TypeDetailEntity(
     }
 
     companion object {
-        fun fromApi(type: co.pokeapi.pokekotlin.model.Type): TypeDetailEntity {
+        fun fromApi(type: TypeDto): TypeDetailEntity { // TODO: Change to PokeApi.Type when PR is merged
             return TypeDetailEntity(
                 id = type.id,
                 name = type.name,
