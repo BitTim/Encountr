@@ -7,7 +7,7 @@
  * File:       PokemonListViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   17.11.25, 23:54
+ * Modified:   18.11.25, 00:08
  */
 
 package dev.bittim.encountr.content.ui.screens.pokemon.list
@@ -45,6 +45,7 @@ class PokemonListViewModel(
     private val _state = MutableStateFlow(PokemonListState())
     val state = _state.asStateFlow()
 
+    var firstLoad = true
     var pokedexFetchJob: Job? = null
     var pokemonIdsFetchJob: Job? = null
 
@@ -56,7 +57,10 @@ class PokemonListViewModel(
         pokedexFetchJob = viewModelScope.launch(Dispatchers.IO) {
             observePokedexIdsByVersion(version.id).collectLatest { pokedexIds ->
                 _state.update { it.copy(pokedexIds = pokedexIds) }
-                onPokedexChanged(pokedexIds.first())
+                if (firstLoad) {
+                    onPokedexChanged(pokedexIds.first())
+                    firstLoad = false
+                }
             }
         }
     }
@@ -66,11 +70,13 @@ class PokemonListViewModel(
     }
 
     fun onPokedexChanged(pokedexId: Int) {
+        _state.update { it.copy(pokedexId = pokedexId, pokemonIds = emptyList()) }
+
         pokemonIdsFetchJob?.cancel()
         pokemonIdsFetchJob = viewModelScope.launch(Dispatchers.IO) {
             observePokemonIdsByPokedex(pokedexId).collectLatest { pokemonIds ->
                 queuesFetchForPokemon(pokemonIds)
-                _state.update { it.copy(pokedexId = pokedexId, pokemonIds = pokemonIds) }
+                _state.update { it.copy(pokemonIds = pokemonIds) }
             }
         }
     }
