@@ -17,7 +17,7 @@ composeBom = "2025.11.00"
 material3 = "1.5.0-alpha08"
 slf4j = "1.7.36"
 
-ksp = "2.2.0-2.0.2"
+ksp = "2.3.2"
 kotlinSerialization = "2.2.21"
 kotlinxSerializationCore = "1.9.0"
 koin = "4.1.1"

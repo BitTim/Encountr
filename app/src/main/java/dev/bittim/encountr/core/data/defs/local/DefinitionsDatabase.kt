@@ -7,7 +7,7 @@
  * File:       DefinitionsDatabase.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   17.11.25, 23:57
  */
 
 package dev.bittim.encountr.core.data.defs.local
@@ -29,6 +29,7 @@ import dev.bittim.encountr.core.data.defs.local.entity.VersionAdditionEntity
     entities = [
         DefinitionEntity::class, VersionAdditionEntity::class, PokedexAdditionEntity::class
     ],
+    exportSchema = false
 )
 abstract class DefinitionsDatabase : RoomDatabase() {
     abstract fun definitionDao(): DefinitionDao

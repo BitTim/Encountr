@@ -7,13 +7,14 @@
  * File:       PokemonTypeJunction.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   17.11.25, 23:54
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.junction
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import dev.bittim.encountr.core.data.api.local.entity.base.pokemon.PokemonStub
 import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeStub
 
@@ -35,7 +36,8 @@ import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeStub
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE
         ),
-    ]
+    ],
+    indices = [Index(value = ["typeId"])]
 )
 data class PokemonTypeJunction(
     val pokemonId: Int,

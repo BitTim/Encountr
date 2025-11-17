@@ -7,13 +7,14 @@
  * File:       PokedexAdditionEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   17.11.25, 23:54
  */
 
 package dev.bittim.encountr.core.data.defs.local.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
@@ -26,7 +27,8 @@ import androidx.room.PrimaryKey
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index(value = ["definition"])]
 )
 data class PokedexAdditionEntity(
     @PrimaryKey val versionGroupId: Int,

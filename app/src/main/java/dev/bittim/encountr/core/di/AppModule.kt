@@ -7,7 +7,7 @@
  * File:       AppModule.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   17.11.25, 23:05
+ * Modified:   17.11.25, 23:54
  */
 
 package dev.bittim.encountr.core.di
@@ -52,6 +52,7 @@ import dev.bittim.encountr.core.data.user.repo.TeamRepositoryImpl
 import dev.bittim.encountr.core.domain.useCase.api.ObservePokedexIdsByVersion
 import dev.bittim.encountr.core.domain.useCase.api.ObservePokemonIdsByPokedex
 import dev.bittim.encountr.core.domain.useCase.api.ObserveVersionIdsByGeneration
+import dev.bittim.encountr.core.domain.useCase.api.QueueFetchForPokemon
 import dev.bittim.encountr.core.domain.useCase.config.ObserveCurrentLanguageId
 import dev.bittim.encountr.core.domain.useCase.config.ObserveCurrentVersion
 import dev.bittim.encountr.core.domain.useCase.config.ObserveIsOnboarded
@@ -183,6 +184,7 @@ val appModule = module {
     single<ObserveVersionIdsByGeneration> { ObserveVersionIdsByGeneration(get(), get()) }
     single<ObservePokedexIdsByVersion> { ObservePokedexIdsByVersion(get(), get()) }
     single<ObservePokemonIdsByPokedex> { ObservePokemonIdsByPokedex(get()) }
+    single<QueueFetchForPokemon> { QueueFetchForPokemon(get()) }
 
     // UI
     single<ObservePokedexName> { ObservePokedexName(get(), get()) }

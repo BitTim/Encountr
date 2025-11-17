@@ -7,7 +7,7 @@
  * File:       TeamEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   12.09.25, 16:34
+ * Modified:   17.11.25, 23:54
  */
 
 package dev.bittim.encountr.core.data.user.local.entity
@@ -23,7 +23,7 @@ import kotlin.uuid.Uuid
 @Entity(
     tableName = "teams",
     indices = [
-        Index(value = ["id", "save"]),
+        Index(value = ["save"]),
     ],
     foreignKeys = [
         ForeignKey(

@@ -7,7 +7,7 @@
  * File:       PokemonStateEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   17.11.25, 23:54
  */
 
 package dev.bittim.encountr.core.data.user.local.entity
@@ -22,7 +22,7 @@ import kotlin.uuid.Uuid
 @Entity(
     tableName = "pokemon_state",
     indices = [
-        Index(value = ["id", "save"]),
+        Index(value = ["save"]),
     ],
     primaryKeys = ["id", "save"],
     foreignKeys = [

@@ -7,7 +7,7 @@
  * File:       PokemonListViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   17.11.25, 20:21
+ * Modified:   17.11.25, 23:54
  */
 
 package dev.bittim.encountr.content.ui.screens.pokemon.list
@@ -18,6 +18,7 @@ import dev.bittim.encountr.content.ui.components.PokemonCardState
 import dev.bittim.encountr.core.domain.model.api.version.Version
 import dev.bittim.encountr.core.domain.useCase.api.ObservePokedexIdsByVersion
 import dev.bittim.encountr.core.domain.useCase.api.ObservePokemonIdsByPokedex
+import dev.bittim.encountr.core.domain.useCase.api.QueueFetchForPokemon
 import dev.bittim.encountr.core.domain.useCase.ui.ObservePokedexName
 import dev.bittim.encountr.core.domain.useCase.ui.ObservePokemonCardState
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +39,8 @@ class PokemonListViewModel(
     private val observePokedexIdsByVersion: ObservePokedexIdsByVersion,
     private val observePokedexNameUseCase: ObservePokedexName,
     private val observePokemonIdsByPokedex: ObservePokemonIdsByPokedex,
-    private val observePokemonCardState: ObservePokemonCardState
+    private val observePokemonCardState: ObservePokemonCardState,
+    private val queuesFetchForPokemon: QueueFetchForPokemon,
 ) : ViewModel() {
     private val _state = MutableStateFlow(PokemonListState())
     val state = _state.asStateFlow()
@@ -67,6 +69,7 @@ class PokemonListViewModel(
         pokemonIdsFetchJob?.cancel()
         pokemonIdsFetchJob = viewModelScope.launch(Dispatchers.IO) {
             observePokemonIdsByPokedex(pokedexId).collectLatest { pokemonIds ->
+                queuesFetchForPokemon(pokemonIds)
                 _state.update { it.copy(pokedexId = pokedexId, pokemonIds = pokemonIds) }
             }
         }

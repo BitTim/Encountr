@@ -7,7 +7,7 @@
  * File:       PokemonListScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   17.11.25, 20:14
+ * Modified:   17.11.25, 23:54
  */
 
 package dev.bittim.encountr.content.ui.screens.pokemon.list
@@ -95,7 +95,7 @@ fun PokemonListScreen(
         SearchBar(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = Spacing.l),
+                .padding(start = Spacing.l, end = Spacing.l, bottom = Spacing.s),
             state = searchBarState,
             inputField = {
                 SearchBarDefaults.InputField(
@@ -152,7 +152,6 @@ fun PokemonListScreen(
                 selectedTabIndex = selectedTab,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = Spacing.s)
             ) {
                 state.pokedexIds.forEachIndexed { idx, pokedexId ->
                     val pokedexName by observePokedexName(pokedexId)

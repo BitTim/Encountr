@@ -7,13 +7,14 @@
  * File:       VersionStub.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   16.11.25, 03:05
+ * Modified:   17.11.25, 23:54
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.base.version
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import dev.bittim.encountr.core.data.api.local.entity.base.StubEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.versionGroup.VersionGroupStub
@@ -27,7 +28,8 @@ import dev.bittim.encountr.core.data.api.local.entity.base.versionGroup.VersionG
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index(value = ["versionGroupId"])]
 )
 data class VersionStub(
     @PrimaryKey override val id: Int,

@@ -7,7 +7,7 @@
  * File:       UserDatabase.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   17.11.25, 23:57
  */
 
 package dev.bittim.encountr.core.data.user.local
@@ -30,7 +30,8 @@ import dev.bittim.encountr.core.data.user.local.entity.TeamEntity
         TeamEntity::class,
         PokemonStateEntity::class,
         PokemonTeamJunction::class,
-    ]
+    ],
+    exportSchema = false
 )
 abstract class UserDatabase : RoomDatabase() {
     abstract val saveDao: SaveDao

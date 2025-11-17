@@ -7,7 +7,7 @@
  * File:       build.gradle.kts
  * Module:     Encountr.app
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   17.11.25, 23:55
  */
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget

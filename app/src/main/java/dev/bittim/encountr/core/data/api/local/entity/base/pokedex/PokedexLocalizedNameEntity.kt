@@ -7,13 +7,14 @@
  * File:       PokedexLocalizedNameEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   17.11.25, 23:54
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.base.pokedex
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import co.pokeapi.pokekotlin.model.Name
 import dev.bittim.encountr.core.data.api.local.entity.base.language.LanguageStub
 import dev.bittim.encountr.core.domain.model.api.language.LocalizedString
@@ -36,7 +37,8 @@ import dev.bittim.encountr.core.domain.model.api.language.LocalizedString
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index(value = ["languageId"])]
 )
 data class PokedexLocalizedNameEntity(
     val pokedexId: Int,

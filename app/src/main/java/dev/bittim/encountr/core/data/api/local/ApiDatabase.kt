@@ -7,7 +7,7 @@
  * File:       ApiDatabase.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   16.11.25, 03:00
+ * Modified:   17.11.25, 23:57
  */
 
 package dev.bittim.encountr.core.data.api.local
@@ -74,7 +74,8 @@ import kotlinx.coroutines.flow.flowOf
         VersionGroupStub::class, VersionGroupDetailEntity::class,
 
         PokedexPokemonJunction::class, PokemonTypeJunction::class, VersionGroupPokedexJunction::class,
-    ]
+    ],
+    exportSchema = false
 )
 abstract class ApiDatabase : RoomDatabase() {
     // region:      -- Base Dao

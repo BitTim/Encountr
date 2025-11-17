@@ -7,13 +7,14 @@
  * File:       VersionAdditionEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   17.11.25, 19:42
+ * Modified:   17.11.25, 23:54
  */
 
 package dev.bittim.encountr.core.data.defs.local.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import dev.bittim.encountr.core.domain.model.api.pokemon.PokemonSpriteVariant
 import dev.bittim.encountr.core.domain.model.api.type.TypeSpriteVariant
@@ -29,7 +30,8 @@ import dev.bittim.encountr.core.domain.model.defs.VersionAddition
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index(value = ["definition"])]
 )
 data class VersionAdditionEntity(
     @PrimaryKey val versionId: Int,
