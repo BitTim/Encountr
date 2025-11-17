@@ -7,7 +7,7 @@
  * File:       PokemonListScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   17.11.25, 02:31
+ * Modified:   17.11.25, 02:42
  */
 
 package dev.bittim.encountr.content.ui.screens.pokemon.list
@@ -73,7 +73,7 @@ data object PokemonListScreenDefaults {
 fun PokemonListScreen(
     state: PokemonListState,
     observePokedexName: (id: Int) -> Flow<String>,
-    onPokedexChanged: (index: Int, searchQuery: String) -> Unit,
+    onPokedexChanged: (pokedexId: Int) -> Unit,
     applyFilter: (searchQuery: String) -> Unit,
 ) {
     var selectedTab by rememberSaveable { mutableIntStateOf(0) }
@@ -82,7 +82,7 @@ fun PokemonListScreen(
     val textFieldState = rememberTextFieldState()
     var searchExpanded by rememberSaveable { mutableStateOf(false) }
 
-    val searchQuery = textFieldState.text.toString()
+    textFieldState.text.toString()
 
     Column(
         modifier = Modifier
@@ -159,7 +159,7 @@ fun PokemonListScreen(
                         selected = idx == selectedTab,
                         onClick = {
                             selectedTab = idx
-                            onPokedexChanged(pokedexId, searchQuery) // TODO
+                            onPokedexChanged(pokedexId)
                         },
                         text = { Text(text = pokedexName ?: "") }
                     )
@@ -209,7 +209,7 @@ fun PokemonListScreenPreview() {
             PokemonListScreen(
                 state = PokemonListState(),
                 observePokedexName = { _ -> emptyFlow() },
-                onPokedexChanged = { _, _ -> },
+                onPokedexChanged = { _ -> },
                 applyFilter = {}
             )
         }

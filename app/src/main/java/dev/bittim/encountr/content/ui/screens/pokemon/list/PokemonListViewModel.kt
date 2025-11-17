@@ -7,7 +7,7 @@
  * File:       PokemonListViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   17.11.25, 02:31
+ * Modified:   17.11.25, 02:37
  */
 
 package dev.bittim.encountr.content.ui.screens.pokemon.list
@@ -52,5 +52,9 @@ class PokemonListViewModel(
 
     fun observePokedexName(pokedexId: Int): Flow<String> {
         return observePokedexNameUseCase(pokedexId)
+    }
+
+    fun onPokedexChanged(pokedexId: Int) {
+
     }
 }
