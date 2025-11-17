@@ -7,7 +7,7 @@
  * File:       VersionGroupPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   16.11.25, 02:32
+ * Modified:   17.11.25, 02:31
  */
 
 package dev.bittim.encountr.core.data.api.repo.versionGroup
@@ -55,6 +55,12 @@ class VersionGroupPokeApiRepository(
         queueWorker(id)
         return apiDatabase.versionGroupDao().getVersionIds(id).distinctUntilChanged()
             .flowOn(Dispatchers.IO)
+    }
+
+    override fun getPokedexIds(id: Int): Flow<List<Int>> {
+        queueWorker(id)
+        return apiDatabase.versionGroupPokedexJunctionDao().getPokedexIdsByVersionGroup(id)
+            .distinctUntilChanged().flowOn(Dispatchers.IO)
     }
 
     // endregion:   -- Get

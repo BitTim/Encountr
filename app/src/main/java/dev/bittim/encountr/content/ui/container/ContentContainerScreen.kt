@@ -7,7 +7,7 @@
  * File:       ContentContainerScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   08.09.25, 01:50
+ * Modified:   17.11.25, 02:31
  */
 
 package dev.bittim.encountr.content.ui.container
@@ -61,7 +61,7 @@ fun ContentContainerScreen(
             navController = navController,
             startDestination = PokemonListNav
         ) {
-            pokemonListScreen()
+            pokemonListScreen(version = state.version)
             locationListScreen()
             teamListScreen()
         }

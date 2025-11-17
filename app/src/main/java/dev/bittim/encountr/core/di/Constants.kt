@@ -7,11 +7,12 @@
  * File:       Constants.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   17.11.25, 02:31
  */
 
 package dev.bittim.encountr.core.di
 
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import dev.bittim.encountr.core.domain.model.api.pokemon.PokemonSpriteVariant
@@ -30,6 +31,7 @@ object Constants {
     // region:      -- DataStore Keys
 
     const val DS_NAME = "EncountrConfig"
+    val DS_KEY_ONBOARDING_COMPLETED = booleanPreferencesKey("onboardingCompleted")
     val DS_KEY_LANG_ID = intPreferencesKey("languageId")
     val DS_KEY_CURR_SAVE_UUID = stringPreferencesKey("currentSaveUuid")
 

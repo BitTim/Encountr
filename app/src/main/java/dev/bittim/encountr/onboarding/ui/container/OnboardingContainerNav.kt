@@ -7,7 +7,7 @@
  * File:       OnboardingContainerNav.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   06.09.25, 02:27
+ * Modified:   17.11.25, 02:31
  */
 
 package dev.bittim.encountr.onboarding.ui.container
@@ -40,7 +40,10 @@ fun NavGraphBuilder.onboarding(
         OnboardingContainerScreen(
             state = state,
             navController = subNavController,
-            navToContent = navToContent
+            navToContent = {
+                viewModel.setOnboardingCompleted(true)
+                navToContent()
+            }
         )
     }
 }

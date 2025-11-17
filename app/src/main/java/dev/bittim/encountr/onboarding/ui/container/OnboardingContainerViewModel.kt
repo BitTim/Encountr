@@ -7,18 +7,24 @@
  * File:       OnboardingContainerViewModel.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   13.08.25, 04:24
+ * Modified:   17.11.25, 02:31
  */
 
 package dev.bittim.encountr.onboarding.ui.container
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dev.bittim.encountr.core.data.config.ConfigStateHolder
 import dev.bittim.encountr.onboarding.ui.screens.OnboardingScreen
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class OnboardingContainerViewModel : ViewModel() {
+class OnboardingContainerViewModel(
+    private val configStateHolder: ConfigStateHolder
+) : ViewModel() {
     private val _state = MutableStateFlow(OnboardingContainerState())
     val state = _state.asStateFlow()
 
@@ -32,6 +38,12 @@ class OnboardingContainerViewModel : ViewModel() {
                 icon = screen?.icon,
                 progress = screen?.step?.toFloat()?.div(OnboardingScreen.getMaxStep())
             )
+        }
+    }
+
+    fun setOnboardingCompleted(onboardingCompleted: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            configStateHolder.setOnboardingCompleted(onboardingCompleted)
         }
     }
 }

@@ -7,7 +7,7 @@
  * File:       PokemonListNav.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   19.09.25, 20:02
+ * Modified:   17.11.25, 02:31
  */
 
 package dev.bittim.encountr.content.ui.screens.pokemon.list
@@ -18,21 +18,24 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import dev.bittim.encountr.core.domain.model.api.version.Version
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
 @Serializable
 object PokemonListNav
 
-fun NavGraphBuilder.pokemonListScreen() {
+fun NavGraphBuilder.pokemonListScreen(version: Version?) {
     composable<PokemonListNav> {
         val viewModel = koinViewModel<PokemonListViewModel>()
         val state by viewModel.state.collectAsStateWithLifecycle()
+        viewModel.setVersion(version)
 
         PokemonListScreen(
             state = state,
-            onPokedexChanged = viewModel::onPokedexChanged,
-            applyFilter = viewModel::applyFilter
+            observePokedexName = viewModel::observePokedexName,
+            onPokedexChanged = { _, _ -> },
+            applyFilter = {}
         )
     }
 }

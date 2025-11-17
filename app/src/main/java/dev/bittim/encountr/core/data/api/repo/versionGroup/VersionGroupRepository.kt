@@ -7,7 +7,7 @@
  * File:       VersionGroupRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   11.11.25, 15:50
+ * Modified:   17.11.25, 02:31
  */
 
 package dev.bittim.encountr.core.data.api.repo.versionGroup
@@ -18,4 +18,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface VersionGroupRepository : Repository<VersionGroup> {
     fun getVersionIds(id: Int): Flow<List<Int>>
+    fun getPokedexIds(id: Int): Flow<List<Int>>
 }

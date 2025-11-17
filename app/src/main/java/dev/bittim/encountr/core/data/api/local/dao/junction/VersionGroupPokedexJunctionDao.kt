@@ -7,7 +7,7 @@
  * File:       VersionGroupPokedexJunctionDao.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   17.11.25, 02:31
  */
 
 package dev.bittim.encountr.core.data.api.local.dao.junction
@@ -31,11 +31,11 @@ interface VersionGroupPokedexJunctionDao {
     // endregion:   -- Create / Update
     // region:      -- Read
 
-    @Query("SELECT * FROM version_group_pokedex_junction WHERE pokedexId = :pokedexId")
-    fun getByPokedex(pokedexId: Int): Flow<List<VersionGroupPokedexJunction>>
+    @Query("SELECT versionGroupId FROM version_group_pokedex_junction WHERE pokedexId = :pokedexId")
+    fun getVersionGroupIdsByPokedex(pokedexId: Int): Flow<List<Int>>
 
-    @Query("SELECT * FROM version_group_pokedex_junction WHERE versionGroupId = :versionGroupId")
-    fun getByVersionGroup(versionGroupId: Int): Flow<List<VersionGroupPokedexJunction>>
+    @Query("SELECT pokedexId FROM version_group_pokedex_junction WHERE versionGroupId = :versionGroupId")
+    fun getPokedexIdsByVersionGroup(versionGroupId: Int): Flow<List<Int>>
 
     // endregion:   -- Read
     // region:      -- Delete

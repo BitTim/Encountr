@@ -4,7 +4,7 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       ObserveCurrentLanguageId.kt
+ * File:       ObserveIsOnboarded.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
  * Modified:   17.11.25, 02:31
@@ -13,19 +13,18 @@
 package dev.bittim.encountr.core.domain.useCase.config
 
 import dev.bittim.encountr.core.data.config.ConfigStateHolder
-import dev.bittim.encountr.core.di.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
-class ObserveCurrentLanguageId(
+class ObserveIsOnboarded(
     private val configStateHolder: ConfigStateHolder
 ) {
-    operator fun invoke(): Flow<Int> {
+    operator fun invoke(): Flow<Boolean?> {
         return configStateHolder.rawState.map { configState ->
-            configState?.languageId ?: Constants.DEFAULT_LANG_ID
+            configState?.onboardingCompleted
         }.distinctUntilChanged().flowOn(Dispatchers.IO)
     }
 }

@@ -7,11 +7,13 @@
  * File:       ContentContainerState.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   04.09.25, 23:26
+ * Modified:   17.11.25, 02:31
  */
 
 package dev.bittim.encountr.content.ui.container
 
+import dev.bittim.encountr.core.domain.model.api.version.Version
+
 data class ContentContainerState(
-    val placeholder: Boolean? = null
+    val version: Version? = null
 )
