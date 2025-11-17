@@ -7,12 +7,14 @@
  * File:       PokemonSprites.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   17.11.25, 19:32
  */
 
 package dev.bittim.encountr.core.domain.model.api.pokemon
 
 data class PokemonSprites(
+    val variant: PokemonSpriteVariant,
+
     val frontDefault: String?,
     val frontShiny: String?,
     val backDefault: String?,

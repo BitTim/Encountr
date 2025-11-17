@@ -7,7 +7,7 @@
  * File:       VersionDetailEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   16.11.25, 03:05
+ * Modified:   17.11.25, 20:19
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.base.version
@@ -17,7 +17,10 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import dev.bittim.encountr.core.data.api.local.entity.base.DetailEntity
 import dev.bittim.encountr.core.domain.model.api.language.LocalizedString
+import dev.bittim.encountr.core.domain.model.api.pokemon.PokemonSpriteVariant
+import dev.bittim.encountr.core.domain.model.api.type.TypeSpriteVariant
 import dev.bittim.encountr.core.domain.model.api.version.Version
+import dev.bittim.encountr.core.domain.model.defs.VersionAddition
 
 @Entity(
     tableName = "version_detail",
@@ -35,6 +38,8 @@ data class VersionDetailEntity(
     @PrimaryKey val id: Int,
     val name: String,
     val imageUrl: String?,
+    val pokemonSpriteVariant: PokemonSpriteVariant,
+    val typeSpriteVariant: TypeSpriteVariant?,
 ) : DetailEntity {
     fun toModel(
         versionGroupId: Int?,
@@ -45,19 +50,23 @@ data class VersionDetailEntity(
             name = name,
             localizedNames = localizedNames,
             versionGroupId = versionGroupId,
-            imageUrl = imageUrl
+            imageUrl = imageUrl,
+            pokemonSpriteVariant = pokemonSpriteVariant,
+            typeSpriteVariant = typeSpriteVariant,
         )
     }
 
     companion object {
         fun fromApi(
             version: co.pokeapi.pokekotlin.model.Version,
-            imageUrl: String?
+            versionAddition: VersionAddition,
         ): VersionDetailEntity {
             return VersionDetailEntity(
                 id = version.id,
                 name = version.name,
-                imageUrl = imageUrl
+                imageUrl = versionAddition.imageUrl,
+                pokemonSpriteVariant = versionAddition.pokemonSpriteVariant,
+                typeSpriteVariant = versionAddition.typeSpriteVariant,
             )
         }
     }

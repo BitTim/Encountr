@@ -7,7 +7,7 @@
  * File:       PokemonCard.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   17.11.25, 20:31
  */
 
 package dev.bittim.encountr.content.ui.components
@@ -48,6 +48,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import dev.bittim.encountr.core.domain.model.api.pokemon.PokemonSpriteVariant
 import dev.bittim.encountr.core.domain.model.api.pokemon.PokemonSprites
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
@@ -308,6 +309,7 @@ fun PokemonCardPreview() {
                         height = "0.7 m",
                         weight = "6.9 kg",
                         sprites = PokemonSprites(
+                            variant = PokemonSpriteVariant.DEFAULT,
                             frontDefault = null,
                             frontShiny = null,
                             backDefault = null,

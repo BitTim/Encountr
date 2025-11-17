@@ -7,15 +7,14 @@
  * File:       DefinitionRepositoryImpl.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   17.11.25, 19:39
  */
 
 package dev.bittim.encountr.core.data.defs.repo
 
 import dev.bittim.encountr.core.data.defs.file.DefinitionLoader
 import dev.bittim.encountr.core.data.defs.local.DefinitionsDatabase
-import dev.bittim.encountr.core.di.Constants
-import dev.bittim.encountr.core.domain.model.api.pokemon.PokemonSpriteVariant
+import dev.bittim.encountr.core.domain.model.defs.VersionAddition
 
 class DefinitionRepositoryImpl(
     private val db: DefinitionsDatabase,
@@ -39,13 +38,8 @@ class DefinitionRepositoryImpl(
         return db.pokedexAdditionDao().get(versionGroupId)?.pokedexIds
     }
 
-    override suspend fun getVersionIcon(versionId: Int): String? {
-        return db.versionAdditionDao().get(versionId)?.imageUrl
-    }
-
-    override suspend fun getVersionSpriteVariant(versionId: Int): PokemonSpriteVariant {
-        return db.versionAdditionDao().get(versionId)?.pokemonSpriteVariant
-            ?: Constants.DEFAULT_POKEMON_SPRITE_VARIANT
+    override suspend fun getVersionAdditions(versionId: Int): VersionAddition? {
+        return db.versionAdditionDao().get(versionId)?.toModel()
     }
 
     override suspend fun isVersionIgnored(versionId: Int): Boolean {

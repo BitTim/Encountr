@@ -4,15 +4,15 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       PokedexEntry.kt
+ * File:       PartialPokedexEntry.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   17.11.25, 19:17
  */
 
-package dev.bittim.encountr.core.domain.model.api.pokemon
+package dev.bittim.encountr.core.data.api.local.entity.reltaion.pokemon
 
-data class PokedexEntry(
+data class PartialPokedexEntry(
     val pokedexId: Int,
     val entryNumber: Int,
 )

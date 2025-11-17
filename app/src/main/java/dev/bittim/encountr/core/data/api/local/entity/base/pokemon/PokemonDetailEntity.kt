@@ -7,7 +7,7 @@
  * File:       PokemonDetailEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   16.11.25, 03:04
+ * Modified:   17.11.25, 19:17
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.base.pokemon
@@ -18,7 +18,6 @@ import androidx.room.PrimaryKey
 import co.pokeapi.pokekotlin.model.PokemonVariety
 import dev.bittim.encountr.core.data.api.local.entity.base.DetailEntity
 import dev.bittim.encountr.core.domain.model.api.language.LocalizedString
-import dev.bittim.encountr.core.domain.model.api.pokemon.PokedexEntry
 import dev.bittim.encountr.core.domain.model.api.pokemon.Pokemon
 import dev.bittim.encountr.core.domain.model.api.pokemon.PokemonSprites
 
@@ -49,7 +48,7 @@ data class PokemonDetailEntity(
     }
 
     fun toModel(
-        entryNumbers: List<PokedexEntry>,
+        entryNumbers: Map<Int, Int>,
         localizedNames: List<LocalizedString>,
         pokemonSprites: List<PokemonSprites>,
         typeIds: List<Int>

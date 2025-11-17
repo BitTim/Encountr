@@ -7,7 +7,7 @@
  * File:       PokemonSpritesEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   17.11.25, 19:32
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.base.pokemon
@@ -45,6 +45,7 @@ data class PokemonSpritesEntity(
 ) {
     fun toModel(): PokemonSprites {
         return PokemonSprites(
+            variant = pokemonSpriteVariant,
             frontDefault = frontDefault,
             frontShiny = frontShiny,
             backDefault = backDefault,

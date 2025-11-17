@@ -7,7 +7,7 @@
  * File:       PokemonListState.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   17.11.25, 02:31
+ * Modified:   17.11.25, 20:12
  */
 
 package dev.bittim.encountr.content.ui.screens.pokemon.list
@@ -16,6 +16,8 @@ import dev.bittim.encountr.core.domain.model.api.version.Version
 
 data class PokemonListState(
     val version: Version? = null,
+    val pokedexId: Int? = null,
 
     val pokedexIds: List<Int> = emptyList(),
+    val pokemonIds: List<Int> = emptyList(),
 )

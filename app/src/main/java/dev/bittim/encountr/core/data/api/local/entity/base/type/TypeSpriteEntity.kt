@@ -7,7 +7,7 @@
  * File:       TypeSpriteEntity.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   10.11.25, 23:36
+ * Modified:   17.11.25, 19:33
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.base.type
@@ -39,7 +39,7 @@ data class TypeSpriteEntity(
 ) {
     fun toModel(): TypeSprite {
         return TypeSprite(
-            typeSpriteVariant = typeSpriteVariant,
+            variant = typeSpriteVariant,
             imageUrl = imageUrl
         )
     }

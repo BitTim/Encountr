@@ -7,7 +7,7 @@
  * File:       PokemonFull.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   16.11.25, 03:00
+ * Modified:   17.11.25, 19:16
  */
 
 package dev.bittim.encountr.core.data.api.local.entity.reltaion.pokemon
@@ -37,7 +37,7 @@ data class PokemonFull(
         parentColumn = "id",
         entityColumn = "pokemonId",
         projection = ["pokedexId", "entryNumber"]
-    ) val entryNumbers: List<PartialPokedexEntryEntity>,
+    ) val entryNumbers: List<PartialPokedexEntry>,
     @Relation(
         entity = PokemonTypeJunction::class,
         parentColumn = "id",
@@ -46,7 +46,7 @@ data class PokemonFull(
     ) val typeIds: List<Int>
 ) : CombinedEntity by pokemon {
     fun toModel() = pokemon.toModel(
-        entryNumbers = entryNumbers.map { it.toModel() },
+        entryNumbers = entryNumbers.associateBy({ it.pokedexId }, { it.entryNumber }),
         localizedNames = pokemonLocalizedNames.map { it.toModel() },
         pokemonSprites = pokemonSprites.map { it.toModel() },
         typeIds = typeIds

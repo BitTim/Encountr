@@ -4,23 +4,19 @@
  * Project:    Encountr
  * License:    GPLv3
  *
- * File:       Version.kt
+ * File:       VersionAddition.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   17.11.25, 20:15
+ * Modified:   17.11.25, 19:42
  */
 
-package dev.bittim.encountr.core.domain.model.api.version
+package dev.bittim.encountr.core.domain.model.defs
 
-import dev.bittim.encountr.core.domain.model.api.language.LocalizedString
 import dev.bittim.encountr.core.domain.model.api.pokemon.PokemonSpriteVariant
 import dev.bittim.encountr.core.domain.model.api.type.TypeSpriteVariant
 
-data class Version(
-    val id: Int,
-    val name: String,
-    val localizedNames: List<LocalizedString>,
-    val versionGroupId: Int?,
+data class VersionAddition(
+    val versionId: Int,
     val imageUrl: String?,
     val pokemonSpriteVariant: PokemonSpriteVariant,
     val typeSpriteVariant: TypeSpriteVariant?

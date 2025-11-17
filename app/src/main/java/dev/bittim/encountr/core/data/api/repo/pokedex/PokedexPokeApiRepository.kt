@@ -7,7 +7,7 @@
  * File:       PokedexPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   16.11.25, 02:32
+ * Modified:   17.11.25, 20:01
  */
 
 package dev.bittim.encountr.core.data.api.repo.pokedex
@@ -46,6 +46,11 @@ class PokedexPokeApiRepository(
     override fun getIds(): Flow<List<Int>> {
         queueWorker()
         return apiDatabase.pokedexDao().getIds().distinctUntilChanged().flowOn(Dispatchers.IO)
+    }
+
+    override fun getPokemonIds(id: Int): Flow<List<Int>> {
+        queueWorker(id)
+        return apiDatabase.pokedexPokemonJunctionDao().getByPokedex(id)
     }
 
     // endregion:   -- Get

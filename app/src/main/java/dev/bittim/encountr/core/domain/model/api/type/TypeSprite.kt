@@ -7,12 +7,12 @@
  * File:       TypeSprite.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   17.11.25, 19:33
  */
 
 package dev.bittim.encountr.core.domain.model.api.type
 
 data class TypeSprite(
-    val typeSpriteVariant: TypeSpriteVariant,
+    val variant: TypeSpriteVariant,
     val imageUrl: String?,
 )

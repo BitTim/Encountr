@@ -7,7 +7,7 @@
  * File:       PokemonListScreen.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   17.11.25, 02:42
+ * Modified:   17.11.25, 20:14
  */
 
 package dev.bittim.encountr.content.ui.screens.pokemon.list
@@ -55,6 +55,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.bittim.encountr.R
+import dev.bittim.encountr.content.ui.components.PokemonCard
+import dev.bittim.encountr.content.ui.components.PokemonCardState
 import dev.bittim.encountr.core.ui.components.version.VersionIcon
 import dev.bittim.encountr.core.ui.theme.EncountrTheme
 import dev.bittim.encountr.core.ui.theme.Spacing
@@ -73,6 +75,7 @@ data object PokemonListScreenDefaults {
 fun PokemonListScreen(
     state: PokemonListState,
     observePokedexName: (id: Int) -> Flow<String>,
+    observePokemon: (pokemonId: Int?) -> Flow<PokemonCardState?>,
     onPokedexChanged: (pokedexId: Int) -> Unit,
     applyFilter: (searchQuery: String) -> Unit,
 ) {
@@ -172,31 +175,20 @@ fun PokemonListScreen(
             contentPadding = PaddingValues(Spacing.l),
             verticalArrangement = Arrangement.spacedBy(Spacing.s)
         ) {
-//            items(state.filteredPokemon?.count() ?: PLACEHOLDER_COUNT) { idx ->
-//                val pokemonCardState = if (
-//                    state.filteredPokemon?.get(idx) == null ||
-//                    state.pokedexes?.get(selectedTab) == null ||
-//                    state.languageId == null ||
-//                    state.version == null
-//                ) {
-//                    null
-//                } else {
-//                    PokemonCardState(
-//                        pokemon = state.filteredPokemon[idx],
-//                        pokedexId = state.pokedexes[selectedTab].id,
-//                        language = state.languageName,
-//                        version = state.version
-//                    )
-//                    null
-//                }
-//
-//                PokemonCard(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .animateItem(),
-//                    state = pokemonCardState
-//                )
-//            }
+            val amount =
+                if (state.pokemonIds.isNotEmpty()) state.pokemonIds.count() else PokemonListScreenDefaults.PLACEHOLDER_COUNT
+
+            items(amount) { idx ->
+                val pokemonId = state.pokemonIds.getOrNull(idx)
+                val pokemonCardState by observePokemon(pokemonId).collectAsStateWithLifecycle(null)
+
+                PokemonCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateItem(),
+                    state = pokemonCardState
+                )
+            }
         }
     }
 }
@@ -209,6 +201,7 @@ fun PokemonListScreenPreview() {
             PokemonListScreen(
                 state = PokemonListState(),
                 observePokedexName = { _ -> emptyFlow() },
+                observePokemon = { _ -> emptyFlow() },
                 onPokedexChanged = { _ -> },
                 applyFilter = {}
             )

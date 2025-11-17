@@ -7,7 +7,7 @@
  * File:       VersionAdditionDto.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   17.11.25, 19:42
  */
 
 package dev.bittim.encountr.core.data.defs.file.dto
@@ -28,7 +28,8 @@ data class VersionAdditionDto(
         return VersionAdditionEntity(
             versionId = this.versionId,
             imageUrl = this.imageUrl,
-            pokemonSpriteVariant = this.pokemonSpriteVariant?.let { PokemonSpriteVariant.valueOf(it) },
+            pokemonSpriteVariant = this.pokemonSpriteVariant?.let { PokemonSpriteVariant.valueOf(it) }
+                ?: PokemonSpriteVariant.DEFAULT,
             typeSpriteVariant = this.typeSpriteVariant?.let { TypeSpriteVariant.valueOf(it) }
         )
     }

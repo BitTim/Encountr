@@ -7,7 +7,7 @@
  * File:       VersionPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   16.11.25, 02:32
+ * Modified:   17.11.25, 20:18
  */
 
 package dev.bittim.encountr.core.data.api.repo.version
@@ -55,11 +55,13 @@ class VersionPokeApiRepository(
 
     override suspend fun refresh(id: Int) {
         val raw = pokeApi.getVersion(id)
-        val imageUrl = definitionRepository.getVersionIcon(id)
+        val versionAddition = definitionRepository.getVersionAdditions(id)
         val isIgnored = definitionRepository.isVersionIgnored(id)
 
+        if (versionAddition == null) return
+
         val stub = VersionStub(raw.id, raw.versionGroup.id, isIgnored)
-        val detail = VersionDetailEntity.fromApi(raw, imageUrl)
+        val detail = VersionDetailEntity.fromApi(raw, versionAddition)
         val localizedNames =
             raw.names.map { VersionLocalizedNameEntity.fromApi(id, it) }
 
