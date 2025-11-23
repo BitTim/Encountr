@@ -7,7 +7,7 @@
  * File:       TypePokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   17.11.25, 22:52
+ * Modified:   23.11.25, 17:41
  */
 
 package dev.bittim.encountr.core.data.api.repo.type
@@ -20,7 +20,6 @@ import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeDetailEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeLocalizedNameEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeSpriteEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeStub
-import dev.bittim.encountr.core.data.api.worker.ApiSyncWorker
 import dev.bittim.encountr.core.domain.model.api.type.Type
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -30,31 +29,35 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 
 class TypePokeApiRepository(
+    workManager: WorkManager,
     private val apiDatabase: ApiDatabase,
     private val pokeApi: PokeApi,
-    private val workManager: WorkManager,
     private val httpClient: HttpClient // TODO: Remove when pokekotlin PR is merged
-) : TypeRepository {
+) : TypeRepository(workManager, apiDatabase) {
     // region:      -- Get
 
     override fun get(id: Int): Flow<Type?> {
-        queueWorker(id)
-        return apiDatabase.typeDao().get(id).distinctUntilChanged().map {
-            it?.toModel()
-        }.flowOn(Dispatchers.IO)
+        return apiDatabase.typeDao().get(id)
+            .onStart { refresh(id) }
+            .distinctUntilChanged()
+            .map { it?.toModel() }
+            .flowOn(Dispatchers.IO)
     }
 
     override fun getIds(): Flow<List<Int>> {
-        queueWorker()
-        return apiDatabase.typeDao().getIds().distinctUntilChanged().flowOn(Dispatchers.IO)
+        return apiDatabase.typeDao().getIds()
+            .onStart { refresh() }
+            .distinctUntilChanged()
+            .flowOn(Dispatchers.IO)
     }
 
     // endregion:   -- Get
-    // region:      -- Refresh
+    // region:      -- Fetch
 
-    override suspend fun refresh(id: Int) {
+    override suspend fun fetch(id: Int) {
         //val raw = pokeApi.getType(id)
         val raw = httpClient.get("https://pokeapi.co/api/v2/type/$id")
             .body<TypeDto>() // TODO: Remove when pokekotlin PR is merged
@@ -72,7 +75,7 @@ class TypePokeApiRepository(
         }
     }
 
-    override suspend fun refresh() {
+    override suspend fun fetch() {
         val count = pokeApi.getTypeList(0, 1).count
         val raw = pokeApi.getTypeList(0, count).results
         val stubs = raw.map { TypeStub(it.id) }
@@ -82,14 +85,5 @@ class TypePokeApiRepository(
         }
     }
 
-    // endregion:   -- Refresh
-    // region:      -- Worker
-
-    override fun queueWorker(id: Int?) = ApiSyncWorker.enqueue(
-        workManager = workManager,
-        type = Type::class.simpleName,
-        id = id
-    )
-
-    // endregion:   -- Worker
+    // endregion:   -- Fetch
 }

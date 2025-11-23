@@ -7,7 +7,7 @@
  * File:       VersionGroupPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   17.11.25, 02:31
+ * Modified:   23.11.25, 17:44
  */
 
 package dev.bittim.encountr.core.data.api.repo.versionGroup
@@ -21,7 +21,6 @@ import dev.bittim.encountr.core.data.api.local.entity.base.version.VersionStub
 import dev.bittim.encountr.core.data.api.local.entity.base.versionGroup.VersionGroupDetailEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.versionGroup.VersionGroupStub
 import dev.bittim.encountr.core.data.api.local.entity.junction.VersionGroupPokedexJunction
-import dev.bittim.encountr.core.data.api.worker.ApiSyncWorker
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
 import dev.bittim.encountr.core.domain.model.api.versionGroup.VersionGroup
 import kotlinx.coroutines.Dispatchers
@@ -29,44 +28,49 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 
 class VersionGroupPokeApiRepository(
+    workManager: WorkManager,
     private val apiDatabase: ApiDatabase,
     private val pokeApi: PokeApi,
     private val definitionRepository: DefinitionRepository,
-    private val workManager: WorkManager,
-) : VersionGroupRepository {
+) : VersionGroupRepository(workManager, apiDatabase) {
     // region:      -- Get
 
     override fun get(id: Int): Flow<VersionGroup?> {
-        queueWorker(id)
-        return apiDatabase.versionGroupDao().get(id).distinctUntilChanged()
-            .map {
-                it?.toModel()
-            }.flowOn(Dispatchers.IO)
+        return apiDatabase.versionGroupDao().get(id)
+            .onStart { refresh(id) }
+            .distinctUntilChanged()
+            .map { it?.toModel() }
+            .flowOn(Dispatchers.IO)
     }
 
     override fun getIds(): Flow<List<Int>> {
-        queueWorker()
-        return apiDatabase.versionGroupDao().getIds().distinctUntilChanged().flowOn(Dispatchers.IO)
+        return apiDatabase.versionGroupDao().getIds()
+            .onStart { refresh() }
+            .distinctUntilChanged()
+            .flowOn(Dispatchers.IO)
     }
 
     override fun getVersionIds(id: Int): Flow<List<Int>> {
-        queueWorker(id)
-        return apiDatabase.versionGroupDao().getVersionIds(id).distinctUntilChanged()
+        return apiDatabase.versionGroupDao().getVersionIds(id)
+            .onStart { refresh(id) }
+            .distinctUntilChanged()
             .flowOn(Dispatchers.IO)
     }
 
     override fun getPokedexIds(id: Int): Flow<List<Int>> {
-        queueWorker(id)
         return apiDatabase.versionGroupPokedexJunctionDao().getPokedexIdsByVersionGroup(id)
-            .distinctUntilChanged().flowOn(Dispatchers.IO)
+            .onStart { refresh(id) }
+            .distinctUntilChanged()
+            .flowOn(Dispatchers.IO)
     }
 
     // endregion:   -- Get
-    // region:      -- Refresh
+    // region:      -- Fetch
 
-    override suspend fun refresh(id: Int) {
+    override suspend fun fetch(id: Int) {
         val linkedPokedexes = definitionRepository.getPokedexAdditions(id) ?: emptyList()
 
         val raw = pokeApi.getVersionGroup(id)
@@ -101,7 +105,7 @@ class VersionGroupPokeApiRepository(
         }
     }
 
-    override suspend fun refresh() {
+    override suspend fun fetch() {
         val count = pokeApi.getVersionGroupList(0, 1).count
         val raw = pokeApi.getVersionGroupList(0, count).results
         val stubs = raw.map { VersionGroupStub(it.id, null) }
@@ -111,14 +115,5 @@ class VersionGroupPokeApiRepository(
         }
     }
 
-    // endregion:   -- Refresh
-    // region:      -- Worker
-
-    override fun queueWorker(id: Int?) = ApiSyncWorker.enqueue(
-        workManager = workManager,
-        type = VersionGroup::class.simpleName,
-        id = id
-    )
-
-    // endregion:   -- Worker
+    // endregion:   -- Fetch
 }

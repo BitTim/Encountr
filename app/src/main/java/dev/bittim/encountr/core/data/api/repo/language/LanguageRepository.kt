@@ -7,12 +7,24 @@
  * File:       LanguageRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   23.11.25, 17:35
  */
 
 package dev.bittim.encountr.core.data.api.repo.language
 
+import androidx.work.WorkManager
+import dev.bittim.encountr.core.data.api.local.ApiDatabase
 import dev.bittim.encountr.core.data.api.repo.Repository
 import dev.bittim.encountr.core.domain.model.api.language.Language
 
-interface LanguageRepository : Repository<Language?>
+abstract class LanguageRepository(
+    workManager: WorkManager,
+    apiDatabase: ApiDatabase
+) : Repository<Language?>(workManager, apiDatabase) {
+
+    // region:      -- Type
+
+    override val type: String = Language::class.java.simpleName
+
+    // endregion:   -- Type
+}

@@ -7,7 +7,7 @@
  * File:       PokedexPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   17.11.25, 20:01
+ * Modified:   23.11.25, 17:39
  */
 
 package dev.bittim.encountr.core.data.api.repo.pokedex
@@ -21,42 +21,47 @@ import dev.bittim.encountr.core.data.api.local.entity.base.pokedex.PokedexLocali
 import dev.bittim.encountr.core.data.api.local.entity.base.pokedex.PokedexStub
 import dev.bittim.encountr.core.data.api.local.entity.base.pokemon.PokemonStub
 import dev.bittim.encountr.core.data.api.local.entity.junction.PokedexPokemonJunction
-import dev.bittim.encountr.core.data.api.worker.ApiSyncWorker
 import dev.bittim.encountr.core.domain.model.api.pokedex.Pokedex
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 
 class PokedexPokeApiRepository(
+    workManager: WorkManager,
     private val apiDatabase: ApiDatabase,
     private val pokeApi: PokeApi,
-    private val workManager: WorkManager,
-) : PokedexRepository {
+) : PokedexRepository(workManager, apiDatabase) {
     // region:      -- Get
 
     override fun get(id: Int): Flow<Pokedex?> {
-        queueWorker(id)
-        return apiDatabase.pokedexDao().get(id).distinctUntilChanged().map {
-            it?.toModel()
-        }.flowOn(Dispatchers.IO)
+        return apiDatabase.pokedexDao().get(id)
+            .onStart { refresh(id) }
+            .distinctUntilChanged()
+            .map { it?.toModel() }
+            .flowOn(Dispatchers.IO)
     }
 
     override fun getIds(): Flow<List<Int>> {
-        queueWorker()
-        return apiDatabase.pokedexDao().getIds().distinctUntilChanged().flowOn(Dispatchers.IO)
+        return apiDatabase.pokedexDao().getIds()
+            .onStart { refresh() }
+            .distinctUntilChanged()
+            .flowOn(Dispatchers.IO)
     }
 
     override fun getPokemonIds(id: Int): Flow<List<Int>> {
-        queueWorker(id)
         return apiDatabase.pokedexPokemonJunctionDao().getByPokedex(id)
+            .onStart { refresh(id) }
+            .distinctUntilChanged()
+            .flowOn(Dispatchers.IO)
     }
 
     // endregion:   -- Get
-    // region:      -- Refresh
+    // region:      -- Fetch
 
-    override suspend fun refresh(id: Int) {
+    override suspend fun fetch(id: Int) {
         val raw = pokeApi.getPokedex(id)
         val stub = PokedexStub(raw.id)
         val detail = PokedexDetailEntity.fromApi(raw)
@@ -81,7 +86,7 @@ class PokedexPokeApiRepository(
         }
     }
 
-    override suspend fun refresh() {
+    override suspend fun fetch() {
         val count = pokeApi.getPokedexList(0, 1).count
         val raw = pokeApi.getPokedexList(0, count).results
         val stubs = raw.map { PokedexStub(it.id) }
@@ -91,14 +96,5 @@ class PokedexPokeApiRepository(
         }
     }
 
-    // endregion:   -- Refresh
-    // region:      -- Worker
-
-    override fun queueWorker(id: Int?) = ApiSyncWorker.enqueue(
-        workManager = workManager,
-        type = Pokedex::class.simpleName,
-        id = id
-    )
-
-    // endregion:   -- Worker
+    // endregion:   -- Fetch
 }

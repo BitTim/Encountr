@@ -7,12 +7,23 @@
  * File:       VersionRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   07.11.25, 01:13
+ * Modified:   23.11.25, 17:42
  */
 
 package dev.bittim.encountr.core.data.api.repo.version
 
+import androidx.work.WorkManager
+import dev.bittim.encountr.core.data.api.local.ApiDatabase
 import dev.bittim.encountr.core.data.api.repo.Repository
 import dev.bittim.encountr.core.domain.model.api.version.Version
 
-interface VersionRepository : Repository<Version>
+abstract class VersionRepository(
+    workManager: WorkManager,
+    apiDatabase: ApiDatabase
+) : Repository<Version>(workManager, apiDatabase) {
+    // region:      -- Type
+
+    override val type: String = Version::class.java.simpleName
+
+    // endregion:   -- Type
+}

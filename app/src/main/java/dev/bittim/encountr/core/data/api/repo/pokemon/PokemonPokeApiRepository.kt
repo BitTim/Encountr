@@ -7,7 +7,7 @@
  * File:       PokemonPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   16.11.25, 02:32
+ * Modified:   23.11.25, 18:54
  */
 
 package dev.bittim.encountr.core.data.api.repo.pokemon
@@ -22,7 +22,6 @@ import dev.bittim.encountr.core.data.api.local.entity.base.pokemon.PokemonSprite
 import dev.bittim.encountr.core.data.api.local.entity.base.pokemon.PokemonStub
 import dev.bittim.encountr.core.data.api.local.entity.base.type.TypeStub
 import dev.bittim.encountr.core.data.api.local.entity.junction.PokemonTypeJunction
-import dev.bittim.encountr.core.data.api.worker.ApiSyncWorker
 import dev.bittim.encountr.core.domain.model.api.pokemon.Pokemon
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -32,30 +31,34 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 
 class PokemonPokeApiRepository(
+    workManager: WorkManager,
     private val apiDatabase: ApiDatabase,
     private val pokeApi: PokeApi,
-    private val workManager: WorkManager,
-) : PokemonRepository {
+) : PokemonRepository(workManager, apiDatabase) {
     // region:      -- Get
 
     override fun get(id: Int): Flow<Pokemon?> {
-        queueWorker(id)
-        return apiDatabase.pokemonDao().get(id).distinctUntilChanged().map {
-            it?.toModel()
-        }.flowOn(Dispatchers.IO)
+        return apiDatabase.pokemonDao().get(id)
+            .onStart { refresh(id) }
+            .distinctUntilChanged()
+            .map { it?.toModel() }
+            .flowOn(Dispatchers.IO)
     }
 
     override fun getIds(): Flow<List<Int>> {
-        queueWorker()
-        return apiDatabase.pokemonDao().getIds().distinctUntilChanged().flowOn(Dispatchers.IO)
+        return apiDatabase.pokemonDao().getIds()
+            .onStart { refresh() }
+            .distinctUntilChanged()
+            .flowOn(Dispatchers.IO)
     }
 
     // endregion:   -- Get
-    // region:      -- Refresh
+    // region:      -- Fetch
 
-    override suspend fun refresh(id: Int) {
+    override suspend fun fetch(id: Int) {
         val rawVariety = pokeApi.getPokemonVariety(id)
         val rawSpecies = pokeApi.getPokemonSpecies(rawVariety.species.id)
 
@@ -83,27 +86,18 @@ class PokemonPokeApiRepository(
         }
     }
 
-    override suspend fun refresh() {
+    override suspend fun fetch() {
         val count = PokeApi.getPokemonVarietyList(0, 1).count
         val rawPokemonVarietyList = PokeApi.getPokemonVarietyList(0, count).results
 
         return coroutineScope {
             rawPokemonVarietyList.map {
                 async(Dispatchers.IO) {
-                    refresh(it.id)
+                    fetch(it.id)
                 }
             }.awaitAll()
         }
     }
 
-    // endregion:   -- Refresh
-    // region:      -- Worker
-
-    override fun queueWorker(id: Int?) = ApiSyncWorker.enqueue(
-        workManager = workManager,
-        type = Pokemon::class.simpleName,
-        id = id
-    )
-
-    // endregion:   -- Worker
+    // endregion:   -- Fetch
 }

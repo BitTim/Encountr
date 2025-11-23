@@ -7,7 +7,7 @@
  * File:       LanguagePokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   16.11.25, 02:32
+ * Modified:   23.11.25, 17:39
  */
 
 package dev.bittim.encountr.core.data.api.repo.language
@@ -18,37 +18,40 @@ import co.pokeapi.pokekotlin.PokeApi
 import dev.bittim.encountr.core.data.api.local.ApiDatabase
 import dev.bittim.encountr.core.data.api.local.entity.base.language.LanguageDetailEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.language.LanguageStub
-import dev.bittim.encountr.core.data.api.worker.ApiSyncWorker
 import dev.bittim.encountr.core.domain.model.api.language.Language
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 
 class LanguagePokeApiRepository(
+    workManager: WorkManager,
     private val apiDatabase: ApiDatabase,
     private val pokeApi: PokeApi,
-    private val workManager: WorkManager
-) : LanguageRepository {
+) : LanguageRepository(workManager, apiDatabase) {
     // region:      -- Get
 
     override fun get(id: Int): Flow<Language?> {
-        queueWorker(id)
-        return apiDatabase.languageDao().get(id).distinctUntilChanged()
+        return apiDatabase.languageDao().get(id)
+            .onStart { refresh(id) }
+            .distinctUntilChanged()
             .map { it?.toModel() }
             .flowOn(Dispatchers.IO)
     }
 
     override fun getIds(): Flow<List<Int>> {
-        queueWorker()
-        return apiDatabase.languageDao().getIds().distinctUntilChanged().flowOn(Dispatchers.IO)
+        return apiDatabase.languageDao().getIds()
+            .onStart { refresh() }
+            .distinctUntilChanged()
+            .flowOn(Dispatchers.IO)
     }
 
     // endregion:   -- Get
-    // region:      -- Refresh
+    // region:      -- Fetch
 
-    override suspend fun refresh(id: Int) {
+    override suspend fun fetch(id: Int) {
         val raw = pokeApi.getLanguage(id)
         val detail = LanguageDetailEntity.fromApi(raw)
         val stub = LanguageStub(raw.id, detail.localizedName != null)
@@ -59,7 +62,7 @@ class LanguagePokeApiRepository(
         }
     }
 
-    override suspend fun refresh() {
+    override suspend fun fetch() {
         val count = pokeApi.getLanguageList(0, 1).count
         val raw = pokeApi.getLanguageList(0, count).results
         val stubs = raw.map { LanguageStub(it.id, true) }
@@ -69,14 +72,5 @@ class LanguagePokeApiRepository(
         }
     }
 
-    // endregion:   -- Refresh
-    // region:      -- Worker
-
-    override fun queueWorker(id: Int?) = ApiSyncWorker.enqueue(
-        workManager = workManager,
-        type = Language::class.simpleName,
-        id = id
-    )
-
-    // endregion:   -- Worker
+    // endregion:   -- Fetch
 }

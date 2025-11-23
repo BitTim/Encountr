@@ -7,7 +7,7 @@
  * File:       VersionPokeApiRepository.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   17.11.25, 20:18
+ * Modified:   23.11.25, 17:42
  */
 
 package dev.bittim.encountr.core.data.api.repo.version
@@ -20,7 +20,6 @@ import dev.bittim.encountr.core.data.api.local.entity.base.version.VersionDetail
 import dev.bittim.encountr.core.data.api.local.entity.base.version.VersionLocalizedNameEntity
 import dev.bittim.encountr.core.data.api.local.entity.base.version.VersionStub
 import dev.bittim.encountr.core.data.api.local.entity.base.versionGroup.VersionGroupStub
-import dev.bittim.encountr.core.data.api.worker.ApiSyncWorker
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
 import dev.bittim.encountr.core.domain.model.api.version.Version
 import kotlinx.coroutines.Dispatchers
@@ -29,31 +28,35 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 
 class VersionPokeApiRepository(
+    workManager: WorkManager,
     private val apiDatabase: ApiDatabase,
     private val pokeApi: PokeApi,
     private val definitionRepository: DefinitionRepository,
-    private val workManager: WorkManager,
-) : VersionRepository {
+) : VersionRepository(workManager, apiDatabase) {
     // region:      -- Get
 
     override fun get(id: Int): Flow<Version?> {
-        queueWorker(id)
-        return apiDatabase.versionDao().get(id).distinctUntilChanged().map {
-            it?.toModel()
-        }.flowOn(Dispatchers.IO)
+        return apiDatabase.versionDao().get(id)
+            .onStart { refresh(id) }
+            .distinctUntilChanged()
+            .map { it?.toModel() }
+            .flowOn(Dispatchers.IO)
     }
 
     override fun getIds(): Flow<List<Int>> {
-        queueWorker()
-        return apiDatabase.versionDao().getIds().distinctUntilChanged().flowOn(Dispatchers.IO)
+        return apiDatabase.versionDao().getIds()
+            .onStart { refresh() }
+            .distinctUntilChanged()
+            .flowOn(Dispatchers.IO)
     }
 
     // endregion:   -- Get
-    // region:      -- Refresh
+    // region:      -- Fetch
 
-    override suspend fun refresh(id: Int) {
+    override suspend fun fetch(id: Int) {
         val raw = pokeApi.getVersion(id)
         val versionAddition = definitionRepository.getVersionAdditions(id)
         val isIgnored = definitionRepository.isVersionIgnored(id)
@@ -79,7 +82,7 @@ class VersionPokeApiRepository(
         }
     }
 
-    override suspend fun refresh() {
+    override suspend fun fetch() {
         val count = pokeApi.getVersionList(0, 1).count
         val raw = pokeApi.getVersionList(0, count).results
         val stubs =
@@ -90,14 +93,5 @@ class VersionPokeApiRepository(
         }
     }
 
-    // endregion:   -- Refresh
-    // region:      -- Worker
-
-    override fun queueWorker(id: Int?) = ApiSyncWorker.enqueue(
-        workManager = workManager,
-        type = Version::class.simpleName,
-        id = id
-    )
-
-    // endregion:   -- Worker
+    // endregion:   -- Fetch
 }

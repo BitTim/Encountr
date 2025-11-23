@@ -7,12 +7,19 @@
  * File:       Encountr.kt
  * Module:     Encountr.app.main
  * Author:     Tim Anhalt (BitTim)
- * Modified:   17.11.25, 02:31
+ * Modified:   23.11.25, 18:14
  */
 
 package dev.bittim.encountr
 
 import android.app.Application
+import coil3.ImageLoader
+import coil3.PlatformContext
+import coil3.SingletonImageLoader
+import coil3.disk.DiskCache
+import coil3.disk.directory
+import coil3.memory.MemoryCache
+import coil3.request.crossfade
 import dev.bittim.encountr.content.di.contentModule
 import dev.bittim.encountr.core.data.config.ConfigStateHolder
 import dev.bittim.encountr.core.data.defs.repo.DefinitionRepository
@@ -27,7 +34,7 @@ import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.GlobalContext
 import org.koin.core.context.GlobalContext.startKoin
 
-class Encountr : Application() {
+class Encountr : Application(), SingletonImageLoader.Factory {
     private val ioAppScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     override fun onCreate() {
@@ -39,6 +46,23 @@ class Encountr : Application() {
         }
 
         fetchDefinitions()
+    }
+
+    override fun newImageLoader(context: PlatformContext): ImageLoader {
+        return ImageLoader.Builder(context)
+            .crossfade(true)
+            .memoryCache {
+                MemoryCache.Builder()
+                    .maxSizePercent(context, 0.25)
+                    .build()
+            }
+            .diskCache {
+                DiskCache.Builder()
+                    .directory(context.cacheDir.resolve("image_cache"))
+                    .maxSizePercent(0.02)
+                    .build()
+            }
+            .build()
     }
 
     private fun fetchDefinitions() {
